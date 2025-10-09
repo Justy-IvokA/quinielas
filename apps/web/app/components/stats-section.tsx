@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { TrendingUp, Users, Trophy, Activity } from "lucide-react";
 
 interface StatItemProps {
@@ -62,33 +63,35 @@ function StatItem({ icon: Icon, value, label, suffix = "", gradient }: StatItemP
 }
 
 export function StatsSection() {
+  const t = useTranslations("stats");
+
   const stats = [
     {
       icon: Users,
       value: 10000,
       suffix: "+",
-      label: "Usuarios activos",
+      label: t("activeUsers"),
       gradient: "from-purple-500 to-pink-500"
     },
     {
       icon: Trophy,
       value: 250,
       suffix: "+",
-      label: "Quinielas creadas",
+      label: t("poolsCreated"),
       gradient: "from-blue-500 to-cyan-500"
     },
     {
       icon: Activity,
       value: 50000,
       suffix: "+",
-      label: "Predicciones",
+      label: t("predictions"),
       gradient: "from-emerald-500 to-teal-500"
     },
     {
       icon: TrendingUp,
       value: 99,
       suffix: "%",
-      label: "Uptime",
+      label: t("uptime"),
       gradient: "from-orange-500 to-red-500"
     }
   ];

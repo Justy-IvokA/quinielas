@@ -1,11 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Sparkles, Zap, TrendingUp } from "lucide-react";
 
 import { Button, ThemeToggle } from "@qp/ui";
 
-import { trpc } from "../../src/trpc/react";
+import { Link } from "@web/i18n/navigation";
+import { trpc } from "@web/trpc/react";
 
 interface HomeHeroProps {
   brandName: string;
@@ -15,9 +16,14 @@ interface HomeHeroProps {
 }
 
 export function HomeHero({ brandName, tagline, ctaLabel, ctaHref }: HomeHeroProps) {
+  const t = useTranslations("home.hero");
   const { data, isLoading } = trpc.health.useQuery();
 
-  const healthStatus = isLoading ? "Comprobando estado…" : data?.ok ? "Servicios en línea" : "Servicios con incidencia";
+  const healthStatus = isLoading 
+    ? t("healthChecking") 
+    : data?.ok 
+      ? t("healthOnline") 
+      : t("healthIssue");
   const healthTone = data?.ok ? "text-emerald-500" : "text-amber-500";
 
   return (
@@ -47,7 +53,7 @@ export function HomeHero({ brandName, tagline, ctaLabel, ctaHref }: HomeHeroProp
           <div className="flex flex-col gap-4">
             <div className="inline-flex items-center gap-2 text-primary">
               <Sparkles className="w-5 h-5 animate-pulse" />
-              <span className="text-sm font-semibold uppercase tracking-wider">Plataforma White-Label</span>
+              <span className="text-sm font-semibold uppercase tracking-wider">{t("platformLabel")}</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-extrabold leading-tight">
@@ -73,11 +79,11 @@ export function HomeHero({ brandName, tagline, ctaLabel, ctaHref }: HomeHeroProp
             <div className="flex items-center gap-6 text-sm">
               <div className="flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-primary" />
-                <span className="text-muted-foreground">Multi-tenant</span>
+                <span className="text-muted-foreground">{t("multiTenantBadge")}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-muted-foreground">Tiempo real</span>
+                <span className="text-muted-foreground">{t("realTimeBadge")}</span>
               </div>
             </div>
           </div>

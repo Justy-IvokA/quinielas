@@ -1,0 +1,296 @@
+{
+  "common": {
+    "appName": "Quinielas WL Admin",
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "confirm": "Confirmar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "create": "Crear",
+    "selectLanguage": "Seleccionar idioma"
+  },
+  "nav": {
+    "dashboard": "Panel",
+    "pools": "Quinielas",
+    "fixtures": "Partidos",
+    "access": "Acceso",
+    "brands": "Marcas",
+    "analytics": "Analítica"
+  },
+  "dashboard": {
+    "statusOnline": "Servicios operativos",
+    "statusCheck": "Verifica el estado del API",
+    "welcome": "Bienvenido, {tenant}",
+    "subtitle": "Administra pools y marcas del portafolio {brand}.",
+    "createPool": "Crear pool",
+    "manageBrands": "Gestionar marcas",
+    "quickActions": {
+      "pools": {
+        "title": "Pools activos",
+        "description": "Supervisa el estado, acceso y cronología de tus quinielas en vivo.",
+        "cta": "Ir a pools"
+      },
+      "fixtures": {
+        "title": "Próximos partidos",
+        "description": "Valida horarios, bloqueos de predicciones y resultados pendientes.",
+        "cta": "Ir a partidos"
+      },
+      "access": {
+        "title": "Invitaciones y códigos",
+        "description": "Gestiona batch de códigos, invitaciones por correo y consumo por jugador.",
+        "cta": "Ir a accesos"
+      }
+    }
+  },
+  "access": {
+    "title": "Gestión de Acceso",
+    "description": "Administra políticas de acceso, códigos de invitación y listas de correo para tus pools.",
+    "loadingPolicies": "Cargando políticas de acceso...",
+    "noPolicy": {
+      "title": "Sin política de acceso",
+      "description": "Este pool no tiene una política de acceso configurada. Crea una para comenzar a gestionar registros.",
+      "cta": "Crear política de acceso"
+    },
+    "newPolicy": {
+      "title": "Nueva política de acceso",
+      "description": "Define cómo los usuarios podrán registrarse en este pool."
+    },
+    "policy": {
+      "heading": "Política de acceso: {name}",
+      "type": "Tipo:",
+      "typeValue": {
+        "PUBLIC": "Público",
+        "CODE": "Por código",
+        "EMAIL_INVITE": "Invitación por correo"
+      },
+      "requireCaptcha": "Requiere CAPTCHA:",
+      "requireEmailVerification": "Verificación de email:",
+      "maxRegistrations": "Máximo de registros:",
+      "unlimited": "Sin límite",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "tabs": {
+      "batches": "Lotes de códigos",
+      "invitations": "Invitaciones por email"
+    },
+    "form": {
+      "accessType": {
+        "label": "Tipo de acceso",
+        "placeholder": "Selecciona el tipo de acceso",
+        "options": {
+          "PUBLIC": "Público (sin restricciones)",
+          "CODE": "Por código de invitación",
+          "EMAIL_INVITE": "Por invitación de email"
+        }
+      },
+      "requireCaptcha": {
+        "label": "Requerir CAPTCHA",
+        "description": "Protege contra registros automatizados"
+      },
+      "requireEmailVerification": {
+        "label": "Verificación de email",
+        "description": "Requiere confirmación por correo electrónico"
+      },
+      "maxRegistrations": {
+        "label": "Máximo de registros (opcional)",
+        "placeholder": "Sin límite"
+      },
+      "submit": "Crear política",
+      "cancel": "Cancelar",
+      "success": "Política de acceso creada exitosamente",
+      "error": "Error al crear política: {message}"
+    },
+    "batches": {
+      "title": "Lotes de códigos",
+      "count": "{count} lote(s) creado(s)",
+      "createButton": "Crear lote",
+      "dialog": {
+        "title": "Crear lote de códigos",
+        "description": "Genera múltiples códigos de invitación de una sola vez."
+      },
+      "form": {
+        "quantity": "Cantidad de códigos",
+        "usesPerCode": "Usos por código",
+        "submit": "Generar códigos"
+      },
+      "success": "Lote de códigos creado exitosamente",
+      "error": "Error al crear lote: {message}",
+      "copySuccess": "Código copiado al portapapeles",
+      "loading": "Cargando lotes de códigos...",
+      "batchTitle": "Lote #{id}",
+      "batchSummary": "{total} códigos · {used} usados",
+      "table": {
+        "code": "Código",
+        "status": "Estado",
+        "uses": "Usos",
+        "actions": "Acciones"
+      },
+      "codeStatus": {
+        "UNUSED": "Disponible",
+        "PARTIALLY_USED": "Parcialmente usado",
+        "USED": "Usado",
+        "EXPIRED": "Expirado",
+        "PAUSED": "Pausado"
+      },
+      "uses": "{used} / {total}",
+      "actions": {
+        "copy": "Copiar"
+      },
+      "more": "Y {count} código(s) más...",
+      "empty": "No hay lotes de códigos creados"
+    },
+    "invites": {
+      "title": "Invitaciones por email",
+      "count": "{count} invitación(es) enviada(s)",
+      "createButton": "Crear invitación",
+      "dialog": {
+        "title": "Crear invitación por email",
+        "description": "Envía una invitación personalizada a un correo electrónico."
+      },
+      "form": {
+        "email": "Correo electrónico",
+        "placeholder": "usuario@ejemplo.com",
+        "submit": "Enviar invitación"
+      },
+      "createSuccess": "Invitación creada exitosamente",
+      "createError": "Error al crear invitación: {message}",
+      "resendSuccess": "Invitación reenviada",
+      "resendError": "Error al reenviar: {message}",
+      "loading": "Cargando invitaciones...",
+      "table": {
+        "email": "Email",
+        "status": "Estado",
+        "sent": "Enviado",
+        "expires": "Expira",
+        "actions": "Acciones"
+      },
+      "status": {
+        "PENDING": "Pendiente",
+        "ACCEPTED": "Aceptada",
+        "EXPIRED": "Expirada"
+      },
+      "sentCount": "{count} vez/veces",
+      "noExpiration": "Sin expiración",
+      "actions": {
+        "resend": "Reenviar"
+      },
+      "empty": "No hay invitaciones creadas"
+    }
+  },
+  "fixtures": {
+    "title": "Partidos",
+    "description": "Administra partidos, horarios y resultados de tus temporadas.",
+    "sync": {
+      "title": "Sincronización de fixtures",
+      "description": "Sincroniza partidos desde tu proveedor externo (API-Football, Sportmonks)",
+      "button": "Sincronizar ahora",
+      "success": "Sincronizados {count} partidos",
+      "error": "Error al sincronizar: {message}"
+    },
+    "tabs": {
+      "upcoming": "Próximos",
+      "live": "En vivo"
+    },
+    "empty": {
+      "upcoming": {
+        "title": "No hay partidos próximos",
+        "description": "Sincroniza fixtures desde tu proveedor externo para comenzar."
+      },
+      "live": {
+        "title": "No hay partidos en vivo",
+        "description": "Los partidos en vivo aparecerán aquí cuando comiencen."
+      }
+    },
+    "table": {
+      "date": "Fecha",
+      "match": "Partido",
+      "round": "Jornada",
+      "status": "Estado",
+      "predictions": "Predicciones",
+      "score": "Marcador",
+      "liveBadge": "EN VIVO"
+    },
+    "status": {
+      "locked": "Bloqueado",
+      "open": "Abierto"
+    }
+  },
+  "pools": {
+    "title": "Quinielas",
+    "description": "Administra tus quinielas activas e inactivas.",
+    "create": "Crear pool",
+    "empty": {
+      "title": "No hay pools creados",
+      "description": "Comienza creando tu primer pool para gestionar predicciones.",
+      "cta": "Crear primer pool"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "noBrand": "Sin marca"
+    },
+    "actions": {
+      "view": "Ver detalles",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "deleteConfirm": "¿Estás seguro de eliminar el pool \"{name}\"?",
+      "deleteSuccess": "Pool eliminado exitosamente",
+      "deleteError": "Error al eliminar: {message}"
+    },
+    "stats": {
+      "registrations": "{count} registros",
+      "prizes": "{count} premios"
+    },
+    "loading": "Cargando quinielas...",
+    "list": {
+      "brand": "{brand}",
+      "noBrand": "Sin marca",
+      "description": "{description}",
+      "registrations": "{count} registros",
+      "prizes": "{count} premios"
+    }
+  },
+  "demo": {
+    "cardTitle": "Configuración de Pool",
+    "cardDescription": "Configura el acceso y las reglas de tu quiniela",
+    "bannerTitle": "Modo demo",
+    "bannerDescription": "Este es un ejemplo de formulario con componentes UI mejorados",
+    "poolNameLabel": "Nombre del Pool",
+    "poolNamePlaceholder": "Mundial 2026",
+    "accessTypeLabel": "Tipo de Acceso",
+    "accessTypePlaceholder": "Selecciona el tipo",
+    "accessTypeOptions": {
+      "public": "Público",
+      "code": "Por Código",
+      "invite": "Por Invitación"
+    },
+    "helper": "Ejemplos de guardado con diferentes patrones de toast",
+    "buttons": {
+      "manual": "Guardar (Manual)",
+      "promise": "Guardar (Promise)"
+    },
+    "toasts": {
+      "successTitle": "Configuración guardada",
+      "successDescription": "Los cambios se han aplicado correctamente",
+      "errorTitle": "No se pudo guardar",
+      "errorDescription": "Ocurrió un error al guardar la configuración",
+      "loading": "Guardando configuración...",
+      "success": "¡Configuración guardada exitosamente!",
+      "error": "Error al guardar la configuración"
+    }
+  },
+  "metadata": {
+    "title": {
+      "default": "{appName} · Admin",
+      "template": "%s | {appName} Admin"
+    },
+    "description": "{brand} · Panel administrativo",
+    "keywords": "admin, quinielas, marcas, pools"
+  }
+}

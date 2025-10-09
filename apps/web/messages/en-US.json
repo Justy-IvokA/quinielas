@@ -1,0 +1,204 @@
+{
+  "common": {
+    "appName": "Quinielas WL",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "actions": "Actions",
+    "noResults": "No results found",
+    "selectLanguage": "Select language"
+  },
+  "nav": {
+    "home": "Home",
+    "pools": "Pools",
+    "leaderboard": "Leaderboard",
+    "fixtures": "Fixtures",
+    "rules": "Rules",
+    "register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "admin": "Admin"
+  },
+  "home": {
+    "hero": {
+      "title": "Welcome to {brandName}",
+      "subtitle": "The most complete sports prediction platform",
+      "cta": "Join the demo pool",
+      "learnMore": "Learn more",
+      "platformLabel": "White-Label Platform",
+      "healthOnline": "Services online",
+      "healthIssue": "Services experiencing issues",
+      "healthChecking": "Checking status…",
+      "multiTenantBadge": "Multi-tenant",
+      "realTimeBadge": "Real-time"
+    },
+    "features": {
+      "multiTenant": {
+        "title": "Multi-tenant Pools",
+        "description": "Launch prediction pools for your brands with custom rules, prizes, and access policies."
+      },
+      "realTime": {
+        "title": "Real-time Results",
+        "description": "Automatic fixture and score ingestion to keep your community informed."
+      },
+      "leaderboard": {
+        "title": "Auditable Leaderboard",
+        "description": "Exact scores, differentials, and complete audits for every matchday."
+      }
+    },
+    "techFeatures": {
+      "secure": "Secure & Auditable",
+      "multiTenant": "Multi-tenant",
+      "whiteLabel": "White-label",
+      "apiFirst": "API-first"
+    },
+    "devInfo": {
+      "title": "Ready for development",
+      "description": "Everything is set up to get started. Run the commands and explore the demo experience.",
+      "runDev": "pnpm dev",
+      "localUrl": "http://localhost:3000"
+    }
+  },
+  "stats": {
+    "title": "Real-time Statistics",
+    "activePools": "Active Pools",
+    "totalPlayers": "Total Players",
+    "matchesTracked": "Matches Tracked",
+    "prizesAwarded": "Prizes Awarded",
+    "activeUsers": "Active users",
+    "poolsCreated": "Pools created",
+    "predictions": "Predictions",
+    "uptime": "Uptime"
+  },
+  "register": {
+    "title": "Register",
+    "subtitle": "Join the pool",
+    "form": {
+      "name": "Full name",
+      "email": "Email address",
+      "phone": "Phone",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "inviteCode": "Invite code",
+      "acceptTerms": "I accept the terms and conditions",
+      "submit": "Register"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordsMustMatch": "Passwords must match",
+      "termsRequired": "You must accept the terms and conditions"
+    },
+    "success": "Registration successful. Check your email to verify your account.",
+    "error": "Registration failed. Please try again.",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginLink": "Login here"
+  },
+  "pool": {
+    "title": "Pool",
+    "description": "Pool description",
+    "rules": "Rules",
+    "prizes": "Prizes",
+    "participants": "Participants",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "status": {
+      "upcoming": "Upcoming",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "join": "Join",
+    "leave": "Leave",
+    "joined": "You've joined",
+    "full": "Pool is full"
+  },
+  "predictions": {
+    "title": "Predictions",
+    "makeYourPrediction": "Make your prediction",
+    "homeTeam": "Home team",
+    "awayTeam": "Away team",
+    "score": "Score",
+    "locked": "Locked",
+    "saved": "Saved",
+    "save": "Save prediction",
+    "edit": "Edit prediction",
+    "deadline": "Deadline",
+    "points": "Points",
+    "exactScore": "Exact score",
+    "correctSign": "Correct sign",
+    "goalDifference": "Goal difference"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "rank": "Rank",
+    "player": "Player",
+    "points": "Points",
+    "exactScores": "Exact scores",
+    "correctSigns": "Correct signs",
+    "matches": "Matches",
+    "lastUpdated": "Last updated",
+    "live": "Live",
+    "final": "Final"
+  },
+  "matches": {
+    "title": "Matches",
+    "upcoming": "Upcoming",
+    "live": "Live",
+    "finished": "Finished",
+    "kickoff": "Kickoff",
+    "venue": "Venue",
+    "competition": "Competition",
+    "season": "Season",
+    "round": "Round",
+    "status": {
+      "scheduled": "Scheduled",
+      "live": "Live",
+      "halftime": "Halftime",
+      "finished": "Finished",
+      "postponed": "Postponed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "notFound": "Page not found.",
+    "unauthorized": "You are not authorized to access this page.",
+    "forbidden": "Access forbidden.",
+    "serverError": "Server error. Please try again later.",
+    "networkError": "Connection error. Check your internet connection.",
+    "validationError": "Validation error. Check the entered data."
+  },
+  "footer": {
+    "copyright": "© {year} {appName}. All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "metadata": {
+    "title": {
+      "default": "{appName} · {brandName}",
+      "template": "%s | {appName}"
+    },
+    "description": "White-label sports prediction platform for brands. Predictions, leaderboards, and prizes.",
+    "keywords": "pool, predictions, sports, world cup, soccer"
+  }
+}

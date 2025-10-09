@@ -7,7 +7,7 @@ import { CheckCircle2 } from "lucide-react";
 
 import { Alert, AlertDescription, Button, FormField, Input, toastError, toastSuccess } from "@qp/ui";
 
-import { trpc } from "../../../src/trpc/react";
+import { trpc } from "@web/trpc/react";
 
 interface PublicRegistrationFormProps {
   poolId: string;

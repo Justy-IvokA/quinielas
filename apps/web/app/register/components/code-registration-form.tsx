@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { CheckCircle2, Key } from "lucide-react";
 
 import { Alert, AlertDescription, Badge, Button, FormField, Input, toastError, toastSuccess } from "@qp/ui";
 
-import { trpc } from "../../../src/trpc/react";
+import { trpc } from "@web/trpc/react";
 
 interface CodeRegistrationFormProps {
   poolId: string;
@@ -38,17 +38,49 @@ export function CodeRegistrationForm({ poolId, initialCode }: CodeRegistrationFo
     { poolId, code: inviteCode },
     {
       enabled: inviteCode.length === 8 && !validatedCode,
-      retry: false,
-      onSuccess: () => {
-        setValidatedCode(inviteCode);
-        toastSuccess("Código válido");
-      },
-      onError: (error) => {
-        setValidatedCode(null);
-        toastError(error.message);
-      }
+      retry: false
     }
   );
+
+  useEffect(() => {
+    if (
+      validateCodeQuery.status === "success" &&
+      validateCodeQuery.data?.valid &&
+      inviteCode.length === 8 &&
+      validatedCode !== inviteCode
+    ) {
+      setValidatedCode(inviteCode);
+      toastSuccess("Código válido");
+    }
+  }, [
+    inviteCode,
+    validatedCode,
+    validateCodeQuery.data,
+    validateCodeQuery.dataUpdatedAt,
+    validateCodeQuery.status
+  ]);
+
+  useEffect(() => {
+    if (
+      validateCodeQuery.status === "error" &&
+      validateCodeQuery.error &&
+      inviteCode.length === 8
+    ) {
+      setValidatedCode(null);
+      toastError(validateCodeQuery.error.message);
+    }
+  }, [
+    inviteCode,
+    validateCodeQuery.error,
+    validateCodeQuery.errorUpdatedAt,
+    validateCodeQuery.status
+  ]);
+
+  useEffect(() => {
+    if (validatedCode && inviteCode !== validatedCode) {
+      setValidatedCode(null);
+    }
+  }, [inviteCode, validatedCode]);
 
   const registerMutation = trpc.registration.registerWithCode.useMutation({
     onSuccess: () => {

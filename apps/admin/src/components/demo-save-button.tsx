@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Button,
   Card,
@@ -30,6 +31,7 @@ import { Save, Settings } from "lucide-react";
  * Demo component for apps/admin showing toast usage with async operations
  */
 export function DemoSaveButton() {
+  const t = useTranslations("demo");
   const [isSaving, setIsSaving] = useState(false);
   const [poolName, setPoolName] = useState("");
   const [accessType, setAccessType] = useState("public");
@@ -39,12 +41,12 @@ export function DemoSaveButton() {
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      toastSuccess("Configuración guardada", {
-        description: "Los cambios se han aplicado correctamente"
+      toastSuccess(t("toasts.successTitle"), {
+        description: t("toasts.successDescription")
       });
     } catch (error) {
-      toastError("No se pudo guardar", {
-        description: "Ocurrió un error al guardar la configuración"
+      toastError(t("toasts.errorTitle"), {
+        description: t("toasts.errorDescription")
       });
     } finally {
       setIsSaving(false);
@@ -60,9 +62,9 @@ export function DemoSaveButton() {
     });
 
     toastPromise(savePromise, {
-      loading: "Guardando configuración...",
-      success: "¡Configuración guardada exitosamente!",
-      error: "Error al guardar la configuración"
+      loading: t("toasts.loading"),
+      success: t("toasts.success"),
+      error: t("toasts.error")
     });
   };
 
@@ -71,49 +73,43 @@ export function DemoSaveButton() {
       <CardHeader>
         <div className="flex items-center gap-2">
           <Settings className="h-5 w-5 text-primary" />
-          <CardTitle>Configuración de Pool</CardTitle>
+          <CardTitle>{t("cardTitle")}</CardTitle>
         </div>
-        <CardDescription>
-          Configura el acceso y las reglas de tu quiniela
-        </CardDescription>
+        <CardDescription>{t("cardDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <Alert variant="info">
-          <AlertTitle>Modo Demo</AlertTitle>
-          <AlertDescription>
-            Este es un ejemplo de formulario con componentes UI mejorados
-          </AlertDescription>
+          <AlertTitle>{t("bannerTitle")}</AlertTitle>
+          <AlertDescription>{t("bannerDescription")}</AlertDescription>
         </Alert>
 
         <div className="space-y-2">
-          <Label htmlFor="pool-name">Nombre del Pool</Label>
+          <Label htmlFor="pool-name">{t("poolNameLabel")}</Label>
           <Input
             id="pool-name"
-            placeholder="Mundial 2026"
+            placeholder={t("poolNamePlaceholder")}
             value={poolName}
             onChange={(e) => setPoolName(e.target.value)}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="access-type">Tipo de Acceso</Label>
+          <Label htmlFor="access-type">{t("accessTypeLabel")}</Label>
           <Select value={accessType} onValueChange={setAccessType}>
             <SelectTrigger id="access-type">
-              <SelectValue placeholder="Selecciona el tipo" />
+              <SelectValue placeholder={t("accessTypePlaceholder")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="public">Público</SelectItem>
-              <SelectItem value="code">Por Código</SelectItem>
-              <SelectItem value="invite">Por Invitación</SelectItem>
+              <SelectItem value="public">{t("accessTypeOptions.public")}</SelectItem>
+              <SelectItem value="code">{t("accessTypeOptions.code")}</SelectItem>
+              <SelectItem value="invite">{t("accessTypeOptions.invite")}</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <Separator />
 
-        <div className="text-sm text-muted-foreground">
-          Ejemplos de guardado con diferentes patrones de toast
-        </div>
+        <div className="text-sm text-muted-foreground">{t("helper")}</div>
       </CardContent>
       <CardFooter className="flex gap-2">
         <Button
@@ -121,14 +117,14 @@ export function DemoSaveButton() {
           loading={isSaving}
           StartIcon={Save}
         >
-          Guardar (Manual)
+          {t("buttons.manual")}
         </Button>
         <Button
           onClick={handleSaveWithPromise}
           variant="secondary"
           StartIcon={Save}
         >
-          Guardar (Promise)
+          {t("buttons.promise")}
         </Button>
       </CardFooter>
     </Card>

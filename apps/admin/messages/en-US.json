@@ -1,0 +1,288 @@
+{
+  "common": {
+    "appName": "Quinielas WL Admin",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "next": "Next",
+    "create": "Create",
+    "selectLanguage": "Select language"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "pools": "Pools",
+    "fixtures": "Fixtures",
+    "access": "Access",
+    "brands": "Brands",
+    "analytics": "Analytics"
+  },
+  "dashboard": {
+    "statusOnline": "Services operational",
+    "statusCheck": "Check API status",
+    "welcome": "Welcome, {tenant}",
+    "subtitle": "Manage pools and brands for {brand} portfolio.",
+    "createPool": "Create pool",
+    "manageBrands": "Manage brands",
+    "quickActions": {
+      "pools": {
+        "title": "Active pools",
+        "description": "Monitor status, access, and timeline of your live pools.",
+        "cta": "Go to pools"
+      },
+      "fixtures": {
+        "title": "Upcoming fixtures",
+        "description": "Review schedules, prediction locks, and pending results.",
+        "cta": "Go to fixtures"
+      },
+      "access": {
+        "title": "Invites & codes",
+        "description": "Manage code batches, email invitations, and player usage.",
+        "cta": "Go to access"
+      }
+    }
+  },
+  "access": {
+    "title": "Access management",
+    "description": "Manage access policies, invite codes, and mailing lists for your pools.",
+    "loadingPolicies": "Loading access policies...",
+    "noPolicy": {
+      "title": "No access policy",
+      "description": "This pool doesn't have an access policy yet. Create one to start managing registrations.",
+      "cta": "Create access policy"
+    },
+    "newPolicy": {
+      "title": "New access policy",
+      "description": "Define how users can register to this pool."
+    },
+    "policy": {
+      "heading": "Access policy: {name}",
+      "type": "Type:",
+      "typeValue": {
+        "PUBLIC": "Public",
+        "CODE": "By code",
+        "EMAIL_INVITE": "Email invitation"
+      },
+      "requireCaptcha": "Require CAPTCHA:",
+      "requireEmailVerification": "Email verification:",
+      "maxRegistrations": "Max registrations:",
+      "unlimited": "Unlimited",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "tabs": {
+      "batches": "Code batches",
+      "invitations": "Email invitations"
+    },
+    "form": {
+      "accessType": {
+        "label": "Access type",
+        "placeholder": "Select access type",
+        "options": {
+          "PUBLIC": "Public (no restrictions)",
+          "CODE": "By invite code",
+          "EMAIL_INVITE": "By email invitation"
+        }
+      },
+      "requireCaptcha": {
+        "label": "Require CAPTCHA",
+        "description": "Protect against automated signups"
+      },
+      "requireEmailVerification": {
+        "label": "Email verification",
+        "description": "Require confirmation via email"
+      },
+      "maxRegistrations": {
+        "label": "Max registrations (optional)",
+        "placeholder": "No limit"
+      },
+      "submit": "Create policy",
+      "cancel": "Cancel",
+      "success": "Access policy created successfully",
+      "error": "Error creating policy: {message}"
+    },
+    "batches": {
+      "title": "Code batches",
+      "count": "{count} batch(es) created",
+      "createButton": "Create batch",
+      "dialog": {
+        "title": "Create code batch",
+        "description": "Generate multiple invitation codes at once."
+      },
+      "form": {
+        "quantity": "Number of codes",
+        "usesPerCode": "Uses per code",
+        "submit": "Generate codes"
+      },
+      "success": "Code batch created successfully",
+      "error": "Error creating batch: {message}",
+      "copySuccess": "Code copied to clipboard",
+      "loading": "Loading code batches...",
+      "batchTitle": "Batch #{id}",
+      "batchSummary": "{total} codes · {used} used",
+      "table": {
+        "code": "Code",
+        "status": "Status",
+        "uses": "Uses",
+        "actions": "Actions"
+      },
+      "codeStatus": {
+        "UNUSED": "Available",
+        "PARTIALLY_USED": "Partially used",
+        "USED": "Used",
+        "EXPIRED": "Expired",
+        "PAUSED": "Paused"
+      },
+      "uses": "{used} / {total}",
+      "actions": {
+        "copy": "Copy"
+      },
+      "more": "And {count} more code(s)...",
+      "empty": "No code batches created"
+    },
+    "invites": {
+      "title": "Email invitations",
+      "count": "{count} invitation(s) sent",
+      "createButton": "Create invitation",
+      "dialog": {
+        "title": "Create email invitation",
+        "description": "Send a personalized invitation to an email address."
+      },
+      "form": {
+        "email": "Email address",
+        "placeholder": "user@example.com",
+        "submit": "Send invitation"
+      },
+      "createSuccess": "Invitation created successfully",
+      "createError": "Error creating invitation: {message}",
+      "resendSuccess": "Invitation resent",
+      "resendError": "Error resending invitation: {message}",
+      "loading": "Loading invitations...",
+      "table": {
+        "email": "Email",
+        "status": "Status",
+        "sent": "Sent",
+        "expires": "Expires",
+        "actions": "Actions"
+      },
+      "status": {
+        "PENDING": "Pending",
+        "ACCEPTED": "Accepted",
+        "EXPIRED": "Expired"
+      },
+      "sentCount": "Sent {count} time(s)",
+      "noExpiration": "No expiration",
+      "actions": {
+        "resend": "Resend"
+      },
+      "empty": "No invitations created"
+    }
+  },
+  "fixtures": {
+    "title": "Fixtures",
+    "description": "Manage matches, schedules, and results for your seasons.",
+    "sync": {
+      "title": "Fixtures synchronization",
+      "description": "Sync matches from your external provider (API-Football, Sportmonks)",
+      "button": "Sync now",
+      "success": "{count} matches synced",
+      "error": "Sync error: {message}"
+    },
+    "tabs": {
+      "upcoming": "Upcoming",
+      "live": "Live"
+    },
+    "empty": {
+      "upcoming": {
+        "title": "No upcoming matches",
+        "description": "Sync fixtures from your external provider to get started."
+      },
+      "live": {
+        "title": "No live matches",
+        "description": "Live matches will appear here once they start."
+      }
+    },
+    "table": {
+      "date": "Date",
+      "match": "Match",
+      "round": "Round",
+      "status": "Status",
+      "predictions": "Predictions",
+      "score": "Score",
+      "liveBadge": "LIVE"
+    },
+    "status": {
+      "locked": "Locked",
+      "open": "Open"
+    }
+  },
+  "pools": {
+    "title": "Pools",
+    "description": "Manage your active and inactive pools.",
+    "create": "Create pool",
+    "empty": {
+      "title": "No pools created",
+      "description": "Start by creating your first pool to manage predictions.",
+      "cta": "Create first pool"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "noBrand": "No brand"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete pool \"{name}\"?",
+      "deleteSuccess": "Pool deleted successfully",
+      "deleteError": "Error deleting pool: {message}"
+    },
+    "stats": {
+      "registrations": "{count} registrations",
+      "prizes": "{count} prizes"
+    }
+  },
+  "demo": {
+    "cardTitle": "Pool configuration",
+    "cardDescription": "Configure access and rules for your pool",
+    "bannerTitle": "Demo mode",
+    "bannerDescription": "This is a sample form showcasing enhanced UI components",
+    "poolNameLabel": "Pool name",
+    "poolNamePlaceholder": "World Cup 2026",
+    "accessTypeLabel": "Access type",
+    "accessTypePlaceholder": "Select type",
+    "accessTypeOptions": {
+      "public": "Public",
+      "code": "By code",
+      "invite": "By invitation"
+    },
+    "helper": "Examples of saving with different toast patterns",
+    "buttons": {
+      "manual": "Save (Manual)",
+      "promise": "Save (Promise)"
+    },
+    "toasts": {
+      "successTitle": "Configuration saved",
+      "successDescription": "Changes applied successfully",
+      "errorTitle": "Could not save",
+      "errorDescription": "An error occurred while saving the configuration",
+      "loading": "Saving configuration...",
+      "success": "Configuration saved successfully!",
+      "error": "Error saving configuration"
+    }
+  },
+  "metadata": {
+    "title": {
+      "default": "{appName} · Admin",
+      "template": "%s | {appName} Admin"
+    },
+    "description": "{brand} · Admin panel",
+    "keywords": "admin, pools, brands, analytics"
+  }
+}

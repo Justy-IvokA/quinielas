@@ -17,7 +17,15 @@
         "name": "next"
       }
     ],
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@admin/*": ["src/*"],
+      "@admin/trpc": ["src/trpc/react.ts"],
+      "@admin/navigation": ["src/i18n/navigation"],
+      "@qp/config": ["../../packages/config/src/index.ts"],
+      "@qp/config/*": ["../../packages/config/src/*"]
+    }
   },
   "include": [
     "**/*.cjs",

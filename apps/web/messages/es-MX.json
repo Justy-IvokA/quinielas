@@ -1,0 +1,204 @@
+{
+  "common": {
+    "appName": "Quinielas WL",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "actions": "Acciones",
+    "noResults": "No se encontraron resultados",
+    "selectLanguage": "Seleccionar idioma"
+  },
+  "nav": {
+    "home": "Inicio",
+    "pools": "Quinielas",
+    "leaderboard": "Tabla de posiciones",
+    "fixtures": "Partidos",
+    "rules": "Reglas",
+    "register": "Registrarse",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "profile": "Perfil",
+    "admin": "Administración"
+  },
+  "home": {
+    "hero": {
+      "title": "Bienvenido a {brandName}",
+      "subtitle": "La plataforma de quinielas deportivas más completa",
+      "cta": "Únete a la quiniela demo",
+      "learnMore": "Conoce más",
+      "platformLabel": "Plataforma White-Label",
+      "healthOnline": "Servicios en línea",
+      "healthIssue": "Servicios con incidencia",
+      "healthChecking": "Comprobando estado…",
+      "multiTenantBadge": "Multi-tenant",
+      "realTimeBadge": "Tiempo real"
+    },
+    "features": {
+      "multiTenant": {
+        "title": "Pools multi-tenant",
+        "description": "Lanza quinielas para tus marcas con reglas, premios y acceso personalizados."
+      },
+      "realTime": {
+        "title": "Resultados en tiempo real",
+        "description": "Ingesta automática de fixtures y marcadores para mantener a tu comunidad informada."
+      },
+      "leaderboard": {
+        "title": "Leaderboard auditable",
+        "description": "Puntos exactos, diferenciales y auditorías completas para cada jornada."
+      }
+    },
+    "techFeatures": {
+      "secure": "Seguro & Auditable",
+      "multiTenant": "Multi-tenant",
+      "whiteLabel": "White-label",
+      "apiFirst": "API-first"
+    },
+    "devInfo": {
+      "title": "Listo para desarrollo",
+      "description": "Todo configurado para iniciar. Ejecuta los comandos y explora la experiencia demo.",
+      "runDev": "pnpm dev",
+      "localUrl": "http://localhost:3000"
+    }
+  },
+  "stats": {
+    "title": "Estadísticas en tiempo real",
+    "activePools": "Quinielas activas",
+    "totalPlayers": "Jugadores totales",
+    "matchesTracked": "Partidos rastreados",
+    "prizesAwarded": "Premios otorgados",
+    "activeUsers": "Usuarios activos",
+    "poolsCreated": "Quinielas creadas",
+    "predictions": "Predicciones",
+    "uptime": "Uptime"
+  },
+  "register": {
+    "title": "Registro",
+    "subtitle": "Únete a la quiniela",
+    "form": {
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "phone": "Teléfono",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "inviteCode": "Código de invitación",
+      "acceptTerms": "Acepto los términos y condiciones",
+      "submit": "Registrarse"
+    },
+    "validation": {
+      "nameRequired": "El nombre es requerido",
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Correo electrónico inválido",
+      "passwordRequired": "La contraseña es requerida",
+      "passwordMinLength": "La contraseña debe tener al menos 8 caracteres",
+      "passwordsMustMatch": "Las contraseñas deben coincidir",
+      "termsRequired": "Debes aceptar los términos y condiciones"
+    },
+    "success": "Registro exitoso. Revisa tu correo para verificar tu cuenta.",
+    "error": "Error al registrarse. Por favor, intenta de nuevo.",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "loginLink": "Inicia sesión aquí"
+  },
+  "pool": {
+    "title": "Quiniela",
+    "description": "Descripción de la quiniela",
+    "rules": "Reglas",
+    "prizes": "Premios",
+    "participants": "Participantes",
+    "startDate": "Fecha de inicio",
+    "endDate": "Fecha de finalización",
+    "status": {
+      "upcoming": "Próximamente",
+      "active": "Activa",
+      "completed": "Finalizada",
+      "cancelled": "Cancelada"
+    },
+    "join": "Unirse",
+    "leave": "Salir",
+    "joined": "Te has unido",
+    "full": "Quiniela llena"
+  },
+  "predictions": {
+    "title": "Predicciones",
+    "makeYourPrediction": "Haz tu predicción",
+    "homeTeam": "Equipo local",
+    "awayTeam": "Equipo visitante",
+    "score": "Marcador",
+    "locked": "Bloqueado",
+    "saved": "Guardado",
+    "save": "Guardar predicción",
+    "edit": "Editar predicción",
+    "deadline": "Fecha límite",
+    "points": "Puntos",
+    "exactScore": "Marcador exacto",
+    "correctSign": "Signo correcto",
+    "goalDifference": "Diferencia de goles"
+  },
+  "leaderboard": {
+    "title": "Tabla de posiciones",
+    "rank": "Posición",
+    "player": "Jugador",
+    "points": "Puntos",
+    "exactScores": "Marcadores exactos",
+    "correctSigns": "Signos correctos",
+    "matches": "Partidos",
+    "lastUpdated": "Última actualización",
+    "live": "En vivo",
+    "final": "Final"
+  },
+  "matches": {
+    "title": "Partidos",
+    "upcoming": "Próximos",
+    "live": "En vivo",
+    "finished": "Finalizados",
+    "kickoff": "Inicio",
+    "venue": "Estadio",
+    "competition": "Competición",
+    "season": "Temporada",
+    "round": "Jornada",
+    "status": {
+      "scheduled": "Programado",
+      "live": "En vivo",
+      "halftime": "Medio tiempo",
+      "finished": "Finalizado",
+      "postponed": "Pospuesto",
+      "cancelled": "Cancelado"
+    }
+  },
+  "errors": {
+    "generic": "Algo salió mal. Por favor, intenta de nuevo.",
+    "notFound": "No se encontró la página.",
+    "unauthorized": "No tienes autorización para acceder a esta página.",
+    "forbidden": "Acceso prohibido.",
+    "serverError": "Error del servidor. Por favor, intenta más tarde.",
+    "networkError": "Error de conexión. Verifica tu conexión a internet.",
+    "validationError": "Error de validación. Verifica los datos ingresados."
+  },
+  "footer": {
+    "copyright": "© {year} {appName}. Todos los derechos reservados.",
+    "privacy": "Privacidad",
+    "terms": "Términos",
+    "contact": "Contacto",
+    "about": "Acerca de"
+  },
+  "metadata": {
+    "title": {
+      "default": "{appName} · {brandName}",
+      "template": "%s | {appName}"
+    },
+    "description": "Plataforma white-label de quinielas deportivas para marcas. Predicciones, leaderboards y premios.",
+    "keywords": "quiniela, predicciones, deportes, mundial, futbol"
+  }
+}

@@ -1,0 +1,17 @@
+
+> @qp/worker@0.0.1 lint C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker
+> eslint .
+
+
+C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\index.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\index.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker'
+
+C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\jobs\lock-predictions.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\jobs\lock-predictions.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker'
+
+C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\jobs\sync-fixtures.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker\src\jobs\sync-fixtures.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker'
+
+✖ 3 problems (3 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

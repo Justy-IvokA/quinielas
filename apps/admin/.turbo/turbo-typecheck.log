@@ -1,0 +1,19 @@
+
+> @qp/admin@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\apps\admin
+> tsc --noEmit
+
+app/access/components/access-policy-form.tsx(4,25): error TS2307: Cannot find module 'react-hook-form' or its corresponding type declarations.
+app/access/components/access-policy-form.tsx(50,40): error TS2345: Argument of type '{ accessType: "PUBLIC" | "CODE" | "EMAIL_INVITE"; requireCaptcha: boolean; requireEmailVerification: boolean; maxRegistrations?: number; poolId: string; }' is not assignable to parameter of type '{ tenantId: string; poolId: string; accessType: "PUBLIC" | "CODE" | "EMAIL_INVITE"; requireCaptcha?: boolean | undefined; requireEmailVerification?: boolean | undefined; domainAllowList?: string[] | undefined; ... 5 more ...; windowEnd?: Date | undefined; }'.
+  Property 'tenantId' is missing in type '{ accessType: "PUBLIC" | "CODE" | "EMAIL_INVITE"; requireCaptcha: boolean; requireEmailVerification: boolean; maxRegistrations?: number; poolId: string; }' but required in type '{ tenantId: string; poolId: string; accessType: "PUBLIC" | "CODE" | "EMAIL_INVITE"; requireCaptcha?: boolean | undefined; requireEmailVerification?: boolean | undefined; domainAllowList?: string[] | undefined; ... 5 more ...; windowEnd?: Date | undefined; }'.
+app/access/components/access-policy-manager.tsx(4,22): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
+app/access/components/access-policy-manager.tsx(65,43): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(66,35): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(72,46): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(76,46): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(78,14): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(81,48): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(88,8): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(94,47): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(99,8): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/access-policy-manager.tsx(105,53): error TS18048: 'accessPolicy' is possibly 'undefined'.
+app/access/components/code-batch-manager.tsx(4,25): error TS2307: Cannot find module 'react-hook-form' or its corresponding type declarations.

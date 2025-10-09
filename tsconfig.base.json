@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@qp/api/*": ["packages/api/src/*"],
+      "@qp/api": ["packages/api/src/index.ts"],
+      "@qp/auth/*": ["packages/auth/src/*"],
+      "@qp/auth": ["packages/auth/src/index.ts"],
+      "@qp/branding/*": ["packages/branding/src/*"],
+      "@qp/branding": ["packages/branding/src/index.ts"],
+      "@qp/config/*": ["packages/config/src/*"],
+      "@qp/db/*": ["packages/db/src/*"],
+      "@qp/db": ["packages/db/src/index.ts"],
+      "@qp/scoring/*": ["packages/scoring/src/*"],
+      "@qp/ui/*": ["packages/ui/src/*"],
+      "@qp/ui": ["packages/ui/src/index.ts"],
+      "@qp/utils/*": ["packages/utils/src/*"],
+      "@qp/utils": ["packages/utils/src/index.ts"]
+    }
+  }
+}

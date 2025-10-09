@@ -1,0 +1,28 @@
+{
+  "name": "quinielas-wl",
+  "private": true,
+  "packageManager": "pnpm@9.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Justy-IvokA/quinielas.git"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "turbo run format",
+    "db:generate": "pnpm --filter @qp/db exec prisma generate",
+    "db:push": "pnpm --filter @qp/db exec prisma db push",
+    "seed": "pnpm --filter @qp/db run seed",
+    "npm:package_versions": "npm view tailwindcss versions"
+  },
+  "dependencies": {
+    "@qp/db": "workspace:*"
+  },
+  "devDependencies": {
+    "turbo": "^2.1.1",
+    "typescript": "^5.9.3"
+  }
+}

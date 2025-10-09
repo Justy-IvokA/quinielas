@@ -1,0 +1,15 @@
+node_modules
+.pnp.cjs
+.pnp.loader.mjs
+pnpm-lock.yaml
+.next
+out
+dist
+build
+.env*
+.prisma
+coverage
+reports
+.turbo
+**/.turbo
+*.tsbuildinfo

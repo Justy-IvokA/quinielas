@@ -1,0 +1,107 @@
+# .windsurfrules — Quinielas White‑Label (Multi‑tenant)
+
+## Project Identity
+- Name: Quinielas WL (white‑label) — multi‑tenant sports prediction platform.
+- Owner: Victor Mancera (Agencia).
+- Vision: White‑label engagement platform for brands to run prediction pools (quinielas) across multiple sports. Each client (tenant) gets custom branding, URLs, and access policies. Data (fixtures/results) syncs from an external sports API; scoring and leaderboards are computed automatically.
+
+## Primary Goals (MVP for FIFA World Cup 2026)
+1) Multi‑tenant foundation: tenants, brands, users/roles (superadmin, tenant_admin, tenant_editor, player).
+2) Pool (quiniela) lifecycle: create pool for a season/competition; configure rules; set prizes; define access policy (public, code, email invite).
+3) Registration flows: public, invite code, and email invitation + token verification.
+4) Fixtures ingestion: sync Season/Teams/Matches from an external provider (API‑Football or SportMonks via RapidAPI key).
+5) Predictions & scoring: lock at kickoff; apply rule template (exact=5, sign=3, bonus diff=1); produce leaderboard.
+6) Branding & theming: per‑tenant/per‑brand CSS tokens (colors, logo, typography) via domain/subdomain or path param.
+7) Auditability & snapshots: score audits and leaderboard snapshots; basic anti‑abuse (rate limit, captcha toggle).
+
+## Non‑Goals (MVP)
+- Payment processing, gambling/betting flows, or paid entries.
+- Complex anti‑fraud (device graphs); only lightweight fingerprints/logs.
+- Mobile apps native; prioritize responsive web.
+- Advanced social features (comments/DMs).
+
+## Tech Stack / Architecture
+- Monorepo: Turborepo + PNPM workspaces.
+- Apps:
+  - `apps/web`: player‑facing Next.js (App Router).
+  - `apps/admin`: admin/client panel (Next.js).
+  - `apps/worker`: background jobs (fixtures sync, scoring, email batches).
+- Packages:
+  - `packages/api`: tRPC routers (server‑side only).
+  - `packages/db`: Prisma client + schema + migrations + seed.
+  - `packages/auth`: Auth.js config/adapters.
+  - `packages/ui`: shared UI lib (Tailwind + Radix/shadcn).
+  - `packages/branding`: theming resolver (CSS variables + asset map).
+  - `packages/scoring`: rule engine and tie‑break logic.
+  - `packages/utils` and `packages/config`: shared utils and config presets.
+- Database: PostgreSQL (row‑level multi‑tenant via `tenantId` fields).
+- Auth: Auth.js (email magic link or OAuth when available).
+- External data: API‑Football or SportMonks (RapidAPI compatible).
+- Emails: SMTP provider (templating with MJML / React Email).
+- Dev Env: Node 20+, PNPM 9+.
+
+## Repository Conventions
+- TypeScript strict mode ON; ESLint + Prettier from `packages/config`.
+- Path aliases via TS config; no relative hell (`@qp/db`, `@qp/api`, etc.).
+- Commit: Conventional Commits (`feat:`, `fix:`, `chore:`…). Small PRs (≤300 LOC) preferred.
+- Testing: Vitest + Playwright (critical flows: registration, prediction lock, scoring).
+- Env handling: `.env` files per app; never commit secrets. Use `ZOD` to parse env at runtime.
+
+## Data Model (Prisma summary)
+- Tenancy: `Tenant`, `Brand`, `TenantMember(Role)`.
+- Pools: `Pool` (per season/competition), `AccessPolicy(AccessType)`, `Registration`.
+- Invitations: `Invitation(EMAIL)`, `CodeBatch`, `InviteCode`.
+- Sports catalog: `Sport`, `Competition`, `Season`, `Team`, `TeamSeason`, `Match(MatchStatus)`.
+- Predictions & scoring: `Prediction` (unique per user/pool/match), `ScoreAudit`, `LeaderboardSnapshot`, `Prize`, `PrizeAward`.
+- External mapping: `ExternalSource`, `ExternalMap` (provider IDs).
+- Logging: `AuditLog` (actions, IP, meta).
+
+## Access & Security Rules
+- Access policy per pool: PUBLIC | CODE | EMAIL_INVITE; options: captcha on/off, email verification, domain allow‑list, user cap, date window.
+- Registration uniqueness: `@@unique([userId, poolId])` in `Registration`.
+- Prediction lock: `locked=true` at match kickoff (cron or DB trigger via worker).
+- Rate‑limit: per IP/email; captcha adaptive on anomalies.
+- Email invite tokens: expirable (24–72h), single‑use; re‑send with backoff.
+- Code batches: per‑code cap; statuses (UNUSED/PARTIALLY_USED/USED/EXPIRED/PAUSED).
+- Audit everything (create/update/delete, scoring runs).
+
+## Scoring Engine (baseline)
+- Exact score = 5 points; correct sign (1X2) = 3; goal diff bonus = 1.
+- Tie‑breakers: more exacts > more signs > points in “premium matches” > custom tie‑breaker question.
+- Engine must be deterministic and auditable (persist rule set snapshot in `ScoreAudit` per run).
+
+## UX Requirements
+- `/[brand]/[pool]` landing: hero (logo/colors), prizes summary, CTA (join), rules link.
+- Registration: minimal friction; show access method clearly; support magic link email when possible.
+- Player dashboard: fixtures table with lock states, prediction inputs, and running tally.
+- Leaderboard: live (with “pending matches” state) + final snapshot view.
+- Admin panel: create pool wizard, access configuration, codes/invites management, prizes, and basic analytics.
+
+## I18N / Locales
+- Base: es‑MX (default) and en‑US later. Keep strings in a locale file, do not hardcode copy in components.
+
+## Observability
+- Basic request logging and error boundaries.
+- DB query tracing (optional) for heavy pages (leaderboard, fixtures).
+- Metrics: registrations/day, invite open/click/activation, prediction completion rate, peak QPS on kickoff.
+
+## CI/CD
+- Pipelines per app; `db:migrate` gated behind approval.
+- Preview deploys per PR.
+- Seed script for demo tenant + World Cup 2026 season.
+
+## Third‑party
+- Sports API: provider interface with adapters (`api‑football`, `sportmonks`); DO NOT hard‑couple domain code to a single provider.
+- Email: provider abstraction to swap (e.g., SES, Resend, Mailgun).
+
+## Legal / Compliance Notes (guidance, not legal advice)
+- Free entry; skill‑based scoring; clear T&Cs to avoid gambling classification.
+- Privacy: consent and deletion; store minimal PII; purge invites beyond retention window.
+
+## Windsurf Agent Guidance
+- Respect this ruleset; ask clarifying Qs only when blocking.
+- Prefer incremental, test‑backed changes; create or update tests per feature.
+- Keep adapters isolated (fixtures, email) and inject via DI or simple provider registry.
+- For public APIs, generate typed clients and narrow the surface in `packages/api` routers.
+- If schema changes, include corresponding migration and `seed` updates.
+- Optimize later; first ensure correctness, locking behavior, and auditability.

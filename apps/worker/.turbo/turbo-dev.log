@@ -1,0 +1,15 @@
+
+> @qp/worker@0.0.1 dev C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker
+> tsx watch src/index.ts
+
+🚀 Worker starting...
+✅ Worker jobs scheduled successfully
+  - Lock predictions: every 1 minute
+  - Score finals: every 5 minutes
+  - Leaderboard snapshots: every 10 minutes
+  - Fixtures sync: every 15 minutes
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...

@@ -1,0 +1,516 @@
+// Prisma schema for Quinielas WL multi-tenant platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TenantRole {
+  SUPERADMIN
+  TENANT_ADMIN
+  TENANT_EDITOR
+  PLAYER
+}
+
+enum AccessType {
+  PUBLIC
+  CODE
+  EMAIL_INVITE
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+enum CodeBatchStatus {
+  UNUSED
+  PARTIALLY_USED
+  USED
+  EXPIRED
+  PAUSED
+}
+
+enum InviteCodeStatus {
+  UNUSED
+  PARTIALLY_USED
+  USED
+  EXPIRED
+  PAUSED
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  EXPIRED
+}
+
+model Tenant {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  name        String
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  brands      Brand[]
+  members     TenantMember[]
+  pools       Pool[]
+  auditLogs   AuditLog[]
+  accessPolicies        AccessPolicy[]
+  registrations         Registration[]
+  invitations           Invitation[]
+  codeBatches           CodeBatch[]
+  inviteCodes           InviteCode[]
+  predictions           Prediction[]
+  scoreAudits           ScoreAudit[]
+  leaderboardSnapshots  LeaderboardSnapshot[]
+  prizes                Prize[]
+  prizeAwards           PrizeAward[]
+
+  @@index([slug])
+}
+
+model Brand {
+  id          String   @id @default(cuid())
+  tenantId    String
+  slug        String
+  name        String
+  description String?
+  logoUrl     String?
+  theme       Json?
+  domains     String[] @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pools  Pool[]
+
+  @@unique([tenantId, slug])
+}
+
+model User {
+  id            String          @id @default(cuid())
+  email         String          @unique
+  phone         String?         @unique
+  phoneVerified Boolean         @default(false)
+  name          String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  lastSignInAt  DateTime?
+
+  memberships TenantMember[]
+  registrations Registration[]
+  predictions  Prediction[]
+  prizeAwards  PrizeAward[]
+  auditLogs    AuditLog[]      @relation("AuditActor")
+  targetLogs   AuditLog[]      @relation("AuditTarget")
+
+  @@index([phone])
+}
+
+model TenantMember {
+  id        String     @id @default(cuid())
+  tenantId  String
+  userId    String
+  role      TenantRole
+  createdAt DateTime   @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId])
+  @@index([userId, tenantId])
+}
+
+model Sport {
+  id        String         @id @default(cuid())
+  slug      String         @unique
+  name      String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  competitions Competition[]
+  teams        Team[]
+}
+
+model Competition {
+  id        String   @id @default(cuid())
+  sportId   String
+  slug      String
+  name      String
+  logoUrl   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sport   Sport   @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  seasons Season[]
+
+  @@unique([sportId, slug])
+}
+
+model Season {
+  id             String      @id @default(cuid())
+  competitionId  String
+  name           String
+  year           Int
+  startsAt       DateTime?
+  endsAt         DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  matches     Match[]
+  pools       Pool[]
+  teamSeasons TeamSeason[]
+
+  @@unique([competitionId, name])
+  @@unique([competitionId, year])
+}
+
+model Team {
+  id          String       @id @default(cuid())
+  sportId     String
+  slug        String
+  name        String
+  shortName   String?
+  logoUrl     String?
+  countryCode String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  sport       Sport        @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  seasons     TeamSeason[]
+  homeMatches Match[]      @relation("HomeTeam")
+  awayMatches Match[]      @relation("AwayTeam")
+
+  @@unique([sportId, slug])
+}
+
+model TeamSeason {
+  id        String   @id @default(cuid())
+  teamId    String
+  seasonId  String
+  createdAt DateTime @default(now())
+
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  @@unique([teamId, seasonId])
+}
+
+model Match {
+  id           String      @id @default(cuid())
+  seasonId     String
+  round        Int?
+  matchday     Int?
+  status       MatchStatus @default(SCHEDULED)
+  kickoffTime  DateTime
+  homeTeamId   String
+  awayTeamId   String
+  homeScore    Int?
+  awayScore    Int?
+  venue        String?
+  locked       Boolean     @default(false)
+  finishedAt   DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  season   Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  homeTeam Team   @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam Team   @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  predictions Prediction[]
+
+  @@unique([seasonId, round, homeTeamId, awayTeamId])
+  @@index([seasonId, kickoffTime])
+  @@index([status])
+}
+
+model Pool {
+  id            String        @id @default(cuid())
+  tenantId      String
+  brandId       String?
+  seasonId      String
+  name          String
+  slug          String
+  description   String?
+  prizeSummary  String?
+  ruleSet       Json?
+  isActive      Boolean       @default(true)
+  isPublic      Boolean       @default(false)
+  startDate     DateTime?
+  endDate       DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  brand  Brand? @relation(fields: [brandId], references: [id])
+  season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+
+  accessPolicy AccessPolicy?
+  registrations Registration[]
+  prizes        Prize[]
+  predictions   Prediction[]
+  scoreAudits   ScoreAudit[]
+  leaderboards  LeaderboardSnapshot[]
+  invitations   Invitation[]
+
+  @@unique([tenantId, slug])
+  @@index([seasonId])
+}
+
+model AccessPolicy {
+  id                       String     @id @default(cuid())
+  poolId                   String     @unique
+  tenantId                 String
+  accessType               AccessType @default(PUBLIC)
+  requireCaptcha           Boolean    @default(false)
+  requireEmailVerification Boolean    @default(false)
+  domainAllowList          String[]   @default([])
+  maxRegistrations         Int?
+  registrationStartDate    DateTime?
+  registrationEndDate      DateTime?
+  userCap                  Int?
+  windowStart              DateTime?
+  windowEnd                DateTime?
+  createdAt                DateTime   @default(now())
+  updatedAt                DateTime   @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool Pool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  codeBatches CodeBatch[]
+  invitations Invitation[]
+
+  @@index([tenantId])
+}
+
+model Registration {
+  id        String   @id @default(cuid())
+  poolId    String
+  userId    String
+  tenantId  String
+  displayName String?
+  email      String?
+  emailVerified Boolean @default(false)
+  phone      String?
+  phoneVerified Boolean @default(false)
+  inviteCodeId String?
+  invitationId String?
+  joinedAt  DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool Pool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inviteCode InviteCode? @relation(fields: [inviteCodeId], references: [id], onDelete: SetNull)
+  invitation Invitation? @relation(fields: [invitationId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, poolId])
+  @@index([poolId])
+  @@index([tenantId, poolId])
+}
+
+model Invitation {
+  id         String    @id @default(cuid())
+  poolId     String
+  accessPolicyId String
+  tenantId   String
+  email      String
+  token      String    @unique
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  status     InvitationStatus @default(PENDING)
+  sentCount  Int      @default(0)
+  lastSentAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool Pool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  accessPolicy AccessPolicy @relation(fields: [accessPolicyId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+
+  @@index([poolId, email])
+  @@index([tenantId, poolId])
+}
+
+model CodeBatch {
+  id              String           @id @default(cuid())
+  accessPolicyId  String
+  tenantId        String
+  name            String?
+  status          CodeBatchStatus  @default(UNUSED)
+  maxUsesPerCode  Int              @default(1)
+  totalCodes      Int
+  usedCodes       Int              @default(0)
+  description     String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  accessPolicy AccessPolicy @relation(fields: [accessPolicyId], references: [id], onDelete: Cascade)
+  codes InviteCode[]
+
+  @@index([accessPolicyId, status])
+  @@index([tenantId, accessPolicyId])
+}
+
+model InviteCode {
+  id             String          @id @default(cuid())
+  codeBatchId    String
+  tenantId       String
+  code           String
+  status         InviteCodeStatus @default(UNUSED)
+  usesPerCode    Int              @default(1)
+  usedCount      Int              @default(0)
+  expiresAt      DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  batch CodeBatch @relation(fields: [codeBatchId], references: [id], onDelete: Cascade)
+  registrations Registration[]
+
+  @@unique([codeBatchId, code])
+  @@index([status])
+  @@index([tenantId, codeBatchId])
+}
+
+model Prediction {
+  id           String    @id @default(cuid())
+  matchId      String
+  poolId       String
+  userId       String
+  tenantId     String
+  homeScore    Int
+  awayScore    Int
+  awardedPoints Int      @default(0)
+  isExact      Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  match Match @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  pool  Pool  @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, poolId, userId])
+  @@index([userId])
+  @@index([tenantId, matchId])
+}
+
+model ScoreAudit {
+  id           String   @id @default(cuid())
+  poolId       String
+  tenantId     String
+  runAt        DateTime @default(now())
+  ruleSnapshot Json
+  metadata     Json?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool Pool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+
+  @@index([poolId, runAt])
+  @@index([tenantId, runAt])
+}
+
+model LeaderboardSnapshot {
+  id        String   @id @default(cuid())
+  poolId    String
+  tenantId  String
+  createdAt DateTime @default(now())
+  data      Json
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool Pool @relation(fields: [poolId], references: [id], onDelete: Cascade)
+
+  @@index([poolId, createdAt])
+  @@index([tenantId, createdAt])
+}
+
+model Prize {
+  id          String   @id @default(cuid())
+  poolId      String
+  tenantId    String
+  position    Int
+  title       String
+  description String?
+  value       String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pool   Pool        @relation(fields: [poolId], references: [id], onDelete: Cascade)
+  awards PrizeAward[]
+
+  @@unique([poolId, position])
+  @@index([tenantId, poolId])
+}
+
+model PrizeAward {
+  id        String   @id @default(cuid())
+  prizeId   String
+  userId    String
+  tenantId  String
+  awardedAt DateTime @default(now())
+  notes     String?
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  prize Prize @relation(fields: [prizeId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([prizeId, userId])
+  @@index([tenantId, prizeId])
+}
+
+model ExternalSource {
+  id        String        @id @default(cuid())
+  name      String
+  slug      String        @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  mappings ExternalMap[]
+}
+
+model ExternalMap {
+  id          String         @id @default(cuid())
+  sourceId    String
+  entityType  String
+  entityId    String
+  externalId  String
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  source ExternalSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceId, entityType, externalId])
+  @@index([entityType, entityId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  tenantId  String
+  actorId   String?
+  userId    String?
+  action    String
+  ipAddress String?
+  userAgent String?
+  metadata  Json?
+  resourceType String?
+  resourceId   String?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actor  User?  @relation("AuditActor", fields: [actorId], references: [id], onDelete: SetNull)
+  user   User?  @relation("AuditTarget", fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, createdAt])
+}

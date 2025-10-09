@@ -1,0 +1,17 @@
+
+> @qp/auth@0.0.1 lint C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth
+> eslint .
+
+
+C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\env\index.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\env\index.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth'
+
+C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\env\schema.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\env\schema.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth'
+
+C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\index.ts
+  0:0  error  Parsing error: project was set to `true` but couldn't find any tsconfig.json relative to 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth\src\index.ts' within 'C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth'
+
+✖ 3 problems (3 errors, 0 warnings)
+
+ ELIFECYCLE  Command failed with exit code 1.

@@ -7,7 +7,8 @@ import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { type ReactNode } from "react";
 
-import { getDemoBranding } from "@qp/branding";
+import { applyBrandTheme, resolveTheme } from "@qp/branding";
+import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
 import { ThemeProvider, ToastProvider } from "@qp/ui";
 
 import { webEnv } from "@web/env";
@@ -23,8 +24,6 @@ const manrope = Manrope({
   display: "swap",
   weight: ["400", "500", "600", "700", "800"],
 });
-
-const branding = getDemoBranding();
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -52,14 +51,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-
   const t = await getTranslations({ locale, namespace: "metadata" });
+
+  // Resolve brand from host for metadata
+  const { headers } = await import("next/headers");
+  const headersList = await headers();
+  const host = headersList.get("host") || "localhost";
+  const { brand } = await resolveTenantAndBrandFromHost(host);
+  
+  const brandName = brand?.name || webEnv.NEXT_PUBLIC_APP_NAME;
 
   return {
     title: {
       default: t("title.default", {
         appName: webEnv.NEXT_PUBLIC_APP_NAME,
-        brandName: branding.brand.name,
+        brandName,
       }),
       template: t("title.template", { appName: webEnv.NEXT_PUBLIC_APP_NAME }),
     },
@@ -84,7 +90,7 @@ export async function generateMetadata({
       siteName: webEnv.NEXT_PUBLIC_APP_NAME,
       title: t("title.default", {
         appName: webEnv.NEXT_PUBLIC_APP_NAME,
-        brandName: branding.brand.name,
+        brandName,
       }),
       description: t("description"),
       images: [
@@ -92,7 +98,7 @@ export async function generateMetadata({
           url: "/og-image.png",
           width: 1200,
           height: 630,
-          alt: branding.brand.name,
+          alt: brandName,
         },
       ],
     },
@@ -100,7 +106,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("title.default", {
         appName: webEnv.NEXT_PUBLIC_APP_NAME,
-        brandName: branding.brand.name,
+        brandName,
       }),
       description: t("description"),
       images: ["/og-image.png"],
@@ -131,11 +137,28 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  // Resolve brand from host for logo
+  const { headers } = await import("next/headers");
+  const headersList = await headers();
+  let host = headersList.get("host") || "localhost";
+  if (host.includes(":")) {
+    host = host.split(":")[0];
+  }
+  const { brand } = await resolveTenantAndBrandFromHost(host);
+
+  // Note: Brand theme is now injected client-side via BrandThemeInjector component
+  // This ensures the theme is available when the page renders
+  // The layout only provides default theme as fallback
+  const brandThemeStyle = applyBrandTheme(null);
+
   // Load messages for the current locale
   const messages = await getMessages();
 
   return (
     <html lang={locale} suppressHydrationWarning className={manrope.variable}>
+      <head>
+        <style id="brand-theme">{brandThemeStyle}</style>
+      </head>
       <body
         className="min-h-screen bg-background text-foreground antialiased font-sans"
         suppressHydrationWarning
@@ -153,7 +176,10 @@ export default async function LocaleLayout({
           <ThemeProvider>
             <ToastProvider>
               <TrpcProvider>
-                <SiteHeader />
+                <SiteHeader 
+                  brandName={brand?.name || webEnv.NEXT_PUBLIC_APP_NAME}
+                  logoUrl={brand?.theme && typeof brand.theme === 'object' && 'logo' in brand.theme ? (brand.theme as any).logo : null}
+                />
                 <main className="min-h-screen flex flex-col">{children}</main>
               </TrpcProvider>
             </ToastProvider>

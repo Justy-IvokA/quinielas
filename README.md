@@ -207,13 +207,26 @@ pnpm --filter @qp/config test
 - ✅ Env parser validation (`packages/config/src/__tests__/env.test.ts`)
 - ✅ Health router (`packages/api/src/__tests__/health.test.ts`)
 
-## 📖 Next Steps
+## 📖 Documentation
 
-### Predictions & Scoring
-- [ ] Prediction CRUD (create, update before lock)
-- [ ] Scoring engine (apply rules, calculate points)
-- [ ] Leaderboard generation (with tie-breakers)
-- [ ] Score audit trail
+### ✅ Fixtures & Predictions (COMPLETE)
+- ✅ **[FIXTURES_QUICK_START.md](./FIXTURES_QUICK_START.md)** - 5-minute setup guide
+- ✅ **[FIXTURES_IMPLEMENTATION.md](./FIXTURES_IMPLEMENTATION.md)** - Complete technical reference
+- ✅ **[INSTALLATION_STEPS.md](./INSTALLATION_STEPS.md)** - Step-by-step installation
+- ✅ **[apps/worker/README.md](./apps/worker/README.md)** - Worker jobs reference
+- ✅ **[FIXTURES_COMPLETE_SUMMARY.md](./FIXTURES_COMPLETE_SUMMARY.md)** - Implementation summary
+
+### Features Implemented
+- ✅ Prediction CRUD (create, update before lock)
+- ✅ Scoring engine (apply rules, calculate points)
+- ✅ Leaderboard generation (with tie-breakers)
+- ✅ Score audit trail
+- ✅ API-Football provider integration
+- ✅ Real-time locking mechanism
+- ✅ Live leaderboard with auto-refresh
+- ✅ Admin fixtures management
+
+## 📖 Next Steps
 
 ### Email & Notifications
 - [ ] Email templates (MJML / React Email)

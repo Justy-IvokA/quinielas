@@ -118,7 +118,7 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} suppressHydrationWarning className={manrope.variable}>
       <head>
-        <div dangerouslySetInnerHTML={{ __html: brandThemeStyle }} />
+        <style id="brand-theme">{brandThemeStyle}</style>
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased font-sans" suppressHydrationWarning>
         <SpeculationRules

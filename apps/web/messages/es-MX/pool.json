@@ -1,0 +1,89 @@
+{
+  "fixtures": {
+    "title": "Partidos y Pronósticos",
+    "description": "Ingresa tus pronósticos antes del inicio de cada partido",
+    "saveAll": "Guardar Todos",
+    "save": "Guardar",
+    "noPrediction": "Sin pronóstico",
+    "auth": {
+      "required": {
+        "title": "Inicia sesión para continuar",
+        "description": "Debes iniciar sesión para ver y hacer pronósticos"
+      },
+      "signIn": "Iniciar Sesión"
+    },
+    "registration": {
+      "required": {
+        "title": "Únete a esta quiniela",
+        "description": "Debes registrarte en esta quiniela para hacer pronósticos"
+      },
+      "join": "Unirse a la Quiniela"
+    },
+    "empty": {
+      "title": "No hay partidos disponibles",
+      "description": "Los partidos aparecerán aquí cuando estén disponibles"
+    },
+    "table": {
+      "time": "Hora",
+      "match": "Partido",
+      "prediction": "Pronóstico",
+      "result": "Resultado",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "status": {
+      "open": "Abierto",
+      "locked": "Bloqueado",
+      "live": "En Vivo",
+      "finished": "Finalizado"
+    },
+    "tooltip": {
+      "locksAt": "Se bloquea al iniciar el partido"
+    },
+    "save": {
+      "success": "Pronóstico guardado correctamente"
+    },
+    "bulkSave": {
+      "success": "Se guardaron {count} pronósticos",
+      "partialError": "{count} pronósticos no se pudieron guardar"
+    },
+    "validation": {
+      "incomplete": "Ingresa ambos marcadores",
+      "noPredictions": "No hay pronósticos para guardar"
+    }
+  },
+  "leaderboard": {
+    "title": "Tabla de Posiciones",
+    "description": "Clasificación general de participantes",
+    "live": "EN VIVO",
+    "final": "FINAL",
+    "liveDescription": "Actualizándose en tiempo real",
+    "finalDescription": "Clasificación final de la temporada",
+    "refresh": "Actualizar",
+    "anonymous": "Anónimo",
+    "empty": {
+      "title": "Aún no hay clasificación",
+      "description": "La tabla de posiciones aparecerá cuando haya pronósticos calificados"
+    },
+    "tabs": {
+      "current": "Actual",
+      "history": "Historial"
+    },
+    "table": {
+      "rank": "Pos",
+      "player": "Jugador",
+      "points": "Puntos",
+      "exact": "Exactos",
+      "sign": "Signos",
+      "predictions": "Pronósticos",
+      "liveBadge": "EN VIVO"
+    },
+    "showing": "Mostrando {shown} de {total} participantes",
+    "snapshots": {
+      "title": "Historial de Clasificaciones",
+      "description": "Clasificaciones guardadas anteriormente",
+      "entries": "{count} participantes",
+      "view": "Ver"
+    }
+  }
+}

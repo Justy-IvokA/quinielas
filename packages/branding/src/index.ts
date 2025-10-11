@@ -1,3 +1,4 @@
 export * from "./types";
 export * from "./demo";
 export * from "./resolveTheme";
+export * from "./colorUtils";

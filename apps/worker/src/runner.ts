@@ -7,12 +7,18 @@ import { lockPredictionsJob } from "./jobs/lock-predictions";
 import { syncFixturesJob } from "./jobs/sync-fixtures";
 import { scoreFinalJob } from "./jobs/score-final";
 import { leaderboardSnapshotJob } from "./jobs/leaderboard-snapshot";
+import { purgeInvitations } from "./jobs/purge-invitations";
+import { purgeAuditLogs } from "./jobs/purge-audit-logs";
+import { purgeTokens } from "./jobs/purge-tokens";
 
 const jobs = {
   "lock-predictions": lockPredictionsJob,
   "sync-fixtures": syncFixturesJob,
   "score-final": scoreFinalJob,
-  "leaderboard-snapshot": leaderboardSnapshotJob
+  "leaderboard-snapshot": leaderboardSnapshotJob,
+  "purge-invitations": purgeInvitations,
+  "purge-audit-logs": purgeAuditLogs,
+  "purge-tokens": purgeTokens,
 };
 
 async function runJob(jobName: string, args: string[]) {

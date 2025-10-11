@@ -5,7 +5,9 @@
   "type": "module",
   "main": "src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./sports": "./src/sports/index.ts"
   },
   "scripts": {
     "build": "tsc --build",

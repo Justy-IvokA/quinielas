@@ -10,6 +10,106 @@ const buttonVariants = cva(
   "group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[10px] text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-30 relative",
   {
     variants: {
+      color: {
+        primary: [
+          // Base colors
+          "bg-brand-default",
+          "text-brand",
+          // Hover state
+          "enabled:hover:bg-brand-emphasis",
+          // Focus state
+          "focus-visible:outline-none",
+          "focus-visible:ring-0",
+          "focus-visible:shadow-button-solid-brand-focused",
+          // Border
+          "border border-brand-default",
+          // Disabled
+          "disabled:opacity-30",
+          // Shadows and effects
+          "shadow-button-solid-brand-default",
+          "enabled:active:shadow-button-solid-brand-active",
+          "enabled:hover:shadow-button-solid-brand-hover",
+          "transition-shadow",
+          "transition-transform",
+          "duration-100",
+        ],
+
+        secondary: [
+          // Base colors and border
+          "bg-default",
+          "text-default",
+          "border",
+          "border-default",
+          // Hover state
+          "enabled:hover:bg-muted",
+          "enabled:hover:text-emphasis",
+          // Disabled
+          "disabled:opacity-30",
+          // Focus state
+          "focus-visible:bg-subtle",
+          "focus-visible:outline-none",
+          "focus-visible:ring-0",
+          "focus-visible:shadow-outline-gray-focused",
+          // Shadows and effects
+          "shadow-outline-gray-rested",
+          "enabled:hover:shadow-outline-gray-hover",
+          "enabled:active:shadow-outline-gray-active",
+          "transition-shadow",
+          "duration-200",
+        ],
+
+        minimal: [
+          // Base color
+          "text-subtle",
+          "border border-transparent",
+          // Hover
+          "enabled:hover:bg-subtle",
+          "enabled:hover:text-emphasis",
+          "enabled:hover:border-subtle hover:border",
+          // Disabled
+          "disabled:opacity-30",
+          // Focus
+          "focus-visible:bg-subtle",
+          "focus-visible:outline-none",
+          "focus-visible:ring-0",
+          "focus-visible:border-subtle",
+          "focus-visible:shadow-button-outline-gray-focused",
+
+          // Shadows and effects
+          "enabled:active:shadow-outline-gray-active",
+          "transition-shadow",
+          "duration-200",
+        ],
+
+        destructive: [
+          // Base colors and border
+          "border",
+          "border-default",
+          "text-error",
+          // Hover state
+          "dark:hover:text-red-100",
+          "hover:border-semantic-error",
+          "hover:bg-error",
+          // Focus state
+          "focus-visible:text-red-700",
+          "focus-visible:bg-error",
+          "focus-visible:outline-none",
+          "focus-visible:ring-0",
+          "focus-visible:shadow-button-outline-red-focused",
+          // Disabled state
+          "disabled:bg-red-100",
+          "disabled:border-red-200",
+          "disabled:text-red-700",
+          "disabled:hover:border-red-200",
+          "disabled:opacity-30",
+          // Shadows and effects
+          "shadow-outline-red-rested",
+          "enabled:hover:shadow-outline-red-hover",
+          "enabled:active:shadow-outline-red-active",
+          "transition-shadow",
+          "duration-200",
+        ],
+      },
       variant: {
         default: [
           "bg-primary text-primary-foreground border border-primary",
@@ -111,6 +211,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       variant,
       size,
+      color,
       asChild = false,
       loading = false,
       StartIcon,
@@ -158,7 +259,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Link
           href={href}
           shallow={shallow}
-          className={cn(buttonVariants({ variant, size, loading }), className)}
+          className={cn(buttonVariants({ variant, size, loading, color }), className)}
         >
           {content}
         </Link>
@@ -169,7 +270,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return (
         <Slot
           ref={ref}
-          className={cn(buttonVariants({ variant, size, loading }), className)}
+          className={cn(buttonVariants({ variant, size, loading, color }), className)}
           {...props}
         >
           {children}
@@ -181,7 +282,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         disabled={isDisabled}
-        className={cn(buttonVariants({ variant, size, loading }), className)}
+        className={cn(buttonVariants({ variant, size, loading, color }), className)}
         {...props}
       >
         {content}

@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@qp/api": "workspace:*",
+    "@qp/auth": "workspace:*",
     "@qp/branding": "workspace:*",
     "@qp/ui": "workspace:*",
     "@qp/utils": "workspace:*",
@@ -20,6 +21,7 @@
     "@trpc/client": "^11.6.0",
     "@trpc/react-query": "^11.6.0",
     "@trpc/server": "^11.6.0",
+    "next-auth": "^5.0.0-beta.4",
     "lucide-react": "^0.468.0",
     "next": "^15.5.4",
     "next-intl": "^4.3.12",

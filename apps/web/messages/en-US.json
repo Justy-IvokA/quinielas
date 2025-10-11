@@ -200,5 +200,52 @@
     },
     "description": "White-label sports prediction platform for brands. Predictions, leaderboards, and prizes.",
     "keywords": "pool, predictions, sports, world cup, soccer"
+  },
+  "examplePage": {
+    "metadata": {
+      "title": "{appName} - Example Page",
+      "description": "Demonstration of i18n usage patterns"
+    },
+    "heading": {
+      "title": "{appName} - i18n Example",
+      "intro": "This page demonstrates how to use translations in your components."
+    },
+    "sections": {
+      "basic": {
+        "title": "Basic Translation",
+        "loadingLabel": "Loading text:",
+        "submitLabel": "Submit button:",
+        "cancelLabel": "Cancel button:"
+      },
+      "nested": {
+        "title": "Nested Translations",
+        "homeLabel": "Home:",
+        "registerLabel": "Register:",
+        "poolsLabel": "Pools:"
+      },
+      "navigation": {
+        "title": "Locale-Aware Navigation",
+        "description": "These links automatically include the current locale prefix:"
+      },
+      "client": {
+        "title": "Client Component",
+        "description": "See the LocaleSwitcher in the header for a client component example."
+      },
+      "code": {
+        "title": "Code Examples",
+        "serverTitle": "Server Component",
+        "clientTitle": "Client Component",
+        "navigationTitle": "Navigation",
+        "navigationComment": "// Automatically adds the locale prefix"
+      }
+    },
+    "clientSnippet": {
+      "label": "Client component text:"
+    },
+    "codeSnippets": {
+      "server": "import { useTranslations } from \"next-intl\";\n\nexport default function MyPage() {\n  const t = useTranslations(\"common\");\n  return <h1>{t(\"appName\")}</h1>;\n}",
+      "client": "\"use client\";\n\nimport { useTranslations } from \"next-intl\";\n\nexport function MyComponent() {\n  const t = useTranslations(\"common\");\n  return <button>{t(\"submit\")}</button>;\n}",
+      "navigation": "import { Link } from \"@web/i18n/navigation\";\n\n// Automatically adds the locale prefix\n<Link href=\"/register\">{tNav(\"register\")}</Link>"
+    }
   }
 }

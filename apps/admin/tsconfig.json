@@ -20,11 +20,63 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "@admin/*": ["src/*"],
-      "@admin/trpc": ["src/trpc/react.ts"],
-      "@admin/navigation": ["src/i18n/navigation"],
-      "@qp/config": ["../../packages/config/src/index.ts"],
-      "@qp/config/*": ["../../packages/config/src/*"]
+      "@admin/*": [
+        "src/*"
+      ],
+      "@admin/trpc": [
+        "src/trpc/react.ts"
+      ],
+      "@admin/navigation": [
+        "src/i18n/navigation"
+      ],
+      "@qp/api": [
+        "../../packages/api/src/index.ts"
+      ],
+      "@qp/api/*": [
+        "../../packages/api/src/*"
+      ],
+      "@qp/auth": [
+        "../../packages/auth/src/index.ts"
+      ],
+      "@qp/auth/*": [
+        "../../packages/auth/src/*"
+      ],
+      "@qp/branding": [
+        "../../packages/branding/src/index.ts"
+      ],
+      "@qp/branding/*": [
+        "../../packages/branding/src/*"
+      ],
+      "@qp/config": [
+        "../../packages/config/src/index.ts"
+      ],
+      "@qp/config/*": [
+        "../../packages/config/src/*"
+      ],
+      "@qp/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@qp/db/*": [
+        "../../packages/db/src/*"
+      ],
+      "@qp/scoring": [
+        "../../packages/scoring/src/index.ts"
+      ],
+      "@qp/scoring/*": [
+        "../../packages/scoring/src/*"
+      ],
+      "@qp/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@qp/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@qp/utils": [
+        "../../packages/utils/src/index.ts"
+      ],
+      "@qp/utils/*": [
+        "../../packages/utils/src/*"
+      ]
     }
   },
   "include": [
@@ -39,6 +91,7 @@
   ],
   "exclude": [
     "node_modules",
-    "tailwind.config.ts"
+    "tailwind.config.ts",
+    ".next"
   ]
 }

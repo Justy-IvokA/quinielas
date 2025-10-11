@@ -5,6 +5,7 @@ import { APIFootballProvider } from "./api-football";
 export * from "./provider";
 export * from "./mock";
 export * from "./api-football";
+export * from "./cache";
 
 /**
  * Get sports provider based on configuration

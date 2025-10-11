@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { prisma } from "@qp/db";
+import { getSportsProvider } from "@qp/utils/sports";
 
 import { publicProcedure, router } from "../../trpc";
 import {
@@ -133,42 +134,182 @@ export const fixturesRouter = router({
       });
     }
 
-    // TODO: Implement actual API call to external provider
-    // This is a placeholder that would be replaced with actual API integration
-    const mockFixtures = generateMockFixtures(season.id);
+    // Get competition external ID from ExternalMap
+    const competitionMap = await prisma.externalMap.findFirst({
+      where: {
+        sourceId: externalSource.id,
+        entityType: "competition",
+        entityId: season.competitionId
+      }
+    });
 
-    // Upsert fixtures
-    const results = await Promise.all(
-      mockFixtures.map(async (fixture) => {
-        return prisma.match.upsert({
-          where: {
-            seasonId_round_homeTeamId_awayTeamId: {
-              seasonId: season.id,
-              round: fixture.round,
-              homeTeamId: fixture.homeTeamId,
-              awayTeamId: fixture.awayTeamId
-            }
-          },
-          create: {
-            seasonId: fixture.seasonId,
-            round: fixture.round,
-            homeTeamId: fixture.homeTeamId,
-            awayTeamId: fixture.awayTeamId,
-            kickoffTime: fixture.kickoffTime,
-            venue: fixture.venue,
-            status: fixture.status
-          },
-          update: {
-            kickoffTime: fixture.kickoffTime,
-            venue: fixture.venue,
-            status: fixture.status
+    if (!competitionMap) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: `No external mapping found for competition ${season.competition.name}`
+      });
+    }
+
+    // Initialize sports provider
+    const provider = getSportsProvider({
+      provider: externalSource.slug as "mock" | "api-football",
+      apiKey: process.env.SPORTS_API_KEY
+    });
+
+    console.log(`[Sync] Fetching season data from ${provider.getName()}...`);
+    console.log(`[Sync] Competition external ID: ${competitionMap.externalId}, Year: ${season.year}`);
+
+    // Fetch season data from external provider
+    let seasonData;
+    try {
+      seasonData = await provider.fetchSeason({
+        competitionExternalId: competitionMap.externalId,
+        year: season.year
+      });
+    } catch (error) {
+      console.error(`[Sync] Error fetching season data:`, error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: error instanceof Error ? error.message : "Failed to fetch season data from provider"
+      });
+    }
+
+    console.log(`[Sync] Received ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`);
+
+    // Sync teams first
+    const teamIdMap = new Map<string, string>(); // externalId -> internalId
+
+    for (const teamDTO of seasonData.teams) {
+      // Find or create team
+      let team = await prisma.team.findFirst({
+        where: {
+          sportId: season.competition.sportId,
+          slug: teamDTO.name.toLowerCase().replace(/\s+/g, "-")
+        }
+      });
+
+      if (!team) {
+        team = await prisma.team.create({
+          data: {
+            sportId: season.competition.sportId,
+            slug: teamDTO.name.toLowerCase().replace(/\s+/g, "-"),
+            name: teamDTO.name,
+            shortName: teamDTO.shortName,
+            logoUrl: teamDTO.logoUrl,
+            countryCode: teamDTO.countryCode
           }
         });
-      })
-    );
+      }
+
+      // Create external mapping
+      await prisma.externalMap.upsert({
+        where: {
+          sourceId_entityType_externalId: {
+            sourceId: externalSource.id,
+            entityType: "team",
+            externalId: teamDTO.externalId
+          }
+        },
+        create: {
+          sourceId: externalSource.id,
+          entityType: "team",
+          entityId: team.id,
+          externalId: teamDTO.externalId
+        },
+        update: {
+          entityId: team.id
+        }
+      });
+
+      // Associate team with season
+      await prisma.teamSeason.upsert({
+        where: {
+          teamId_seasonId: {
+            teamId: team.id,
+            seasonId: season.id
+          }
+        },
+        create: {
+          teamId: team.id,
+          seasonId: season.id
+        },
+        update: {}
+      });
+
+      teamIdMap.set(teamDTO.externalId, team.id);
+    }
+
+    // Sync matches
+    let syncedCount = 0;
+
+    for (const matchDTO of seasonData.matches) {
+      const homeTeamId = teamIdMap.get(matchDTO.homeTeamExternalId);
+      const awayTeamId = teamIdMap.get(matchDTO.awayTeamExternalId);
+
+      if (!homeTeamId || !awayTeamId) {
+        console.warn(`[Sync] Skipping match ${matchDTO.externalId}: team mapping not found`);
+        continue;
+      }
+
+      // Upsert match
+      const match = await prisma.match.upsert({
+        where: {
+          seasonId_round_homeTeamId_awayTeamId: {
+            seasonId: season.id,
+            round: matchDTO.round,
+            homeTeamId,
+            awayTeamId
+          }
+        },
+        create: {
+          seasonId: season.id,
+          round: matchDTO.round,
+          homeTeamId,
+          awayTeamId,
+          kickoffTime: matchDTO.kickoffTime,
+          venue: matchDTO.venue,
+          status: matchDTO.status,
+          homeScore: matchDTO.homeScore,
+          awayScore: matchDTO.awayScore,
+          finishedAt: matchDTO.finishedAt
+        },
+        update: {
+          kickoffTime: matchDTO.kickoffTime,
+          venue: matchDTO.venue,
+          status: matchDTO.status,
+          homeScore: matchDTO.homeScore,
+          awayScore: matchDTO.awayScore,
+          finishedAt: matchDTO.finishedAt
+        }
+      });
+
+      // Create external mapping for match
+      await prisma.externalMap.upsert({
+        where: {
+          sourceId_entityType_externalId: {
+            sourceId: externalSource.id,
+            entityType: "match",
+            externalId: matchDTO.externalId
+          }
+        },
+        create: {
+          sourceId: externalSource.id,
+          entityType: "match",
+          entityId: match.id,
+          externalId: matchDTO.externalId
+        },
+        update: {
+          entityId: match.id
+        }
+      });
+
+      syncedCount++;
+    }
+
+    console.log(`[Sync] Successfully synced ${syncedCount} matches`);
 
     return {
-      synced: results.length,
+      synced: syncedCount,
       seasonId: season.id,
       seasonName: season.name
     };
@@ -299,20 +440,33 @@ export const fixturesRouter = router({
       },
       orderBy: { kickoffTime: "asc" }
     });
+  }),
+
+  // Get available seasons
+  getSeasons: publicProcedure.query(async () => {
+    return prisma.season.findMany({
+      include: {
+        competition: {
+          select: {
+            id: true,
+            name: true,
+            logoUrl: true
+          }
+        },
+        _count: {
+          select: {
+            matches: true
+          }
+        }
+      },
+      orderBy: { year: "desc" }
+    });
+  }),
+
+  // Get external sources
+  getExternalSources: publicProcedure.query(async () => {
+    return prisma.externalSource.findMany({
+      orderBy: { name: "asc" }
+    });
   })
 });
-
-// Helper function to generate mock fixtures (replace with actual API integration)
-function generateMockFixtures(seasonId: string): Array<{
-  seasonId: string;
-  round: number;
-  homeTeamId: string;
-  awayTeamId: string;
-  kickoffTime: Date;
-  venue: string | null;
-  status: "SCHEDULED" | "LIVE" | "FINISHED" | "POSTPONED" | "CANCELLED";
-}> {
-  // This would be replaced with actual API call to API-Football or SportMonks
-  // For now, return empty array as placeholder
-  return [];
-}

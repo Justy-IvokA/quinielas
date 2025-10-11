@@ -121,6 +121,15 @@ export type {
   SelectFieldProps,
   SelectFieldOption
 } from "./components/form";
+// Steps components
+export { Steps, Stepper, FormStep } from "./components/form/step";
+// Wizard components
+export { WizardForm, useWizardState } from "./components/wizard";
+export type {
+  WizardFormProps,
+  WizardStep,
+  WizardState
+} from "./components/wizard";
 
 // Providers
 export { ThemeProvider, useTheme } from "./providers/theme-provider";

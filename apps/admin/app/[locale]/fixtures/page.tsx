@@ -5,10 +5,11 @@ import { useTranslations } from "next-intl";
 import { FixturesManager } from "./components/fixtures-manager";
 
 export async function generateMetadata({
-  params: { locale }
+  params
 }: {
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "fixtures" });
 
   return {

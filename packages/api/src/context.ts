@@ -2,6 +2,8 @@ import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { z } from "zod";
 import { prisma } from "@qp/db";
 import type { Tenant, Brand, PrismaClient } from "@qp/db";
+import { createAuthConfig, createAuthInstance } from "@qp/auth";
+import type { Session } from "@qp/auth";
 
 // Environment schema
 const envSchema = z.object({
@@ -22,14 +24,8 @@ export type Env = z.infer<typeof envSchema>;
 // Parse and validate environment variables
 export const env = envSchema.parse(process.env);
 
-// Session type (placeholder for Auth.js integration)
-export interface Session {
-  user: {
-    id: string;
-    email: string;
-    name?: string | null;
-  };
-}
+// Auth config (reusable)
+export const authConfig = createAuthConfig({ prisma });
 
 export interface AppContext {
   prisma: PrismaClient;
@@ -38,11 +34,13 @@ export interface AppContext {
   brand: Brand | null;
   session: Session | null;
   req?: Request;
+  ip: string | null;
+  userAgent: string | null;
 }
 
 /**
  * Resolve tenant and brand from request
- * Priority: host domain > path segment > default
+ * Uses the robust host-based resolution strategy
  */
 async function resolveTenantAndBrand(req?: Request): Promise<{
   tenant: Tenant | null;
@@ -54,77 +52,47 @@ async function resolveTenantAndBrand(req?: Request): Promise<{
 
   try {
     const url = new URL(req.url);
-    const hostname = url.hostname;
-
-    // Try to find brand by domain
-    const brandByDomain = await prisma.brand.findFirst({
-      where: {
-        domains: {
-          has: hostname
-        }
-      },
-      include: {
-        tenant: true
-      }
-    });
-
-    if (brandByDomain) {
-      return {
-        tenant: brandByDomain.tenant,
-        brand: brandByDomain
-      };
-    }
-
-    // Try to extract from path: /[tenantSlug]/[brandSlug]/...
-    const pathSegments = url.pathname.split("/").filter(Boolean);
-    if (pathSegments.length >= 2) {
-      const [tenantSlug, brandSlug] = pathSegments;
-
-      const brand = await prisma.brand.findFirst({
-        where: {
-          slug: brandSlug,
-          tenant: {
-            slug: tenantSlug
-          }
-        },
-        include: {
-          tenant: true
-        }
-      });
-
-      if (brand) {
-        return {
-          tenant: brand.tenant,
-          brand
-        };
-      }
-    }
-
-    // Fallback: try to get demo tenant for development
-    if (env.NODE_ENV === "development") {
-      const demoTenant = await prisma.tenant.findUnique({
-        where: { slug: "demo" }
-      });
-
-      if (demoTenant) {
-        const demoBrand = await prisma.brand.findFirst({
-          where: {
-            tenantId: demoTenant.id,
-            slug: "default"
-          }
-        });
-
-        return {
-          tenant: demoTenant,
-          brand: demoBrand
-        };
-      }
-    }
+    const { resolveTenantAndBrandFromHost } = await import("./lib/host-tenant");
+    
+    const result = await resolveTenantAndBrandFromHost(url.hostname, url.pathname);
+    
+    return {
+      tenant: result.tenant,
+      brand: result.brand
+    };
   } catch (error) {
-    console.error("Error resolving tenant/brand:", error);
+    console.error("[context] Error resolving tenant/brand:", error);
+    return { tenant: null, brand: null };
   }
+}
 
-  return { tenant: null, brand: null };
+/**
+ * Extract IP address from request headers
+ */
+function getIpAddress(req?: Request): string | null {
+  if (!req) return null;
+  
+  // Check common proxy headers
+  const forwarded = req.headers.get('x-forwarded-for');
+  if (forwarded) {
+    return forwarded.split(',')[0].trim();
+  }
+  
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) {
+    return realIp;
+  }
+  
+  // Fallback to connection info (may not be available in all environments)
+  return null;
+}
+
+/**
+ * Extract user agent from request headers
+ */
+function getUserAgent(req?: Request): string | null {
+  if (!req) return null;
+  return req.headers.get('user-agent');
 }
 
 /**
@@ -133,11 +101,12 @@ async function resolveTenantAndBrand(req?: Request): Promise<{
 export const createContext = async (opts?: FetchCreateContextFnOptions): Promise<AppContext> => {
   const req = opts?.req;
 
+  // Get session from Auth.js
+  const auth = createAuthInstance(authConfig);
+  const session = await auth();
+
   // Resolve tenant and brand
   const { tenant, brand } = await resolveTenantAndBrand(req);
-
-  // TODO: Get session from Auth.js
-  const session: Session | null = null;
 
   return {
     prisma,
@@ -145,7 +114,9 @@ export const createContext = async (opts?: FetchCreateContextFnOptions): Promise
     tenant,
     brand,
     session,
-    req
+    req,
+    ip: getIpAddress(req),
+    userAgent: getUserAgent(req)
   };
 };
 
@@ -159,5 +130,7 @@ export const createTestContext = (overrides?: Partial<AppContext>): AppContext =
   brand: null,
   session: null,
   req: undefined,
+  ip: null,
+  userAgent: null,
   ...overrides
 });

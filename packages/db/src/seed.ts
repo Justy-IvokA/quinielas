@@ -1,25 +1,187 @@
 /* eslint-disable no-console */
-import { PrismaClient, AccessType, MatchStatus } from "@prisma/client";
+import { PrismaClient, AccessType, MatchStatus, PrizeType } from "@prisma/client";
 
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === "development" ? ["query", "info", "warn", "error"] : ["warn", "error"]
 });
 
+/**
+ * Demo theme with dark mode support and hero assets
+ * Uses HSL format for Tailwind CSS variables
+ */
 const demoTheme = {
-  logo: "/demo/logo.svg",
-  colors: {
-    primary: "#0ea5e9",
-    secondary: "#111827",
-    background: "#ffffff",
-    foreground: "#0f172a"
+  name: "Demo Theme",
+  slug: "demo-default",
+  tokens: {
+    colors: {
+      background: "0 0% 100%",
+      foreground: "224 71% 4%",
+      primary: "199 84% 55%",
+      primaryForeground: "0 0% 100%",
+      secondary: "222 47% 11%",
+      secondaryForeground: "0 0% 100%",
+      accent: "199 84% 90%",
+      accentForeground: "199 84% 25%",
+      muted: "210 40% 96%",
+      mutedForeground: "215 16% 47%",
+      destructive: "0 84% 60%",
+      destructiveForeground: "0 0% 98%",
+      border: "214 32% 91%",
+      ring: "199 84% 55%",
+      input: "214 32% 91%",
+      card: "0 0% 100%",
+      cardForeground: "224 71% 4%",
+      popover: "0 0% 100%",
+      popoverForeground: "224 71% 4%"
+    },
+    radius: "0.75rem"
+  },
+  darkTokens: {
+    colors: {
+      background: "224 71% 4%",
+      foreground: "210 40% 98%",
+      card: "224 71% 4%",
+      cardForeground: "210 40% 98%",
+      popover: "224 71% 4%",
+      popoverForeground: "210 40% 98%",
+      primary: "199 84% 65%",
+      primaryForeground: "224 71% 4%",
+      secondary: "215 28% 17%",
+      secondaryForeground: "210 40% 98%",
+      muted: "215 28% 17%",
+      mutedForeground: "217 33% 64%",
+      accent: "215 28% 17%",
+      accentForeground: "210 40% 98%",
+      border: "215 28% 17%",
+      input: "215 28% 17%",
+      ring: "199 84% 55%"
+    }
   },
   typography: {
-    fontFamily: "Inter, ui-sans-serif, system-ui"
+    sans: "Inter, ui-sans-serif, system-ui",
+    heading: "Poppins, ui-sans-serif, system-ui"
+  },
+  heroAssets: {
+    video: false,
+    assetUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1920&h=1080&fit=crop",
+    fallbackImageUrl: null
   }
 };
 
 async function main() {
   console.log("🌱 Seeding Quinielas WL demo data...");
+
+  // ========================================
+  // 1. SUPERADMIN & AGENCIA TENANT
+  // ========================================
+  console.log("📦 Creating Agencia tenant and SUPERADMIN...");
+
+  const agenciaTenant = await prisma.tenant.upsert({
+    where: { slug: "innotecnia" },
+    update: {
+      name: "Innotecnia"
+    },
+    create: {
+      slug: "innotecnia",
+      name: "Innotecnia",
+      description: "Tenant de Innotecnia para gestión global del sistema"
+    }
+  });
+
+  const agenciaTheme = {
+    name: "Innotecnia Theme",
+    slug: "innotecnia-default",
+    tokens: {
+      colors: {
+        background: "0 0% 100%",
+        foreground: "222 47% 11%",
+        primary: "258 90% 66%",
+        primaryForeground: "0 0% 100%",
+        secondary: "217 33% 17%",
+        secondaryForeground: "210 40% 98%",
+        accent: "258 90% 95%",
+        accentForeground: "258 90% 30%",
+        muted: "210 40% 96%",
+        mutedForeground: "215 16% 47%",
+        destructive: "0 84% 60%",
+        destructiveForeground: "0 0% 98%",
+        border: "214 32% 91%",
+        ring: "258 90% 66%",
+        input: "214 32% 91%",
+        card: "0 0% 100%",
+        cardForeground: "222 47% 11%",
+        popover: "0 0% 100%",
+        popoverForeground: "222 47% 11%"
+      },
+      radius: "0.5rem"
+    },
+    darkTokens: {
+      colors: {
+        background: "222 47% 11%",
+        foreground: "210 40% 98%",
+        primary: "258 90% 70%",
+        primaryForeground: "222 47% 11%"
+      }
+    },
+    typography: {
+      sans: "Inter, ui-sans-serif, system-ui",
+      heading: "Inter, ui-sans-serif, system-ui"
+    },
+    heroAssets: {
+      video: false,
+      assetUrl: null,
+      fallbackImageUrl: null
+    }
+  };
+
+  const agenciaBrand = await prisma.brand.upsert({
+    where: { tenantId_slug: { tenantId: agenciaTenant.id, slug: "innotecnia" } },
+    update: {
+      name: "Innotecnia",
+      theme: agenciaTheme
+    },
+    create: {
+      tenantId: agenciaTenant.id,
+      slug: "innotecnia",
+      name: "Innotecnia",
+      description: "La Innovación es lo que distingue al líder de sus seguidores.",
+      logoUrl: "/agencia/logo.svg",
+      theme: agenciaTheme,
+      domains: []
+    }
+  });
+
+  const superAdminUser = await prisma.user.upsert({
+    where: { email: "vemancera@gmail.com" },
+    update: {
+      name: "Víctor E. Mancera G."
+    },
+    create: {
+      email: "vemancera@gmail.com",
+      name: "Víctor E. Mancera G."
+    }
+  });
+
+  await prisma.tenantMember.upsert({
+    where: { tenantId_userId: { tenantId: agenciaTenant.id, userId: superAdminUser.id } },
+    update: { role: "SUPERADMIN" },
+    create: {
+      tenantId: agenciaTenant.id,
+      userId: superAdminUser.id,
+      role: "SUPERADMIN"
+    }
+  });
+
+  console.log("✅ SUPERADMIN created:", {
+    email: "vemancera@gmail.com",
+    tenant: agenciaTenant.slug,
+    role: "SUPERADMIN"
+  });
+
+  // ========================================
+  // 2. DEMO TENANT
+  // ========================================
+  console.log("📦 Creating demo tenant...");
 
   const tenant = await prisma.tenant.upsert({
     where: { slug: "demo" },
@@ -132,6 +294,11 @@ async function main() {
     }
   });
 
+  // ========================================
+  // 3. EXTERNAL SOURCE & MAPPINGS
+  // ========================================
+  console.log("🔗 Creating external source and mappings...");
+
   const externalSource = await prisma.externalSource.upsert({
     where: { slug: "api-football" },
     update: {
@@ -143,7 +310,76 @@ async function main() {
     }
   });
 
-  // Create demo users
+  // Map Competition to API-Football
+  // World Cup 2026 = League ID 1 in API-Football (example)
+  await prisma.externalMap.upsert({
+    where: {
+      sourceId_entityType_externalId: {
+        sourceId: externalSource.id,
+        entityType: "competition",
+        externalId: "1" // API-Football World Cup ID
+      }
+    },
+    update: {
+      entityId: competition.id,
+      metadata: {
+        name: "FIFA World Cup",
+        type: "Cup",
+        country: "World"
+      }
+    },
+    create: {
+      sourceId: externalSource.id,
+      entityType: "competition",
+      entityId: competition.id,
+      externalId: "1",
+      metadata: {
+        name: "FIFA World Cup",
+        type: "Cup",
+        country: "World"
+      }
+    }
+  });
+
+  // Map Season to API-Football
+  await prisma.externalMap.upsert({
+    where: {
+      sourceId_entityType_externalId: {
+        sourceId: externalSource.id,
+        entityType: "season",
+        externalId: "2026" // API-Football season year
+      }
+    },
+    update: {
+      entityId: season.id,
+      metadata: {
+        year: 2026,
+        current: false
+      }
+    },
+    create: {
+      sourceId: externalSource.id,
+      entityType: "season",
+      entityId: season.id,
+      externalId: "2026",
+      metadata: {
+        year: 2026,
+        current: false
+      }
+    }
+  });
+
+  console.log("✅ External mappings created:", {
+    source: externalSource.slug,
+    competition: "FIFA World Cup → ID 1",
+    season: "2026 → ID 2026"
+  });
+
+  // ========================================
+  // 4. DEMO USERS
+  // ========================================
+  console.log("👥 Creating demo users...");
+
   const demoUser1 = await prisma.user.upsert({
     where: { email: "player1@demo.com" },
     update: {
@@ -185,7 +421,11 @@ async function main() {
     }
   });
 
-  // Create tenant memberships
+  // ========================================
+  // 5. TENANT MEMBERSHIPS
+  // ========================================
+  console.log("🔐 Creating tenant memberships...");
+
   await prisma.tenantMember.upsert({
     where: { tenantId_userId: { tenantId: tenant.id, userId: adminUser.id } },
     update: { role: "TENANT_ADMIN" },
@@ -206,7 +446,11 @@ async function main() {
     }
   });
 
-  // Create demo teams
+  // ========================================
+  // 6. DEMO TEAMS
+  // ========================================
+  console.log("⚽ Creating demo teams...");
+
   const teamMexico = await prisma.team.upsert({
     where: { sportId_slug: { sportId: sport.id, slug: "mexico" } },
     update: {
@@ -279,7 +523,11 @@ async function main() {
     }
   });
 
-  // Link teams to season
+  // ========================================
+  // 7. LINK TEAMS TO SEASON
+  // ========================================
+  console.log("🔗 Linking teams to season...");
+
   await prisma.teamSeason.upsert({
     where: { teamId_seasonId: { teamId: teamMexico.id, seasonId: season.id } },
     update: {},
@@ -304,7 +552,11 @@ async function main() {
     create: { teamId: teamArgentina.id, seasonId: season.id }
   });
 
-  // Create demo matches with new fields
+  // ========================================
+  // 8. DEMO MATCHES
+  // ========================================
+  console.log("🏟️  Creating demo matches...");
+
   const match1 = await prisma.match.upsert({
     where: {
       seasonId_round_homeTeamId_awayTeamId: {
@@ -357,65 +609,177 @@ async function main() {
     }
   });
 
-  // Create prizes with new fields
+  // ========================================
+  // 9. PRIZES
+  // ========================================
+  console.log("🏆 Creating prizes...");
+
+  // First Place - Rank 1
   await prisma.prize.upsert({
-    where: { poolId_position: { poolId: pool.id, position: 1 } },
+    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 1, rankTo: 1 } },
     update: {
+      type: PrizeType.CASH,
       title: "Primer Lugar",
       description: "Ganador del pool Mundial 2026",
       value: "$10,000 MXN",
-      imageUrl: "/prizes/gold-trophy.png"
+      imageUrl: "/prizes/gold-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 10000,
+        paymentMethod: "transfer"
+      }
     },
     create: {
       poolId: pool.id,
       tenantId: tenant.id,
-      position: 1,
+      rankFrom: 1,
+      rankTo: 1,
+      type: PrizeType.CASH,
       title: "Primer Lugar",
       description: "Ganador del pool Mundial 2026",
       value: "$10,000 MXN",
-      imageUrl: "/prizes/gold-trophy.png"
+      imageUrl: "/prizes/gold-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 10000,
+        paymentMethod: "transfer"
+      }
     }
   });
 
+  // Second Place - Rank 2
   await prisma.prize.upsert({
-    where: { poolId_position: { poolId: pool.id, position: 2 } },
+    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 2, rankTo: 2 } },
     update: {
+      type: PrizeType.CASH,
       title: "Segundo Lugar",
       description: "Subcampeón del pool",
       value: "$5,000 MXN",
-      imageUrl: "/prizes/silver-trophy.png"
+      imageUrl: "/prizes/silver-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 5000,
+        paymentMethod: "transfer"
+      }
     },
     create: {
       poolId: pool.id,
       tenantId: tenant.id,
-      position: 2,
+      rankFrom: 2,
+      rankTo: 2,
+      type: PrizeType.CASH,
       title: "Segundo Lugar",
       description: "Subcampeón del pool",
       value: "$5,000 MXN",
-      imageUrl: "/prizes/silver-trophy.png"
+      imageUrl: "/prizes/silver-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 5000,
+        paymentMethod: "transfer"
+      }
     }
   });
 
+  // Third Place - Rank 3
   await prisma.prize.upsert({
-    where: { poolId_position: { poolId: pool.id, position: 3 } },
+    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 3, rankTo: 3 } },
     update: {
+      type: PrizeType.CASH,
       title: "Tercer Lugar",
       description: "Tercer mejor predictor",
       value: "$2,500 MXN",
-      imageUrl: "/prizes/bronze-trophy.png"
+      imageUrl: "/prizes/bronze-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 2500,
+        paymentMethod: "transfer"
+      }
     },
     create: {
       poolId: pool.id,
       tenantId: tenant.id,
-      position: 3,
+      rankFrom: 3,
+      rankTo: 3,
+      type: PrizeType.CASH,
       title: "Tercer Lugar",
       description: "Tercer mejor predictor",
       value: "$2,500 MXN",
-      imageUrl: "/prizes/bronze-trophy.png"
+      imageUrl: "/prizes/bronze-trophy.png",
+      metadata: {
+        currency: "MXN",
+        amount: 2500,
+        paymentMethod: "transfer"
+      }
     }
   });
 
-  // Create registrations
+  // Top 10 - Ranks 4-10 (Range prize example)
+  await prisma.prize.upsert({
+    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 4, rankTo: 10 } },
+    update: {
+      type: PrizeType.DISCOUNT,
+      title: "Top 10",
+      description: "Descuento especial para próxima quiniela",
+      value: "50% OFF",
+      metadata: {
+        discountPercent: 50,
+        validFor: "next-pool",
+        expiresInDays: 90
+      }
+    },
+    create: {
+      poolId: pool.id,
+      tenantId: tenant.id,
+      rankFrom: 4,
+      rankTo: 10,
+      type: PrizeType.DISCOUNT,
+      title: "Top 10",
+      description: "Descuento especial para próxima quiniela",
+      value: "50% OFF",
+      metadata: {
+        discountPercent: 50,
+        validFor: "next-pool",
+        expiresInDays: 90
+      }
+    }
+  });
+
+  // Participation Prize - Ranks 11-50 (Experience prize example)
+  await prisma.prize.upsert({
+    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 11, rankTo: 50 } },
+    update: {
+      type: PrizeType.EXPERIENCE,
+      title: "Reconocimiento Participación",
+      description: "Acceso exclusivo a evento de cierre",
+      value: "Evento Virtual",
+      metadata: {
+        eventType: "virtual",
+        eventDate: "2026-07-22",
+        includesRecording: true
+      }
+    },
+    create: {
+      poolId: pool.id,
+      tenantId: tenant.id,
+      rankFrom: 11,
+      rankTo: 50,
+      type: PrizeType.EXPERIENCE,
+      title: "Reconocimiento Participación",
+      description: "Acceso exclusivo a evento de cierre",
+      value: "Evento Virtual",
+      metadata: {
+        eventType: "virtual",
+        eventDate: "2026-07-22",
+        includesRecording: true
+      }
+    }
+  });
+
+  // ========================================
+  // 10. REGISTRATIONS
+  // ========================================
+  console.log("📝 Creating registrations...");
+
   await prisma.registration.upsert({
     where: { userId_poolId: { userId: demoUser1.id, poolId: pool.id } },
     update: {
@@ -458,7 +822,11 @@ async function main() {
     }
   });
 
-  // Create sample predictions
+  // ========================================
+  // 11. PREDICTIONS
+  // ========================================
+  console.log("🎯 Creating sample predictions...");
+
   await prisma.prediction.upsert({
     where: {
       matchId_poolId_userId: {
@@ -503,18 +871,162 @@ async function main() {
     }
   });
 
-  console.log("✅ Seed complete", {
-    tenant: tenant.slug,
-    brand: brand.slug,
-    pool: pool.slug,
-    season: `${competition.slug}-${season.year}`,
-    users: 3,
-    teams: 4,
-    matches: 2,
-    prizes: 3,
-    registrations: 2,
-    predictions: 2
+  // ========================================
+  // SUMMARY
+  // ========================================
+  console.log("\n" + "=".repeat(60));
+  console.log("✅ SEED COMPLETE");
+  console.log("=".repeat(60));
+  console.log("\n📊 Summary:");
+  console.log("\n🔐 SUPERADMIN:");
+  console.log(`   Email: vemancera@gmail.com`);
+  console.log(`   Tenant: ${agenciaTenant.slug}`);
+  console.log(`   Role: SUPERADMIN`);
+  console.log(`   Login: Use Auth.js magic link or OAuth with this email`);
+  console.log(`   Access: Can manage all tenants via /superadmin/tenants`);
+  console.log("\n📦 Demo Tenant:");
+  console.log(`   Tenant: ${tenant.slug}`);
+  console.log(`   Brand: ${brand.slug}`);
+  console.log(`   Pool: ${pool.slug}`);
+  console.log(`   Season: ${competition.slug}-${season.year}`);
+  console.log("\n👥 Users:");
+  console.log(`   - admin@demo.com (TENANT_ADMIN in demo tenant)`);
+  console.log(`   - player1@demo.com (PLAYER in demo tenant)`);
+  console.log(`   - player2@demo.com (PLAYER in demo tenant)`);
+  console.log("\n⚽ Data:");
+  console.log(`   Teams: 4 (Mexico, USA, Canada, Argentina)`);
+  console.log(`   Matches: 2`);
+  console.log(`   Prizes: 5 (Rank 1, 2, 3, 4-10, 11-50)`);
+  console.log(`   Registrations: 2`);
+  console.log(`   Predictions: 2`);
+  console.log("\n🔗 External Mappings:");
+  console.log(`   Source: ${externalSource.slug}`);
+  console.log(`   Competition: FIFA World Cup → API-Football ID 1`);
+  console.log(`   Season: 2026 → API-Football ID 2026`);
+
+  // ========================================
+  // GLOBAL SETTINGS (COMPLIANCE)
+  // ========================================
+  console.log("\n⚙️ Seeding global settings...");
+
+  await prisma.setting.upsert({
+    where: {
+      scope_tenantId_poolId_key: {
+        scope: "GLOBAL",
+        tenantId: null,
+        poolId: null,
+        key: "antiAbuse.captchaLevel",
+      },
+    },
+    update: {},
+    create: {
+      scope: "GLOBAL",
+      key: "antiAbuse.captchaLevel",
+      value: "auto",
+    },
   });
+
+  await prisma.setting.upsert({
+    where: {
+      scope_tenantId_poolId_key: {
+        scope: "GLOBAL",
+        tenantId: null,
+        poolId: null,
+        key: "antiAbuse.rateLimit",
+      },
+    },
+    update: {},
+    create: {
+      scope: "GLOBAL",
+      key: "antiAbuse.rateLimit",
+      value: { windowSec: 60, max: 60 },
+    },
+  });
+
+  await prisma.setting.upsert({
+    where: {
+      scope_tenantId_poolId_key: {
+        scope: "GLOBAL",
+        tenantId: null,
+        poolId: null,
+        key: "privacy.ipLogging",
+      },
+    },
+    update: {},
+    create: {
+      scope: "GLOBAL",
+      key: "privacy.ipLogging",
+      value: true,
+    },
+  });
+
+  await prisma.setting.upsert({
+    where: {
+      scope_tenantId_poolId_key: {
+        scope: "GLOBAL",
+        tenantId: null,
+        poolId: null,
+        key: "privacy.cookieBanner",
+      },
+    },
+    update: {},
+    create: {
+      scope: "GLOBAL",
+      key: "privacy.cookieBanner",
+      value: true,
+    },
+  });
+
+  await prisma.setting.upsert({
+    where: {
+      scope_tenantId_poolId_key: {
+        scope: "GLOBAL",
+        tenantId: null,
+        poolId: null,
+        key: "privacy.deviceFingerprint",
+      },
+    },
+    update: {},
+    create: {
+      scope: "GLOBAL",
+      key: "privacy.deviceFingerprint",
+      value: false,
+    },
+  });
+
+  console.log("✅ Global settings created");
+
+  // ========================================
+  // DATA RETENTION POLICY (DEMO TENANT)
+  // ========================================
+  console.log("\n🗑️ Creating data retention policy...");
+
+  await prisma.dataRetentionPolicy.upsert({
+    where: {
+      tenantId_poolId: {
+        tenantId: tenant.id,
+        poolId: null,
+      },
+    },
+    update: {},
+    create: {
+      tenantId: tenant.id,
+      rules: {
+        invitesDays: 90,
+        auditDays: 365,
+        tokensDays: 30,
+      },
+    },
+  });
+
+  console.log("✅ Data retention policy created");
+
+  console.log("\n💡 Next Steps:");
+  console.log(`   1. Run: pnpm db:migrate (to apply Auth.js schema)`);
+  console.log(`   2. Set AUTH_SECRET in .env (min 32 chars)`);
+  console.log(`   3. Configure email provider or OAuth in .env`);
+  console.log(`   4. Start admin app and sign in as SUPERADMIN`);
+  console.log("\n" + "=".repeat(60) + "\n");
 }
 
 main()

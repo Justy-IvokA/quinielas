@@ -23,17 +23,37 @@ export interface BrandThemeTokens {
   radius: string;
 }
 
+export interface BrandThemeDarkTokens {
+  colors?: Partial<BrandThemeTokens["colors"]>;
+  radius?: string;
+}
+
 export interface BrandTypographyConfig {
   sans: string;
   heading: string;
+}
+
+export interface BrandHeroAssets {
+  /** Whether to use video for hero background */
+  video: boolean;
+  /** URL to video or image asset */
+  assetUrl: string | null;
+  /** Fallback image if video fails to load */
+  fallbackImageUrl?: string | null;
 }
 
 export interface BrandTheme {
   name: string;
   slug: string;
   tokens: BrandThemeTokens;
+  /** Optional dark theme overrides */
+  darkTokens?: BrandThemeDarkTokens;
   typography: BrandTypographyConfig;
   cssVariables: Record<string, string>;
+  /** Optional dark theme CSS variables */
+  darkCssVariables?: Record<string, string>;
+  /** Hero section assets configuration */
+  heroAssets?: BrandHeroAssets;
 }
 
 export interface BrandConfig {

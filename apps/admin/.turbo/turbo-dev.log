@@ -2,12 +2,12 @@
 > @qp/admin@0.0.1 dev C:\Users\victo\Documents\reactNextJS\quinielas\apps\admin
 > next dev
 
- ⚠ Port 3000 is in use by process 25052, using available port 3001 instead.
    ▲ Next.js 15.5.4
-   - Local:        http://localhost:3001
-   - Network:      http://192.168.100.3:3001
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.100.3:3000
+   - Environments: .env.local
    - Experiments (use with caution):
      · optimizePackageImports
 
  ✓ Starting...
- ✓ Ready in 3.4s
+ ✓ Ready in 3.6s

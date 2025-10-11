@@ -20,5 +20,21 @@ export const procedure = t.procedure;
 export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
+// Protected procedure (requires authentication)
+const isAuthed = t.middleware(({ ctx, next }) => {
+  if (!ctx.session?.user) {
+    throw new Error("UNAUTHORIZED");
+  }
+  return next({
+    ctx: {
+      ...ctx,
+      session: ctx.session,
+      user: ctx.session.user
+    }
+  });
+});
+
+export const protectedProcedure = t.procedure.use(isAuthed);
+
 // Re-export createCallerFactory for testing
 export const createCallerFactory = t.createCallerFactory;

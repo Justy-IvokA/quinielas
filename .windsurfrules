@@ -23,19 +23,19 @@
 ## Tech Stack / Architecture
 - Monorepo: Turborepo + PNPM workspaces.
 - Apps:
-  - `apps/web`: player‑facing Next.js (App Router).
-  - `apps/admin`: admin/client panel (Next.js).
+  - `apps/web`: player‑facing Next.js 15.5.4 (App Router).
+  - `apps/admin`: admin/client panel (Next.js 15.5.4).
   - `apps/worker`: background jobs (fixtures sync, scoring, email batches).
 - Packages:
   - `packages/api`: tRPC routers (server‑side only).
   - `packages/db`: Prisma client + schema + migrations + seed.
-  - `packages/auth`: Auth.js config/adapters.
+  - `packages/auth`: Auth.js Ver.5.0.0-beta.4 config/adapters.
   - `packages/ui`: shared UI lib (Tailwind + Radix/shadcn).
   - `packages/branding`: theming resolver (CSS variables + asset map).
   - `packages/scoring`: rule engine and tie‑break logic.
   - `packages/utils` and `packages/config`: shared utils and config presets.
 - Database: PostgreSQL (row‑level multi‑tenant via `tenantId` fields).
-- Auth: Auth.js (email magic link or OAuth when available).
+- Auth: Auth.js Ver.5.0.0-beta.4 (email magic link or OAuth when available).
 - External data: API‑Football or SportMonks (RapidAPI compatible).
 - Emails: SMTP provider (templating with MJML / React Email).
 - Dev Env: Node 20+, PNPM 9+.

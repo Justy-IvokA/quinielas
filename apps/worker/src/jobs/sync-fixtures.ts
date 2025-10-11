@@ -1,142 +1,181 @@
 import { prisma } from "@qp/db";
+import { getSportsProvider, type MatchDTO, type TeamDTO } from "@qp/utils";
 
-interface ExternalFixture {
-  externalId: string;
-  round: number;
-  homeTeamExternalId: string;
-  awayTeamExternalId: string;
-  kickoffTime: Date;
-  venue?: string;
-  status: "SCHEDULED" | "LIVE" | "FINISHED" | "POSTPONED" | "CANCELLED";
-  homeScore?: number;
-  awayScore?: number;
-}
-
-export async function syncFixturesJob(seasonId: string, externalSourceId: string) {
-  console.log(`[SyncFixtures] Starting sync for season ${seasonId} from source ${externalSourceId}`);
+export async function syncFixturesJob(params: {
+  seasonId: string;
+  competitionExternalId: string;
+  year: number;
+  providerName?: string;
+  apiKey?: string;
+}) {
+  console.log(`[SyncFixtures] Starting sync for season ${params.seasonId}`);
 
   const season = await prisma.season.findUnique({
-    where: { id: seasonId },
+    where: { id: params.seasonId },
     include: {
-      competition: true
+      competition: {
+        include: {
+          sport: true
+        }
+      }
     }
   });
 
   if (!season) {
-    throw new Error(`Season ${seasonId} not found`);
+    throw new Error(`Season ${params.seasonId} not found`);
   }
 
-  const externalSource = await prisma.externalSource.findUnique({
-    where: { id: externalSourceId }
+  // Get provider (from env or params)
+  const providerName = params.providerName || process.env.SPORTS_PROVIDER || "mock";
+  const apiKey = params.apiKey || process.env.SPORTS_API_KEY;
+
+  const provider = getSportsProvider({
+    provider: providerName as "mock" | "api-football" | "sportmonks",
+    apiKey
   });
 
-  if (!externalSource) {
-    throw new Error(`External source ${externalSourceId} not found`);
-  }
+  console.log(`[SyncFixtures] Using provider: ${provider.getName()}`);
 
-  // Get external season mapping
-  const seasonMapping = await prisma.externalMap.findFirst({
-    where: {
-      sourceId: externalSourceId,
-      entityType: "SEASON",
-      entityId: seasonId
-    }
+  // Fetch season data from provider
+  const seasonData = await provider.fetchSeason({
+    competitionExternalId: params.competitionExternalId,
+    year: params.year
   });
 
-  if (!seasonMapping) {
-    throw new Error(`No external mapping found for season ${seasonId}`);
-  }
-
-  // Fetch fixtures from external API
-  // Note: ExternalSource schema doesn't have provider/apiKey fields yet
-  // This is a placeholder for future implementation
-  const externalFixtures = await fetchFixturesFromProvider(
-    "mock",
-    "",
-    seasonMapping.externalId
+  console.log(
+    `[SyncFixtures] Fetched ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`
   );
 
-  console.log(`[SyncFixtures] Fetched ${externalFixtures.length} fixtures from external API`);
+  // Get or create external source
+  const externalSource = await prisma.externalSource.upsert({
+    where: { slug: provider.getName() },
+    create: {
+      name: provider.getName(),
+      slug: provider.getName()
+    },
+    update: {}
+  });
 
+  // Sync teams first
+  const teamIdMap = new Map<string, string>(); // externalId -> internalId
+
+  for (const teamDTO of seasonData.teams) {
+    // Check if team already exists via external mapping
+    let teamMapping = await prisma.externalMap.findFirst({
+      where: {
+        sourceId: externalSource.id,
+        entityType: "TEAM",
+        externalId: teamDTO.externalId
+      }
+    });
+
+    let teamId: string;
+
+    if (teamMapping) {
+      teamId = teamMapping.entityId;
+      // Update team info
+      await prisma.team.update({
+        where: { id: teamId },
+        data: {
+          name: teamDTO.name,
+          shortName: teamDTO.shortName,
+          logoUrl: teamDTO.logoUrl,
+          countryCode: teamDTO.countryCode
+        }
+      });
+    } else {
+      // Create new team
+      const team = await prisma.team.create({
+        data: {
+          sportId: season.competition.sportId,
+          slug: teamDTO.name.toLowerCase().replace(/\s+/g, "-"),
+          name: teamDTO.name,
+          shortName: teamDTO.shortName,
+          logoUrl: teamDTO.logoUrl,
+          countryCode: teamDTO.countryCode
+        }
+      });
+
+      teamId = team.id;
+
+      // Create external mapping
+      await prisma.externalMap.create({
+        data: {
+          sourceId: externalSource.id,
+          entityType: "TEAM",
+          entityId: teamId,
+          externalId: teamDTO.externalId
+        }
+      });
+    }
+
+    // Ensure TeamSeason exists
+    await prisma.teamSeason.upsert({
+      where: {
+        teamId_seasonId: {
+          teamId,
+          seasonId: params.seasonId
+        }
+      },
+      create: {
+        teamId,
+        seasonId: params.seasonId
+      },
+      update: {}
+    });
+
+    teamIdMap.set(teamDTO.externalId, teamId);
+  }
+
+  console.log(`[SyncFixtures] Synced ${teamIdMap.size} teams`);
+
+  // Sync matches
   let syncedCount = 0;
   let errorCount = 0;
 
-  for (const fixture of externalFixtures) {
+  for (const matchDTO of seasonData.matches) {
     try {
-      // Map external team IDs to internal team IDs
-      const homeTeamMapping = await prisma.externalMap.findFirst({
-        where: {
-          sourceId: externalSourceId,
-          entityType: "TEAM",
-          externalId: fixture.homeTeamExternalId
-        }
-      });
+      const homeTeamId = teamIdMap.get(matchDTO.homeTeamExternalId);
+      const awayTeamId = teamIdMap.get(matchDTO.awayTeamExternalId);
 
-      const awayTeamMapping = await prisma.externalMap.findFirst({
-        where: {
-          sourceId: externalSourceId,
-          entityType: "TEAM",
-          externalId: fixture.awayTeamExternalId
-        }
-      });
-
-      if (!homeTeamMapping || !awayTeamMapping) {
-        console.warn(`[SyncFixtures] Missing team mapping for fixture ${fixture.externalId}`);
-        errorCount++;
-        continue;
-      }
-
-      // Find TeamSeason records
-      const homeTeamSeason = await prisma.teamSeason.findFirst({
-        where: {
-          seasonId,
-          teamId: homeTeamMapping.entityId
-        }
-      });
-
-      const awayTeamSeason = await prisma.teamSeason.findFirst({
-        where: {
-          seasonId,
-          teamId: awayTeamMapping.entityId
-        }
-      });
-
-      if (!homeTeamSeason || !awayTeamSeason) {
-        console.warn(`[SyncFixtures] Missing TeamSeason for fixture ${fixture.externalId}`);
+      if (!homeTeamId || !awayTeamId) {
+        console.warn(`[SyncFixtures] Missing team mapping for match ${matchDTO.externalId}`);
         errorCount++;
         continue;
       }
 
       // Upsert match
-      await prisma.match.upsert({
+      const match = await prisma.match.upsert({
         where: {
           seasonId_round_homeTeamId_awayTeamId: {
-            seasonId,
-            round: fixture.round,
-            homeTeamId: homeTeamSeason.id,
-            awayTeamId: awayTeamSeason.id
+            seasonId: params.seasonId,
+            round: matchDTO.round || 1,
+            homeTeamId,
+            awayTeamId
           }
         },
         create: {
-          seasonId,
-          round: fixture.round,
-          homeTeamId: homeTeamSeason.id,
-          awayTeamId: awayTeamSeason.id,
-          kickoffTime: fixture.kickoffTime,
-          venue: fixture.venue,
-          status: fixture.status,
-          homeScore: fixture.homeScore,
-          awayScore: fixture.awayScore,
-          locked: fixture.status !== "SCHEDULED"
+          seasonId: params.seasonId,
+          round: matchDTO.round,
+          matchday: matchDTO.matchday,
+          homeTeamId,
+          awayTeamId,
+          kickoffTime: matchDTO.kickoffTime,
+          venue: matchDTO.venue,
+          status: matchDTO.status,
+          homeScore: matchDTO.homeScore,
+          awayScore: matchDTO.awayScore,
+          locked: matchDTO.status !== "SCHEDULED",
+          finishedAt: matchDTO.finishedAt
         },
         update: {
-          kickoffTime: fixture.kickoffTime,
-          venue: fixture.venue,
-          status: fixture.status,
-          homeScore: fixture.homeScore,
-          awayScore: fixture.awayScore,
-          locked: fixture.status !== "SCHEDULED",
-          ...(fixture.status === "FINISHED" && !fixture.homeScore && { finishedAt: new Date() })
+          kickoffTime: matchDTO.kickoffTime,
+          venue: matchDTO.venue,
+          status: matchDTO.status,
+          homeScore: matchDTO.homeScore,
+          awayScore: matchDTO.awayScore,
+          locked: matchDTO.status !== "SCHEDULED",
+          finishedAt: matchDTO.finishedAt
         }
       });
 
@@ -144,23 +183,25 @@ export async function syncFixturesJob(seasonId: string, externalSourceId: string
       await prisma.externalMap.upsert({
         where: {
           sourceId_entityType_externalId: {
-            sourceId: externalSourceId,
+            sourceId: externalSource.id,
             entityType: "MATCH",
-            externalId: fixture.externalId
+            externalId: matchDTO.externalId
           }
         },
         create: {
-          sourceId: externalSourceId,
+          sourceId: externalSource.id,
           entityType: "MATCH",
-          externalId: fixture.externalId,
-          entityId: `${seasonId}-${fixture.round}-${homeTeamSeason.id}-${awayTeamSeason.id}`
+          externalId: matchDTO.externalId,
+          entityId: match.id
         },
-        update: {}
+        update: {
+          entityId: match.id
+        }
       });
 
       syncedCount++;
     } catch (error) {
-      console.error(`[SyncFixtures] Error syncing fixture ${fixture.externalId}:`, error);
+      console.error(`[SyncFixtures] Error syncing match ${matchDTO.externalId}:`, error);
       errorCount++;
     }
   }
@@ -168,51 +209,10 @@ export async function syncFixturesJob(seasonId: string, externalSourceId: string
   console.log(`[SyncFixtures] Completed. Synced: ${syncedCount}, Errors: ${errorCount}`);
 
   return {
-    seasonId,
+    seasonId: params.seasonId,
     syncedCount,
     errorCount,
-    totalFixtures: externalFixtures.length
+    totalFixtures: seasonData.matches.length,
+    totalTeams: seasonData.teams.length
   };
-}
-
-async function fetchFixturesFromProvider(
-  provider: string,
-  apiKey: string,
-  externalSeasonId: string
-): Promise<ExternalFixture[]> {
-  // TODO: Implement actual API calls based on provider
-  // This is a placeholder that would be replaced with actual API integration
-
-  switch (provider) {
-    case "API_FOOTBALL":
-      return fetchFromApiFootball(apiKey, externalSeasonId);
-    case "SPORTMONKS":
-      return fetchFromSportmonks(apiKey, externalSeasonId);
-    default:
-      throw new Error(`Unsupported provider: ${provider}`);
-  }
-}
-
-async function fetchFromApiFootball(apiKey: string, seasonId: string): Promise<ExternalFixture[]> {
-  // Placeholder for API-Football integration
-  // const response = await fetch(`https://v3.football.api-sports.io/fixtures?season=${seasonId}`, {
-  //   headers: { 'x-rapidapi-key': apiKey }
-  // });
-  // const data = await response.json();
-  // return data.response.map(transformApiFootballFixture);
-
-  console.log(`[API-Football] Would fetch fixtures for season ${seasonId}`);
-  return [];
-}
-
-async function fetchFromSportmonks(apiKey: string, seasonId: string): Promise<ExternalFixture[]> {
-  // Placeholder for Sportmonks integration
-  // const response = await fetch(`https://api.sportmonks.com/v3/football/fixtures/season/${seasonId}`, {
-  //   headers: { 'Authorization': apiKey }
-  // });
-  // const data = await response.json();
-  // return data.data.map(transformSportmonksFixture);
-
-  console.log(`[Sportmonks] Would fetch fixtures for season ${seasonId}`);
-  return [];
 }

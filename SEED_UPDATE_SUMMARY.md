@@ -97,66 +97,10 @@ create: {
 ### 10. **Predictions con tenantId** ✅
 ```typescript
 // 2 predicciones creadas:
-- Player 1: Mexico 2-1 USA
-- Player 2: Mexico 1-1 USA
-```
-
----
-
-## 📦 Datos Generados por el Seed
-
-| Entidad | Cantidad | Detalles |
-|---------|----------|----------|
-| **Tenants** | 1 | demo |
-| **Brands** | 1 | default |
-| **Sports** | 1 | Football |
-| **Competitions** | 1 | FIFA World Cup (con logo) |
-| **Seasons** | 1 | World Cup 2026 |
-| **Pools** | 1 | world-cup-2026 |
-| **Access Policies** | 1 | PUBLIC |
-| **Users** | 3 | 2 players + 1 admin |
-| **Tenant Members** | 2 | 1 admin + 1 player |
-| **Teams** | 4 | MEX, USA, CAN, ARG (con logos) |
-| **Team Seasons** | 4 | Todos vinculados a 2026 |
-| **Matches** | 2 | Con round, kickoffTime, venue |
-| **Prizes** | 3 | Con position, title, value, imageUrl |
-| **Registrations** | 2 | Ambos players registrados |
-| **Predictions** | 2 | Ambos players con predicciones |
-| **External Sources** | 1 | api-football |
-
----
-
-## 🚀 Cómo Ejecutar el Seed
-
-### Opción 1: Con Reset (Recomendado)
-```bash
-cd packages/db
-pnpm prisma migrate reset
-# Esto ejecuta automáticamente el seed
-```
-
-### Opción 2: Solo Seed (sin reset)
-```bash
-cd packages/db
-pnpm prisma db seed
-```
-
-### Opción 3: Ejecutar directamente
-```bash
-cd packages/db
-pnpm tsx src/seed.ts
-```
-
----
-
-## ✅ Verificación Post-Seed
-
-Después de ejecutar el seed, verifica que todo se creó correctamente:
-
-```bash
 # Verificar en Prisma Studio
 cd packages/db
 pnpm prisma studio
+# Navigate to Registration model and verify Player 2 has Mexico 1-1 USA prediction
 ```
 
 **Navega a:**

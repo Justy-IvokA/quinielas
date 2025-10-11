@@ -4,6 +4,7 @@ import { z } from "zod";
 import { prisma } from "@qp/db";
 
 import { publicProcedure, router } from "../../trpc";
+import { withTenant } from "../../middleware/with-tenant";
 import {
   createPoolSchema,
   createPrizeSchema,
@@ -12,13 +13,14 @@ import {
 } from "./schema";
 
 export const poolsRouter = router({
-  // List pools by tenant
+  // List pools by tenant (uses ctx.tenant)
   listByTenant: publicProcedure
-    .input(z.object({ tenantId: z.string().cuid(), includeInactive: z.boolean().default(false) }))
-    .query(async ({ input }) => {
+    .use(withTenant)
+    .input(z.object({ includeInactive: z.boolean().default(false) }))
+    .query(async ({ ctx, input }) => {
       return prisma.pool.findMany({
         where: {
-          tenantId: input.tenantId,
+          tenantId: ctx.tenant.id,
           ...(input.includeInactive ? {} : { isActive: true })
         },
         include: {
@@ -64,15 +66,15 @@ export const poolsRouter = router({
     return pool;
   }),
 
-  // Get pool by slug
+  // Get pool by slug (scoped to ctx.tenant)
   getBySlug: publicProcedure
-    .input(z.object({ tenantSlug: z.string(), brandSlug: z.string(), poolSlug: z.string() }))
-    .query(async ({ input }) => {
+    .use(withTenant)
+    .input(z.object({ poolSlug: z.string() }))
+    .query(async ({ ctx, input }) => {
       const pool = await prisma.pool.findFirst({
         where: {
           slug: input.poolSlug,
-          tenant: { slug: input.tenantSlug },
-          brand: { slug: input.brandSlug }
+          tenantId: ctx.tenant.id
         },
         include: {
           tenant: { select: { name: true, slug: true } },
@@ -93,16 +95,19 @@ export const poolsRouter = router({
       return pool;
     }),
 
-  // Create pool
-  create: publicProcedure.input(createPoolSchema).mutation(async ({ input }) => {
-    // Check if slug is unique for this tenant/brand
-    const existing = await prisma.pool.findFirst({
-      where: {
-        slug: input.slug,
-        tenantId: input.tenantId,
-        brandId: input.brandId
-      }
-    });
+  // Create pool (uses ctx.tenant)
+  create: publicProcedure
+    .use(withTenant)
+    .input(createPoolSchema.omit({ tenantId: true }))
+    .mutation(async ({ ctx, input }) => {
+      // Check if slug is unique for this tenant/brand
+      const existing = await prisma.pool.findFirst({
+        where: {
+          slug: input.slug,
+          tenantId: ctx.tenant.id,
+          brandId: input.brandId
+        }
+      });
 
     if (existing) {
       throw new TRPCError({
@@ -120,7 +125,10 @@ export const poolsRouter = router({
     }
 
     return prisma.pool.create({
-      data: input,
+      data: {
+        ...input,
+        tenantId: ctx.tenant.id
+      },
       include: {
         brand: { select: { name: true } },
         season: { select: { name: true } }

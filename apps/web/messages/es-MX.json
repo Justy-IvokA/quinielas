@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "Quinielas WL",
+    "appName": "Quinielas",
     "loading": "Cargando...",
     "error": "Error",
     "success": "Éxito",
@@ -37,13 +37,15 @@
     "hero": {
       "title": "Bienvenido a {brandName}",
       "subtitle": "La plataforma de quinielas deportivas más completa",
-      "cta": "Únete a la quiniela demo",
+      "tagline": "Usa el 100% de tu branding para crear quinielas en las que pueden participar tus clientes y/o empleados. Asigna premios y reglas personalizadas.",
+      "cta": "Únete ahora",
       "learnMore": "Conoce más",
-      "platformLabel": "Plataforma White-Label",
+      "platformLabel": "Innotecnia",
       "healthOnline": "Servicios en línea",
       "healthIssue": "Servicios con incidencia",
       "healthChecking": "Comprobando estado…",
       "multiTenantBadge": "Multi-tenant",
+      "multiUserBadge": "Multi-usuario",
       "realTimeBadge": "Tiempo real"
     },
     "features": {
@@ -112,7 +114,7 @@
     "loginLink": "Inicia sesión aquí"
   },
   "pool": {
-    "title": "Quiniela",
+    "title": "Quiniela {poolSlug}",
     "description": "Descripción de la quiniela",
     "rules": "Reglas",
     "prizes": "Premios",
@@ -123,7 +125,32 @@
       "upcoming": "Próximamente",
       "active": "Activa",
       "completed": "Finalizada",
-      "cancelled": "Cancelada"
+      "cancelled": "Cancelada",
+      "expired": "Finalizada",
+      "registered": "Registrado"
+    },
+    "actions": {
+      "joinNow": "Únete ahora",
+      "joinWithCode": "Únete con código",
+      "joinWithInvite": "Únete con invitación",
+      "makePredictions": "Hacer pronósticos",
+      "viewLeaderboard": "Ver tabla",
+      "viewFinalLeaderboard": "Ver tabla final"
+    },
+    "messages": {
+      "loginRequired": "Inicia sesión para participar"
+    },
+    "stats": {
+      "participants": "participantes",
+      "prizes": "premios"
+    },
+    "sections": {
+      "prizes": "Premios",
+      "howItWorks": "¿Cómo funciona?"
+    },
+    "prize": {
+      "rank": "Lugar",
+      "ranks": "Lugares"
     },
     "join": "Unirse",
     "leave": "Salir",
@@ -200,5 +227,51 @@
     },
     "description": "Plataforma white-label de quinielas deportivas para marcas. Predicciones, leaderboards y premios.",
     "keywords": "quiniela, predicciones, deportes, mundial, futbol"
+  },
+  "examplePage": {
+    "metadata": {
+      "title": "{appName} - Página de ejemplo",
+      "description": "Demostración de patrones de uso de i18n"
+    },
+    "heading": {
+      "title": "{appName} - Ejemplo i18n",
+      "intro": "Esta página demuestra cómo usar traducciones en tus componentes."
+    },
+    "sections": {
+      "basic": {
+        "title": "Traducción básica",
+        "loadingLabel": "Texto de carga:",
+        "submitLabel": "Botón enviar:",
+        "cancelLabel": "Botón cancelar:"
+      },
+      "nested": {
+        "title": "Traducciones anidadas",
+        "homeLabel": "Inicio:",
+        "registerLabel": "Registro:",
+        "poolsLabel": "Quinielas:"
+      },
+      "navigation": {
+        "title": "Navegación según locale",
+        "description": "Estos enlaces incluyen automáticamente el prefijo del locale actual:"
+      },
+      "client": {
+        "title": "Componente cliente",
+        "description": "Consulta el selector de idioma en el header para ver un ejemplo de componente cliente."
+      },
+      "code": {
+        "title": "Ejemplos de código",
+        "serverTitle": "Componente del servidor:",
+        "clientTitle": "Componente cliente:",
+        "navigationTitle": "Navegación:"
+      }
+    },
+    "clientSnippet": {
+      "label": "Texto del componente cliente:"
+    },
+    "codeSnippets": {
+      "server": "import { useTranslations } from \"next-intl\";\n\nexport default function MyPage() {\n  const t = useTranslations(\"common\");\n  return <h1>{t(\"appName\")}</h1>;\n}",
+      "client": "\"use client\";\n\nimport { useTranslations } from \"next-intl\";\n\nexport function MyComponent() {\n  const t = useTranslations(\"common\");\n  return <button>{t(\"submit\")}</button>;\n}",
+      "navigation": "import { Link } from \"@web/i18n/navigation\";\n\n// Agrega automáticamente el prefijo del locale\n<Link href=\"/register\">{tNav(\"register\")}</Link>"
+    }
   }
 }

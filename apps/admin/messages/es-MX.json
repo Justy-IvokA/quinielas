@@ -18,6 +18,7 @@
     "dashboard": "Panel",
     "pools": "Quinielas",
     "fixtures": "Partidos",
+    "sync": "Sincronización",
     "access": "Acceso",
     "brands": "Marcas",
     "analytics": "Analítica"
@@ -284,6 +285,10 @@
       "success": "¡Configuración guardada exitosamente!",
       "error": "Error al guardar la configuración"
     }
+  },
+  "sync": {
+    "title": "Sincronización de Fixtures",
+    "description": "Monitorea y controla la sincronización con proveedores externos"
   },
   "metadata": {
     "title": {

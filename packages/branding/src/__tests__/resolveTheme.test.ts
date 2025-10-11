@@ -94,7 +94,7 @@ describe("tokensToCssVariables", () => {
 });
 
 describe("applyBrandTheme", () => {
-  it("should generate a style tag with CSS variables", () => {
+  it("should generate CSS variables string", () => {
     const theme: BrandTheme = {
       name: "Test Theme",
       slug: "test",
@@ -131,24 +131,20 @@ describe("applyBrandTheme", () => {
 
     const styleTag = applyBrandTheme(theme);
 
-    expect(styleTag).toContain('<style id="brand-theme">');
-    expect(styleTag).toContain(":root {");
+    expect(styleTag.startsWith(":root {\n")).toBe(true);
     expect(styleTag).toContain("--primary: 199 84% 55%");
     expect(styleTag).toContain("--radius: 0.75rem");
     expect(styleTag).toContain("--font-sans: Inter, system-ui");
     expect(styleTag).toContain("--font-heading: Poppins, system-ui");
-    expect(styleTag).toContain("</style>");
   });
 
   it("should use default tokens when theme is null", () => {
     const styleTag = applyBrandTheme(null);
 
-    expect(styleTag).toContain('<style id="brand-theme">');
-    expect(styleTag).toContain(":root {");
+    expect(styleTag.startsWith(":root {\n")).toBe(true);
     expect(styleTag).toContain("--background:");
     expect(styleTag).toContain("--foreground:");
     expect(styleTag).toContain("--font-sans:");
-    expect(styleTag).toContain("</style>");
   });
 
   it("should include custom brand colors", () => {
@@ -188,9 +184,11 @@ describe("applyBrandTheme", () => {
 
     const styleTag = applyBrandTheme(theme);
 
+    expect(styleTag.startsWith(":root {\n")).toBe(true);
     expect(styleTag).toContain("--primary: 280 100% 70%");
     expect(styleTag).toContain("--background: 0 0% 10%");
     expect(styleTag).toContain("--radius: 1rem");
+    expect(styleTag).toContain("--font-heading: Montserrat, sans-serif");
   });
 });
 

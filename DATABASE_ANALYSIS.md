@@ -51,7 +51,7 @@ La base de datos cubre todos los requisitos del MVP para el Mundial 2026:
 
 ## 2. Discrepancias Encontradas y Corregidas
 
-### 🔧 **10 discrepancias críticas alineadas entre Prisma ↔ tRPC**
+### 🔧 **11 discrepancias críticas alineadas entre Prisma ↔ tRPC**
 
 ### ➕ **Mejora adicional: Campo `phone` en User** (2025-10-09)
 
@@ -68,6 +68,17 @@ Agregado soporte para notificaciones por WhatsApp/SMS:
 - Cambios importantes en pools
 - Autenticación alternativa (2FA)
 
+### ➕ **Mejora adicional: Relación `externalMaps` en Competition** (2025-10-09)
+
+Agregada relación faltante para sincronización de fixtures:
+- ✅ `Competition.externalMaps` - Relación con ExternalMap
+- ✅ `ExternalMap.competition` - Relación inversa opcional
+- ✅ Named relation `"CompetitionMaps"` para type safety
+- ✅ Corrige error en `syncRouter` que referenciaba esta relación
+
+**Razón:**
+El `syncRouter` usa `competition.externalMaps` para obtener IDs externos de APIs deportivas (API-Football, SportMonks). Sin esta relación, las queries fallarían en runtime.
+
 | # | Modelo/Schema | Campo/Tipo | Problema | ✅ Solución |
 |---|---------------|------------|----------|-------------|
 | 1 | `MatchStatus` | Enum values | Tenía `IN_PROGRESS`, `COMPLETED` | Cambié a `LIVE`, `FINISHED` |
@@ -80,6 +91,7 @@ Agregado soporte para notificaciones por WhatsApp/SMS:
 | 8 | `Match` | Índice faltante | Faltaba índice por status | Agregué `@@index([status])` |
 | 9 | `Prize` | Campos | Tenía `name`, `rank` | Cambié a `position`, `title`, agregué `value`, `imageUrl` |
 | 10 | `CodeBatch` | Campo nullable | `name` era obligatorio | Cambié a `name String?` |
+| 11 | `Competition` | Relación faltante | No tenía `externalMaps` | Agregué `externalMaps ExternalMap[]` con relación inversa |
 
 ### 📝 **Schemas tRPC Actualizados**
 

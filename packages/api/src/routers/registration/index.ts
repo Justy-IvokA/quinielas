@@ -1,8 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { prisma } from "@qp/db";
 
 import { publicProcedure, router } from "../../trpc";
+import { withAuth, withTenant } from "../../middleware/with-tenant";
 import {
   checkRegistrationSchema,
   registerPublicSchema,
@@ -29,6 +31,44 @@ export const registrationRouter = router({
       registration
     };
   }),
+
+  // Check registration status by pool slug (uses ctx.tenant and ctx.session)
+  checkByPoolSlug: publicProcedure
+    .use(withTenant)
+    .use(withAuth)
+    .input(z.object({ poolSlug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Find pool in tenant
+      const pool = await prisma.pool.findFirst({
+        where: {
+          slug: input.poolSlug,
+          tenantId: ctx.tenant.id
+        }
+      });
+
+      if (!pool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Pool not found"
+        });
+      }
+
+      // Check registration
+      const registration = await prisma.registration.findUnique({
+        where: {
+          userId_poolId: {
+            userId: ctx.session.user.id,
+            poolId: pool.id
+          }
+        }
+      });
+
+      return {
+        isRegistered: !!registration,
+        registration,
+        poolId: pool.id
+      };
+    }),
 
   // Validate invite code
   validateInviteCode: publicProcedure.input(validateInviteCodeSchema).query(async ({ input }) => {

@@ -1,0 +1,38 @@
+{
+  "title": "Partidos",
+  "description": "Gestiona y sincroniza los partidos de las temporadas",
+  "sync": {
+    "title": "Sincronizar Partidos",
+    "description": "Obtén los últimos partidos y resultados del proveedor externo",
+    "button": "Sincronizar Ahora",
+    "success": "Se sincronizaron {count} partidos correctamente",
+    "error": "Error al sincronizar: {message}"
+  },
+  "tabs": {
+    "upcoming": "Próximos",
+    "live": "En Vivo"
+  },
+  "empty": {
+    "upcoming": {
+      "title": "No hay partidos próximos",
+      "description": "Los partidos programados aparecerán aquí"
+    },
+    "live": {
+      "title": "No hay partidos en vivo",
+      "description": "Los partidos en curso aparecerán aquí"
+    }
+  },
+  "table": {
+    "date": "Fecha",
+    "match": "Partido",
+    "round": "Jornada",
+    "status": "Estado",
+    "predictions": "Pronósticos",
+    "score": "Marcador",
+    "liveBadge": "EN VIVO"
+  },
+  "status": {
+    "open": "Abierto",
+    "locked": "Bloqueado"
+  }
+}

@@ -59,22 +59,20 @@ export function CreatePoolForm() {
 
   const createMutation = trpc.pools.create.useMutation({
     onSuccess: (data) => {
-      toastSuccess(`Pool "${data.name}" creado exitosamente`);
+      toastSuccess(`Quiniela "${data.name}" creada exitosamente`);
       router.push(`/pools/${data.id}`);
     },
     onError: (error) => {
-      toastError(`Error al crear pool: ${error.message}`);
+      toastError(`Error al crear quiniela: ${error.message}`);
     }
   });
 
   const onSubmit = async (data: PoolFormData) => {
-    // Mock tenant/brand/season IDs - replace with actual selectors
-    const tenantId = "demo-tenant-id";
+    // Mock brand/season IDs - replace with actual selectors
     const brandId = "demo-brand-id";
     const seasonId = "demo-season-id";
 
     await createMutation.mutateAsync({
-      tenantId,
       brandId,
       seasonId,
       name: data.name,

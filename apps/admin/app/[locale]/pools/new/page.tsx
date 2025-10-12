@@ -7,7 +7,7 @@ import { Button } from "@qp/ui";
 import { CreatePoolForm } from "./components/create-pool-form";
 
 export const metadata: Metadata = {
-  title: "Crear Pool"
+  title: "Crear Quiniela"
 };
 
 export default function NewPoolPage() {
@@ -21,9 +21,9 @@ export default function NewPoolPage() {
           </Link>
         </Button>
         <div className="flex flex-col gap-1">
-          <h1 className="text-3xl font-bold">Crear Pool</h1>
+          <h1 className="text-3xl font-bold">Crear Quiniela</h1>
           <p className="text-muted-foreground">
-            Configura un nuevo pool para tu marca y temporada.
+            Configura una nueva quiniela
           </p>
         </div>
       </header>

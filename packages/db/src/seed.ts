@@ -79,58 +79,26 @@ async function main() {
   const agenciaTenant = await prisma.tenant.upsert({
     where: { slug: "innotecnia" },
     update: {
-      name: "Innotecnia"
+      name: "Innotecnia",
+      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema."
     },
     create: {
       slug: "innotecnia",
       name: "Innotecnia",
-      description: "Tenant de Innotecnia para gestión global del sistema"
+      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema."
     }
   });
 
   const agenciaTheme = {
-    name: "Innotecnia Theme",
-    slug: "innotecnia-default",
-    tokens: {
-      colors: {
-        background: "0 0% 100%",
-        foreground: "222 47% 11%",
-        primary: "258 90% 66%",
-        primaryForeground: "0 0% 100%",
-        secondary: "217 33% 17%",
-        secondaryForeground: "210 40% 98%",
-        accent: "258 90% 95%",
-        accentForeground: "258 90% 30%",
-        muted: "210 40% 96%",
-        mutedForeground: "215 16% 47%",
-        destructive: "0 84% 60%",
-        destructiveForeground: "0 0% 98%",
-        border: "214 32% 91%",
-        ring: "258 90% 66%",
-        input: "214 32% 91%",
-        card: "0 0% 100%",
-        cardForeground: "222 47% 11%",
-        popover: "0 0% 100%",
-        popoverForeground: "222 47% 11%"
-      },
-      radius: "0.5rem"
-    },
-    darkTokens: {
-      colors: {
-        background: "222 47% 11%",
-        foreground: "210 40% 98%",
-        primary: "258 90% 70%",
-        primaryForeground: "222 47% 11%"
-      }
+    logo: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Finnovatica_banner.jpg?alt=media&token=7e3d1aac-172b-459f-9580-406771501dfd",
+    colors: {
+      primary: "#7c3aed",
+      secondary: "#1f2937",
+      background: "#ffffff",
+      foreground: "#111827"
     },
     typography: {
-      sans: "Inter, ui-sans-serif, system-ui",
-      heading: "Inter, ui-sans-serif, system-ui"
-    },
-    heroAssets: {
-      video: false,
-      assetUrl: null,
-      fallbackImageUrl: null
+      fontFamily: "Inter, ui-sans-serif, system-ui"
     }
   };
 
@@ -138,14 +106,17 @@ async function main() {
     where: { tenantId_slug: { tenantId: agenciaTenant.id, slug: "innotecnia" } },
     update: {
       name: "Innotecnia",
-      theme: agenciaTheme
+      description: "La Innovación es lo que distingue al líder de sus seguidores.",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Finnovatica_banner.jpg?alt=media&token=7e3d1aac-172b-459f-9580-406771501dfd",
+      theme: agenciaTheme,
+      domains: []
     },
     create: {
       tenantId: agenciaTenant.id,
       slug: "innotecnia",
       name: "Innotecnia",
       description: "La Innovación es lo que distingue al líder de sus seguidores.",
-      logoUrl: "/agencia/logo.svg",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Finnovatica_banner.jpg?alt=media&token=7e3d1aac-172b-459f-9580-406771501dfd",
       theme: agenciaTheme,
       domains: []
     }
@@ -154,11 +125,15 @@ async function main() {
   const superAdminUser = await prisma.user.upsert({
     where: { email: "vemancera@gmail.com" },
     update: {
-      name: "Víctor E. Mancera G."
+      name: "Víctor E. Mancera G.",
+      phone: "+522221757251",
+      phoneVerified: true
     },
     create: {
       email: "vemancera@gmail.com",
-      name: "Víctor E. Mancera G."
+      name: "Víctor E. Mancera G.",
+      phone: "+522221757251",
+      phoneVerified: true
     }
   });
 
@@ -179,36 +154,58 @@ async function main() {
   });
 
   // ========================================
-  // 2. DEMO TENANT
+  // 2. IVOKA TENANT (Customer)
   // ========================================
-  console.log("📦 Creating demo tenant...");
+  console.log("📦 Creating Ivoka tenant...");
 
   const tenant = await prisma.tenant.upsert({
-    where: { slug: "demo" },
+    where: { slug: "ivoka" },
     update: {
-      name: "Demo Tenant"
+      name: "Ivoka",
+      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc."
     },
     create: {
-      slug: "demo",
-      name: "Demo Tenant",
-      description: "Demo tenant for Quinielas WL"
+      slug: "ivoka",
+      name: "Ivoka",
+      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc."
     }
   });
 
+  const ivokaTheme = {
+    logo: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2FIvoka-Black%402x.png?alt=media&token=ca95321d-fd20-4c45-8702-6eae8c59ca39",
+    colors: {
+      accent: "#7964F2",
+      primary: "#0062FF",
+      secondary: "#FE7734",
+      background: "#FFFEF7",
+      foreground: "#1E1F1C"
+    },
+    heroAssets: {
+      video: false,
+      assetUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_bg.jpeg?alt=media&token=abeb5dbe-b395-4286-a24e-5580aeca612a",
+      fallbackImageUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fivokalogo%2Bslogan%402x.png?alt=media&token=e0580c0e-40a8-499d-8cc9-1128412ad0d5"
+    },
+    typography: {
+      fontFamily: "Manrope, ui-sans-serif, system-ui"
+    }
+  };
+
   const brand = await prisma.brand.upsert({
-    where: { tenantId_slug: { tenantId: tenant.id, slug: "default" } },
+    where: { tenantId_slug: { tenantId: tenant.id, slug: "ivoka" } },
     update: {
-      name: "Demo Brand",
-      theme: demoTheme,
+      name: "Ivoka",
+      description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Ftenant01.jpg?alt=media&token=cccc06a7-6ba2-4d27-9926-ce92c387dbd5",
+      theme: ivokaTheme,
       domains: ["localhost"]
     },
     create: {
       tenantId: tenant.id,
-      slug: "default",
-      name: "Demo Brand",
-      description: "Default brand for demo tenant",
-      logoUrl: "/demo/logo.svg",
-      theme: demoTheme,
+      slug: "ivoka",
+      name: "Ivoka",
+      description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Ftenant01.jpg?alt=media&token=cccc06a7-6ba2-4d27-9926-ce92c387dbd5",
+      theme: ivokaTheme,
       domains: ["localhost"]
     }
   });
@@ -376,10 +373,27 @@ async function main() {
   });
 
   // ========================================
-  // 4. DEMO USERS
+  // 4. IVOKA USERS
   // ========================================
-  console.log("👥 Creating demo users...");
+  console.log("👥 Creating Ivoka users...");
 
+  // TENANT_ADMIN for Ivoka
+  const adminUser = await prisma.user.upsert({
+    where: { email: "vemancera@ivoka.ai" },
+    update: {
+      name: "Eduardo Mancera G.",
+      phone: "+522213528341",
+      phoneVerified: true
+    },
+    create: {
+      email: "vemancera@ivoka.ai",
+      name: "Eduardo Mancera G.",
+      phone: "+522213528341",
+      phoneVerified: true
+    }
+  });
+
+  // Player 1
   const demoUser1 = await prisma.user.upsert({
     where: { email: "player1@demo.com" },
     update: {
@@ -395,6 +409,7 @@ async function main() {
     }
   });
 
+  // Player 2
   const demoUser2 = await prisma.user.upsert({
     where: { email: "player2@demo.com" },
     update: {
@@ -407,17 +422,6 @@ async function main() {
       name: "Demo Player 2",
       phone: "+525587654321",
       phoneVerified: true
-    }
-  });
-
-  const adminUser = await prisma.user.upsert({
-    where: { email: "admin@demo.com" },
-    update: {
-      name: "Demo Admin"
-    },
-    create: {
-      email: "admin@demo.com",
-      name: "Demo Admin"
     }
   });
 
@@ -444,6 +448,12 @@ async function main() {
       userId: demoUser1.id,
       role: "PLAYER"
     }
+  });
+
+  console.log("✅ TENANT_ADMIN created:", {
+    email: "vemancera@ivoka.ai",
+    tenant: tenant.slug,
+    role: "TENANT_ADMIN"
   });
 
   // ========================================
@@ -523,6 +533,24 @@ async function main() {
     }
   });
 
+  const teamBrasil = await prisma.team.upsert({
+    where: { sportId_slug: { sportId: sport.id, slug: "brasil" } },
+    update: {
+      name: "Brasil",
+      shortName: "BRA",
+      logoUrl: "https://flagcdn.com/w80/br.png",
+      countryCode: "BR"
+    },
+    create: {
+      sportId: sport.id,
+      slug: "brasil",
+      name: "Brasil",
+      shortName: "BRA",
+      logoUrl: "https://flagcdn.com/w80/br.png",
+      countryCode: "BR"
+    }
+  });
+
   // ========================================
   // 7. LINK TEAMS TO SEASON
   // ========================================
@@ -550,6 +578,12 @@ async function main() {
     where: { teamId_seasonId: { teamId: teamArgentina.id, seasonId: season.id } },
     update: {},
     create: { teamId: teamArgentina.id, seasonId: season.id }
+  });
+
+  await prisma.teamSeason.upsert({
+    where: { teamId_seasonId: { teamId: teamBrasil.id, seasonId: season.id } },
+    update: {},
+    create: { teamId: teamBrasil.id, seasonId: season.id }
   });
 
   // ========================================
@@ -884,15 +918,21 @@ async function main() {
   console.log(`   Role: SUPERADMIN`);
   console.log(`   Login: Use Auth.js magic link or OAuth with this email`);
   console.log(`   Access: Can manage all tenants via /superadmin/tenants`);
-  console.log("\n📦 Demo Tenant:");
+  console.log("\n🔐 TENANT_ADMIN:");
+  console.log(`   Email: vemancera@ivoka.ai`);
+  console.log(`   Tenant: ${tenant.slug}`);
+  console.log(`   Role: TENANT_ADMIN`);
+  console.log(`   Login: Use Auth.js magic link or OAuth with this email`);
+  console.log(`   Access: Can manage ${tenant.slug} tenant via admin panel`);
+  console.log("\n📦 Ivoka Tenant:");
   console.log(`   Tenant: ${tenant.slug}`);
   console.log(`   Brand: ${brand.slug}`);
   console.log(`   Pool: ${pool.slug}`);
   console.log(`   Season: ${competition.slug}-${season.year}`);
   console.log("\n👥 Users:");
-  console.log(`   - admin@demo.com (TENANT_ADMIN in demo tenant)`);
-  console.log(`   - player1@demo.com (PLAYER in demo tenant)`);
-  console.log(`   - player2@demo.com (PLAYER in demo tenant)`);
+  console.log(`   - vemancera@ivoka.ai (TENANT_ADMIN in ivoka tenant)`);
+  console.log(`   - player1@demo.com (PLAYER in ivoka tenant)`);
+  console.log(`   - player2@demo.com (PLAYER in ivoka tenant)`);
   console.log("\n⚽ Data:");
   console.log(`   Teams: 4 (Mexico, USA, Canada, Argentina)`);
   console.log(`   Matches: 2`);
@@ -909,115 +949,60 @@ async function main() {
   // ========================================
   console.log("\n⚙️ Seeding global settings...");
 
-  await prisma.setting.upsert({
-    where: {
-      scope_tenantId_poolId_key: {
+  // Helper function to create or skip global settings
+  const createGlobalSettingIfNotExists = async (key: string, value: any) => {
+    const existing = await prisma.setting.findFirst({
+      where: {
         scope: "GLOBAL",
         tenantId: null,
         poolId: null,
-        key: "antiAbuse.captchaLevel",
+        key,
       },
-    },
-    update: {},
-    create: {
-      scope: "GLOBAL",
-      key: "antiAbuse.captchaLevel",
-      value: "auto",
-    },
-  });
+    });
 
-  await prisma.setting.upsert({
-    where: {
-      scope_tenantId_poolId_key: {
-        scope: "GLOBAL",
-        tenantId: null,
-        poolId: null,
-        key: "antiAbuse.rateLimit",
-      },
-    },
-    update: {},
-    create: {
-      scope: "GLOBAL",
-      key: "antiAbuse.rateLimit",
-      value: { windowSec: 60, max: 60 },
-    },
-  });
+    if (!existing) {
+      await prisma.setting.create({
+        data: {
+          scope: "GLOBAL",
+          key,
+          value,
+        },
+      });
+    }
+  };
 
-  await prisma.setting.upsert({
-    where: {
-      scope_tenantId_poolId_key: {
-        scope: "GLOBAL",
-        tenantId: null,
-        poolId: null,
-        key: "privacy.ipLogging",
-      },
-    },
-    update: {},
-    create: {
-      scope: "GLOBAL",
-      key: "privacy.ipLogging",
-      value: true,
-    },
-  });
-
-  await prisma.setting.upsert({
-    where: {
-      scope_tenantId_poolId_key: {
-        scope: "GLOBAL",
-        tenantId: null,
-        poolId: null,
-        key: "privacy.cookieBanner",
-      },
-    },
-    update: {},
-    create: {
-      scope: "GLOBAL",
-      key: "privacy.cookieBanner",
-      value: true,
-    },
-  });
-
-  await prisma.setting.upsert({
-    where: {
-      scope_tenantId_poolId_key: {
-        scope: "GLOBAL",
-        tenantId: null,
-        poolId: null,
-        key: "privacy.deviceFingerprint",
-      },
-    },
-    update: {},
-    create: {
-      scope: "GLOBAL",
-      key: "privacy.deviceFingerprint",
-      value: false,
-    },
-  });
+  await createGlobalSettingIfNotExists("antiAbuse.captchaLevel", "auto");
+  await createGlobalSettingIfNotExists("antiAbuse.rateLimit", { windowSec: 60, max: 60 });
+  await createGlobalSettingIfNotExists("privacy.ipLogging", true);
+  await createGlobalSettingIfNotExists("privacy.cookieBanner", true);
+  await createGlobalSettingIfNotExists("privacy.deviceFingerprint", false);
 
   console.log("✅ Global settings created");
 
   // ========================================
-  // DATA RETENTION POLICY (DEMO TENANT)
+  // DATA RETENTION POLICY (IVOKA TENANT)
   // ========================================
   console.log("\n🗑️ Creating data retention policy...");
 
-  await prisma.dataRetentionPolicy.upsert({
+  const existingPolicy = await prisma.dataRetentionPolicy.findFirst({
     where: {
-      tenantId_poolId: {
-        tenantId: tenant.id,
-        poolId: null,
-      },
-    },
-    update: {},
-    create: {
       tenantId: tenant.id,
-      rules: {
-        invitesDays: 90,
-        auditDays: 365,
-        tokensDays: 30,
-      },
+      poolId: null,
     },
   });
+
+  if (!existingPolicy) {
+    await prisma.dataRetentionPolicy.create({
+      data: {
+        tenantId: tenant.id,
+        rules: {
+          invitesDays: 90,
+          auditDays: 365,
+          tokensDays: 30,
+        },
+      },
+    });
+  }
 
   console.log("✅ Data retention policy created");
 

@@ -52,6 +52,34 @@ export const fixturesRouter = router({
     return matches;
   }),
 
+  // Alias for getBySeasonId
+  listBySeason: publicProcedure.input(z.object({ seasonId: z.string().cuid() })).query(async ({ input }) => {
+    const matches = await prisma.match.findMany({
+      where: { seasonId: input.seasonId },
+      include: {
+        homeTeam: {
+          select: {
+            id: true,
+            name: true,
+            shortName: true,
+            logoUrl: true
+          }
+        },
+        awayTeam: {
+          select: {
+            id: true,
+            name: true,
+            shortName: true,
+            logoUrl: true
+          }
+        }
+      },
+      orderBy: [{ kickoffTime: "asc" }, { round: "asc" }]
+    });
+
+    return matches;
+  }),
+
   // Get fixture by ID
   getById: publicProcedure.input(getFixtureByIdSchema).query(async ({ input }) => {
     const match = await prisma.match.findUnique({
@@ -256,14 +284,14 @@ export const fixturesRouter = router({
         where: {
           seasonId_round_homeTeamId_awayTeamId: {
             seasonId: season.id,
-            round: matchDTO.round,
+            round: matchDTO.round ?? 0,
             homeTeamId,
             awayTeamId
           }
         },
         create: {
           seasonId: season.id,
-          round: matchDTO.round,
+          round: matchDTO.round ?? 0,
           homeTeamId,
           awayTeamId,
           kickoffTime: matchDTO.kickoffTime,

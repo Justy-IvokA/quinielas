@@ -495,5 +495,34 @@ export const tenantRouter = router({
           message: "Failed to update member role"
         });
       }
+    }),
+
+  /**
+   * List brands for current tenant (tenant-scoped)
+   */
+  listBrands: procedure
+    .input(z.object({ tenantId: z.string().optional() }).optional())
+    .query(async ({ ctx, input }) => {
+      // Use tenant from context if available, otherwise from input
+      const tenantId = ctx.tenant?.id || input?.tenantId;
+
+      if (!tenantId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Tenant ID required"
+        });
+      }
+
+      return ctx.prisma.brand.findMany({
+        where: { tenantId },
+        orderBy: { name: "asc" },
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          logoUrl: true,
+          domains: true
+        }
+      });
     })
 });

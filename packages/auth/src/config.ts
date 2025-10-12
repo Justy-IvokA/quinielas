@@ -75,9 +75,9 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
     },
 
     pages: {
-      signIn: "/auth/signin",
-      verifyRequest: "/auth/verify-request",
-      error: "/auth/error"
+      signIn: "/es-MX/auth/signin",
+      verifyRequest: "/es-MX/auth/verify-request",
+      error: "/es-MX/auth/error"
     },
 
     callbacks: {
@@ -93,11 +93,11 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
             select: { role: true, tenantId: true }
           });
           
-          const roles = memberships.map(m => m.role);
+          const roles = memberships.map((m: { role: TenantRole }) => m.role);
           const highestRole = getHighestRole(roles);
           
           token.highestRole = highestRole;
-          token.tenantRoles = memberships.reduce((acc, m) => {
+          token.tenantRoles = memberships.reduce((acc: Record<string, TenantRole>, m: { tenantId: string; role: TenantRole }) => {
             acc[m.tenantId] = m.role;
             return acc;
           }, {} as Record<string, TenantRole>);
@@ -111,11 +111,11 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
               select: { role: true, tenantId: true }
             });
             
-            const roles = memberships.map(m => m.role);
+            const roles = memberships.map((m: { role: TenantRole }) => m.role);
             const highestRole = getHighestRole(roles);
             
             token.highestRole = highestRole;
-            token.tenantRoles = memberships.reduce((acc, m) => {
+            token.tenantRoles = memberships.reduce((acc: Record<string, TenantRole>, m: { tenantId: string; role: TenantRole }) => {
               acc[m.tenantId] = m.role;
               return acc;
             }, {} as Record<string, TenantRole>);
@@ -138,13 +138,41 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
     },
 
     events: {
-      async signIn({ user }) {
+      async signIn({ user, account }) {
         // Update lastSignInAt
         if (user.id) {
           await prisma.user.update({
             where: { id: user.id },
             data: { lastSignInAt: new Date() }
           });
+
+          // Log successful sign-in
+          // Note: tenantId is required by schema but we don't have it in auth context
+          // This will be logged separately in the app layer where tenant context exists
+          try {
+            // Get user's first tenant for audit log
+            const membership = await prisma.tenantMember.findFirst({
+              where: { userId: user.id },
+              select: { tenantId: true },
+            });
+
+            if (membership) {
+              await prisma.auditLog.create({
+                data: {
+                  tenantId: membership.tenantId,
+                  actorId: user.id,
+                  userId: user.id,
+                  action: "AUTH_SIGNIN_SUCCESS",
+                  metadata: {
+                    email: user.email,
+                    provider: account?.provider || "unknown",
+                  },
+                },
+              });
+            }
+          } catch (error) {
+            console.error("[auth] Failed to log sign-in:", error);
+          }
         }
       }
     },

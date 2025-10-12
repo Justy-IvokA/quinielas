@@ -22,12 +22,15 @@ export const createPoolSchema = z.object({
 export const updatePoolSchema = z.object({
   id: z.string().cuid(),
   name: z.string().min(3).max(100).optional(),
+  slug: z.string().min(3).max(100).regex(/^[a-z0-9-]+$/).optional(),
   description: z.string().max(500).optional(),
+  brandId: z.string().cuid().optional(),
+  prizeSummary: z.string().max(500).optional(),
   startDate: z.date().optional(),
   endDate: z.date().optional(),
   isActive: z.boolean().optional(),
   isPublic: z.boolean().optional(),
-  rules: z.object({
+  ruleSet: z.object({
     exactScore: z.number().int().min(0).optional(),
     correctSign: z.number().int().min(0).optional(),
     goalDiffBonus: z.number().int().min(0).optional(),
@@ -39,6 +42,9 @@ export const createPrizeSchema = z.object({
   poolId: z.string().cuid(),
   tenantId: z.string().cuid(),
   position: z.number().int().min(1),
+  rankFrom: z.number().int().min(1),
+  rankTo: z.number().int().min(1),
+  type: z.enum(["CASH", "DISCOUNT", "SERVICE", "DAY_OFF", "EXPERIENCE", "OTHER"]).optional(),
   title: z.string().min(1).max(100),
   description: z.string().max(500).optional(),
   value: z.string().max(100).optional(),

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Award, Edit, Plus, Trash2 } from "lucide-react";
-
+import { useTranslations } from "next-intl";
 import {
   Badge,
   Button,
@@ -39,6 +39,8 @@ interface PrizesManagerProps {
 
 interface PrizeFormData {
   position: number;
+  rankFrom: number;
+  rankTo: number;
   title: string;
   description?: string;
   value?: string;
@@ -50,7 +52,7 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
   const [editingPrize, setEditingPrize] = useState<string | null>(null);
   const utils = trpc.useUtils();
   const tenantId = "demo-tenant-id"; // Replace with actual tenant context
-
+  const t = useTranslations("pools");
   const { data: prizes, isLoading } = trpc.pools.prizes.list.useQuery({ poolId });
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<PrizeFormData>();
@@ -100,14 +102,14 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Premios</CardTitle>
+            <CardTitle>{t("details.prizes")}</CardTitle>
             <CardDescription>
-              {prizes?.length || 0} premio(s) configurado(s)
+              {t("prizes.description", { count: prizes?.length || 0 })}
             </CardDescription>
           </div>
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogTrigger asChild>
-              <Button StartIcon={Plus}>Agregar premio</Button>
+              <Button StartIcon={Plus}>{t("actions.add")}</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -117,7 +119,7 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-                <FormField label="Posición" htmlFor="position" required error={errors.position?.message}>
+                {/* <FormField label="Posición" htmlFor="position" required error={errors.position?.message}>
                   <Input
                     id="position"
                     type="number"
@@ -125,7 +127,29 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                     placeholder="1"
                     {...register("position", { required: "La posición es requerida", valueAsNumber: true })}
                   />
-                </FormField>
+                </FormField> */}
+
+                <div className="flex justify-between gap-2">
+                  <FormField label="Del" htmlFor="rankFrom" required error={errors.rankFrom?.message}>
+                    <Input
+                      id="rankFrom"
+                      type="number"
+                      min={1}
+                      placeholder="1"
+                      {...register("rankFrom", { required: "La posición es requerida", valueAsNumber: true })}
+                    />
+                  </FormField>
+
+                  <FormField label="Al" htmlFor="rankTo" required error={errors.rankTo?.message}>
+                    <Input
+                      id="rankTo"
+                      type="number"
+                      min={1}
+                      placeholder="1"
+                      {...register("rankTo", { required: "La posición es requerida", valueAsNumber: true })}
+                    />
+                  </FormField>
+                </div>
 
                 <FormField label="Título" htmlFor="title" required error={errors.title?.message}>
                   <Input
@@ -174,7 +198,8 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Posición</TableHead>
+                <TableHead className="w-[80px]">Del</TableHead>
+                <TableHead className="w-[80px]">Al</TableHead>
                 <TableHead>Título</TableHead>
                 <TableHead>Valor</TableHead>
                 <TableHead className="w-[120px]">Acciones</TableHead>
@@ -184,7 +209,10 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
               {prizes.map((prize) => (
                 <TableRow key={prize.id}>
                   <TableCell>
-                    <Badge variant="outline">#{prize.position}</Badge>
+                    <Badge variant="outline">#{prize.rankFrom}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline">#{prize.rankTo}</Badge>
                   </TableCell>
                   <TableCell className="font-medium">{prize.title}</TableCell>
                   <TableCell className="text-muted-foreground">

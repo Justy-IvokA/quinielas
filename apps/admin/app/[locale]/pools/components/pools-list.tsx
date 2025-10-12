@@ -23,17 +23,15 @@ import { Link } from "@admin/navigation";
 export function PoolsList() {
   const t = useTranslations("pools");
   const utils = trpc.useUtils();
-  const tenantId = "demo-tenant-id"; // Replace with actual tenant context
 
   const { data: pools, isLoading } = trpc.pools.listByTenant.useQuery({
-    tenantId,
     includeInactive: true
   });
 
   const deleteMutation = trpc.pools.delete.useMutation({
     onSuccess: () => {
       toastSuccess(t("actions.deleteSuccess"));
-      utils.pools.listByTenant.invalidate({ tenantId });
+      utils.pools.listByTenant.invalidate({ includeInactive: true });
     },
     onError: (error) => {
       toastError(t("actions.deleteError", { message: error.message }));
@@ -126,12 +124,15 @@ export function PoolsList() {
               </Button>
               <Button
                 size="sm"
+                asChild
                 variant="destructive"
                 onClick={() => handleDelete(pool.id, pool.name)}
                 loading={deleteMutation.isPending}
               >
-                <Trash2 className="h-4 w-4" />
-                {t("actions.delete")}
+                <Link href={`#`}>
+                  <Trash2 className="h-4 w-4" />
+                  {t("actions.delete")}
+                </Link>
               </Button>
             </div>
           </CardContent>

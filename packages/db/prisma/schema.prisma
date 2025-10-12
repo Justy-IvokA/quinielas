@@ -481,6 +481,7 @@ model Prize {
   tenantId    String
   rankFrom    Int
   rankTo      Int
+  position    Int       @default(0)
   type        PrizeType @default(OTHER)
   title       String
   description String?
@@ -496,6 +497,7 @@ model Prize {
 
   @@unique([poolId, rankFrom, rankTo])
   @@index([tenantId, poolId])
+  @@index([poolId, position])
 }
 
 model PrizeAward {

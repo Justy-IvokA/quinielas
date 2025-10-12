@@ -9,6 +9,15 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["@qp/ui", "lucide-react"],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+        pathname: "/v0/b/**",
+      },
+    ],
+  },
 };
 
 module.exports = withNextIntl(nextConfig);

@@ -38,6 +38,13 @@ export const registrationRouter = router({
     .use(withAuth)
     .input(z.object({ poolSlug: z.string() }))
     .query(async ({ ctx, input }) => {
+      if (!ctx.tenant) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Tenant context required"
+        });
+      }
+
       // Find pool in tenant
       const pool = await prisma.pool.findFirst({
         where: {

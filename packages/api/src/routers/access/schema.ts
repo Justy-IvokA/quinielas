@@ -28,6 +28,21 @@ export const updateAccessPolicySchema = z.object({
   windowEnd: z.date().optional()
 });
 
+export const upsertAccessPolicySchema = z.object({
+  poolId: z.string().cuid(),
+  tenantId: z.string().cuid(),
+  accessType: z.enum(["PUBLIC", "CODE", "EMAIL_INVITE"]),
+  requireCaptcha: z.boolean().default(false),
+  requireEmailVerification: z.boolean().default(false),
+  domainAllowList: z.array(z.string()).optional(),
+  maxRegistrations: z.number().int().positive().optional(),
+  registrationStartDate: z.date().optional(),
+  registrationEndDate: z.date().optional(),
+  userCap: z.number().int().positive().optional(),
+  windowStart: z.date().optional(),
+  windowEnd: z.date().optional()
+});
+
 export const createCodeBatchSchema = z.object({
   accessPolicyId: z.string().cuid(),
   tenantId: z.string().cuid(),
@@ -81,5 +96,6 @@ export const downloadCodesSchema = z.object({
 
 export type CreateAccessPolicyInput = z.infer<typeof createAccessPolicySchema>;
 export type UpdateAccessPolicyInput = z.infer<typeof updateAccessPolicySchema>;
+export type UpsertAccessPolicyInput = z.infer<typeof upsertAccessPolicySchema>;
 export type CreateCodeBatchInput = z.infer<typeof createCodeBatchSchema>;
 export type CreateEmailInvitationInput = z.infer<typeof createEmailInvitationSchema>;

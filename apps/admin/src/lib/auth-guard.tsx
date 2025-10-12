@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { trpc } from "../trpc/react";
@@ -15,24 +15,28 @@ interface AuthGuardProps {
  * Client-side auth guard component
  * Redirects unauthenticated users or users without required role
  */
-export function AuthGuard({ children, requiredRole, redirectTo = "/auth/signin" }: AuthGuardProps) {
+export function AuthGuard({ children, requiredRole, redirectTo }: AuthGuardProps) {
   const { data: session, isLoading } = trpc.auth.getSession.useQuery();
   const router = useRouter();
+  const params = useParams();
+  const locale = params?.locale || "es-MX";
+  
+  const defaultRedirectTo = redirectTo || `/${locale}/auth/signin`;
 
   useEffect(() => {
     if (isLoading) return;
 
     if (!session) {
       toast.error("Debes iniciar sesión para acceder");
-      router.push(redirectTo);
+      router.push(defaultRedirectTo);
       return;
     }
 
     if (requiredRole && session.user.highestRole !== requiredRole) {
       toast.error(`No tienes permisos para acceder. Se requiere rol: ${requiredRole}`);
-      router.push("/dashboard");
+      router.push(`/${locale}/dashboard`);
     }
-  }, [session, isLoading, requiredRole, router, redirectTo]);
+  }, [session, isLoading, requiredRole, router, defaultRedirectTo, locale]);
 
   if (isLoading) {
     return (
@@ -57,8 +61,11 @@ export function AuthGuard({ children, requiredRole, redirectTo = "/auth/signin" 
  * Superadmin guard - only allows SUPERADMIN role
  */
 export function SuperAdminGuard({ children }: { children: React.ReactNode }) {
+  const params = useParams();
+  const locale = params?.locale || "es-MX";
+  
   return (
-    <AuthGuard requiredRole="SUPERADMIN" redirectTo="/dashboard">
+    <AuthGuard requiredRole="SUPERADMIN" redirectTo={`/${locale}/dashboard`}>
       {children}
     </AuthGuard>
   );

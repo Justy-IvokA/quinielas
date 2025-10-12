@@ -43,8 +43,29 @@ export const poolsRouter = router({
       where: { id: input.id },
       include: {
         tenant: { select: { name: true, slug: true } },
-        brand: { select: { name: true, slug: true, logoUrl: true } },
-        season: { select: { name: true, year: true, competitionId: true } },
+        brand: { 
+          select: { 
+            name: true, 
+            slug: true, 
+            logoUrl: true,
+            domains: true 
+          } 
+        },
+        season: { 
+          select: { 
+            name: true, 
+            year: true, 
+            competitionId: true,
+            competition: {
+              select: {
+                name: true,
+                sport: {
+                  select: { name: true }
+                }
+              }
+            }
+          } 
+        },
         accessPolicy: true,
         prizes: { orderBy: { position: "asc" } },
         _count: {

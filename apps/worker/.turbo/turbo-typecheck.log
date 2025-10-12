@@ -2,3 +2,5 @@
 > @qp/worker@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker
 > tsc --noEmit
 
+src/jobs/auto-sync-fixtures.ts(70,9): error TS2783: 'seasonId' is specified more than once, so this usage will be overwritten.
+ ELIFECYCLE  Command failed with exit code 2.

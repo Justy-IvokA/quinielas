@@ -1,12 +1,11 @@
-import { getDemoBranding } from "@qp/branding";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
+import { headers } from "next/headers";
 
+import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
 import { adminEnv } from "@admin/env";
 import { Link } from "@admin/navigation";
 import { DashboardWelcome } from "../components/dashboard-welcome";
 import { DemoSaveButton } from "@admin/components/demo-save-button";
-
-const branding = getDemoBranding();
 
 const quickActionKeys = [
   {
@@ -23,14 +22,24 @@ const quickActionKeys = [
   },
 ] as const;
 
-export default function AdminHome() {
-  const t = useTranslations("dashboard");
+export default async function AdminHome() {
+  // Resolve brand from host
+  const headersList = await headers();
+  let host = headersList.get("host") || "localhost";
+  if (host.includes(":")) {
+    host = host.split(":")[0];
+  }
+  const { brand, tenant } = await resolveTenantAndBrandFromHost(host);
+  
+  const brandName = brand?.name || adminEnv.NEXT_PUBLIC_APP_NAME;
+  const tenantName = tenant?.name || adminEnv.NEXT_PUBLIC_TENANT_SLUG;
+  const t = await getTranslations("dashboard");
 
   return (
     <div className="flex flex-col gap-10">
       <DashboardWelcome
-        tenantName={adminEnv.NEXT_PUBLIC_TENANT_SLUG}
-        brandName={branding.brand.name}
+        tenantName={tenantName}
+        brandName={brandName}
       />
 
       <section className="grid gap-6 md:grid-cols-3">

@@ -2,3 +2,33 @@
 > @qp/auth@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth
 > tsc --noEmit
 
+../api/src/lib/anti-abuse.ts(5,54): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/settings.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts'
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts'
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/auth-audit.ts'
+../api/src/lib/anti-abuse.ts(5,54): error TS6307: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/settings.ts' is not listed within the file list of project 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts'
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts'
+    Imported via "./settings" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/auth-audit.ts'
+../api/src/lib/auth-audit.ts(5,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+../api/src/lib/auth-audit.ts(6,35): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth'. 'rootDir' is expected to contain all source files.
+../api/src/lib/auth-audit.ts(6,35): error TS6307: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/anti-abuse.ts' is not listed within the file list of project 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../api/src/lib/settings.ts(7,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+../api/src/lib/settings.ts(8,35): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+../api/src/lib/settings.ts(9,29): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/config.ts(3,47): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/config.ts(96,41): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/config.ts(100,51): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/config.ts(100,56): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/config.ts(114,43): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/config.ts(118,53): error TS7006: Parameter 'acc' implicitly has an 'any' type.
+src/config.ts(118,58): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/config.ts(151,55): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/auth-audit.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth'. 'rootDir' is expected to contain all source files.
+src/config.ts(151,55): error TS6307: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/auth-audit.ts' is not listed within the file list of project 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+src/env/index.ts(1,27): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/config/src/env.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth'. 'rootDir' is expected to contain all source files.
+src/env/index.ts(1,27): error TS6307: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/config/src/env.ts' is not listed within the file list of project 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+src/helpers.ts(5,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/types.ts(1,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+ ELIFECYCLE  Command failed with exit code 2.

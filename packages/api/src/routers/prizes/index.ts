@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@qp/db";
+import { prisma, Prisma } from "@qp/db";
 
 import { publicProcedure, router } from "../../trpc";
 import { createPrizeSchema, updatePrizeSchema, reorderPrizesSchema } from "./schema";
@@ -100,7 +100,7 @@ export const prizesRouter = router({
   update: publicProcedure
     .input(updatePrizeSchema)
     .mutation(async ({ input }) => {
-      const { id, ...data } = input;
+      const { id, metadata, ...data } = input;
 
       // Get existing prize to check pool and current ranges
       const existing = await prisma.prize.findUnique({
@@ -123,9 +123,17 @@ export const prizesRouter = router({
         await validateNoOverlap(existing.poolId, newRankFrom, newRankTo, id);
       }
 
+      // Handle metadata null value properly for Prisma
+      const updateData: Prisma.PrizeUpdateInput = {
+        ...data,
+        ...(metadata !== undefined && { 
+          metadata: metadata === null ? Prisma.DbNull : metadata 
+        })
+      };
+
       return prisma.prize.update({
         where: { id },
-        data,
+        data: updateData,
         include: {
           pool: {
             select: { name: true }

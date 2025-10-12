@@ -9,6 +9,7 @@ import {
   createCodeBatchSchema,
   createEmailInvitationSchema,
   updateAccessPolicySchema,
+  upsertAccessPolicySchema,
   uploadInvitationsCsvSchema,
   sendInvitationsSchema,
   invitationStatsSchema,
@@ -61,6 +62,30 @@ export const accessRouter = router({
     return prisma.accessPolicy.update({
       where: { id },
       data
+    });
+  }),
+
+  // Upsert access policy (create or update)
+  upsert: publicProcedure.input(upsertAccessPolicySchema).mutation(async ({ input }) => {
+    const { poolId, tenantId, ...data } = input;
+
+    const existing = await prisma.accessPolicy.findUnique({
+      where: { poolId }
+    });
+
+    if (existing) {
+      return prisma.accessPolicy.update({
+        where: { poolId },
+        data
+      });
+    }
+
+    return prisma.accessPolicy.create({
+      data: {
+        poolId,
+        tenantId,
+        ...data
+      }
     });
   }),
 
@@ -447,7 +472,7 @@ export const accessRouter = router({
     // Return structured data for CSV generation
     return {
       batchName: batch.name || "Unnamed Batch",
-      codes: batch.codes.map((code: { code: string, status: string, usedCount: number, usesPerCode: number, expiresAt: Date, createdAt: Date }) => ({
+      codes: batch.codes.map((code) => ({
         code: code.code,
         status: code.status,
         usedCount: code.usedCount,

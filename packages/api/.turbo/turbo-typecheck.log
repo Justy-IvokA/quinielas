@@ -2,3 +2,113 @@
 > @qp/api@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\packages\api
 > tsc --noEmit
 
+src/context.ts(3,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/context.ts(4,50): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/context.ts(5,54): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/dist/src/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/src/index.ts'.
+src/context.ts(6,30): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/dist/src/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/src/index.ts'.
+src/lib/auth-audit.ts(5,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/host-tenant.test.ts(3,36): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/host-tenant.ts(1,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/host-tenant.ts(2,36): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/rbac.test.ts(12,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/rbac.test.ts(55,11): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/lib/rbac.test.ts(68,11): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/lib/rbac.test.ts(87,11): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/lib/rbac.test.ts(110,9): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/lib/rbac.test.ts(135,9): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/lib/rbac.ts(1,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/rbac.ts(46,25): error TS2339: Property 'highestRole' does not exist on type 'User'.
+src/lib/rbac.ts(53,23): error TS2339: Property 'tenantRoles' does not exist on type 'User'.
+src/lib/rbac.ts(54,23): error TS2339: Property 'tenantRoles' does not exist on type 'User'.
+src/lib/settings.test.ts(2,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/settings.ts(7,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/settings.ts(8,35): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/settings.ts(9,29): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/lib/tenant-utils.ts(2,50): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/middleware/require-role.ts(2,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/middleware/require-tenant-member.ts(2,33): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/middleware/with-tenant.test.ts(8,13): error TS2739: Type '{ prisma: any; env: any; tenant: null; brand: null; session: null; }' is missing the following properties from type 'AppContext': ip, userAgent
+src/middleware/with-tenant.test.ts(21,13): error TS2739: Type '{ prisma: any; env: any; tenant: { id: string; slug: string; name: string; description: null; createdAt: Date; updatedAt: Date; }; brand: null; session: null; }' is missing the following properties from type 'AppContext': ip, userAgent
+src/middleware/with-tenant.test.ts(43,13): error TS2739: Type '{ prisma: any; env: any; tenant: null; brand: null; session: null; }' is missing the following properties from type 'AppContext': ip, userAgent
+src/middleware/with-tenant.test.ts(55,13): error TS2739: Type '{ prisma: any; env: any; tenant: null; brand: null; session: { user: { id: string; email: string; name: string; }; }; }' is missing the following properties from type 'AppContext': ip, userAgent
+src/routers/access/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/access/index.ts(475,31): error TS7006: Parameter 'code' implicitly has an 'any' type.
+src/routers/analytics/index.ts(1,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/analytics/index.ts(57,10): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/routers/analytics/index.ts(57,15): error TS7006: Parameter 'stat' implicitly has an 'any' type.
+src/routers/analytics/index.ts(61,31): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/routers/analytics/index.ts(82,53): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/routers/analytics/index.ts(174,48): error TS7006: Parameter 'p' implicitly has an 'any' type.
+src/routers/analytics/index.ts(233,55): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/routers/analytics/index.ts(237,39): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/routers/audit/index.ts(3,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/audit/index.ts(4,49): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/utils/dist/csv/audit.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/utils/src/csv/audit.ts'.
+src/routers/audit/index.ts(217,36): error TS7006: Parameter 'log' implicitly has an 'any' type.
+src/routers/audit/index.ts(309,27): error TS7006: Parameter 'a' implicitly has an 'any' type.
+src/routers/awards/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/awards/index.ts(145,26): error TS7006: Parameter 'award' implicitly has an 'any' type.
+src/routers/consent/index.ts(3,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/consent/index.ts(204,10): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/routers/consent/index.ts(207,10): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/routers/fixtures/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/leaderboard/index.ts(2,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/leaderboard/index.ts(3,37): error TS2307: Cannot find module '@qp/scoring' or its corresponding type declarations.
+src/routers/leaderboard/index.ts(167,27): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/routers/policies/index.ts(3,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/pools/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/predictions/index.ts(2,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/predictions/index.ts(204,35): error TS7006: Parameter 'm' implicitly has an 'any' type.
+src/routers/prizes/index.ts(4,32): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/registration/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/registration/index.ts(110,17): error TS7006: Parameter 'batch' implicitly has an 'any' type.
+src/routers/registration/index.ts(111,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/routers/registration/index.ts(360,17): error TS7006: Parameter 'batch' implicitly has an 'any' type.
+src/routers/registration/index.ts(361,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/routers/settings/index.ts(3,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/sync/index.ts(10,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/sync/index.ts(11,10): error TS2305: Module '"@qp/utils/sports"' has no exported member 'sportsAPICache'.
+src/routers/sync/index.ts(73,36): error TS7006: Parameter 'source' implicitly has an 'any' type.
+src/routers/sync/index.ts(180,40): error TS7006: Parameter 's' implicitly has an 'any' type.
+src/routers/sync/index.ts(193,24): error TS7006: Parameter 'map' implicitly has an 'any' type.
+src/routers/sync/index.ts(196,24): error TS7006: Parameter 'season' implicitly has an 'any' type.
+src/routers/sync/index.ts(212,30): error TS2339: Property 'source' does not exist on type '{}'.
+src/routers/sync/index.ts(213,32): error TS2339: Property 'source' does not exist on type '{}'.
+src/routers/sync/index.ts(214,38): error TS2339: Property 'externalId' does not exist on type '{}'.
+src/routers/tenant.test.ts(5,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/tenant.test.ts(15,7): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/routers/tenant.test.ts(25,7): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/routers/tenant.test.ts(35,7): error TS2353: Object literal may only specify known properties, and 'highestRole' does not exist in type 'User'.
+src/routers/tenant.test.ts(41,71): error TS2739: Type '{ prisma: any; env: { DATABASE_URL: string; NODE_ENV: "test"; SPORTS_API_PROVIDER: "mock"; EMAIL_PROVIDER: "mock"; }; tenant: null; brand: null; session: Session | null; req: undefined; }' is missing the following properties from type 'AppContext': ip, userAgent
+src/routers/tenant.ts(5,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/routers/tenant.ts(185,15): error TS18046: 'error' is of type 'unknown'.
+src/routers/tenant.ts(262,15): error TS18046: 'error' is of type 'unknown'.
+src/routers/tenant.ts(392,15): error TS18046: 'error' is of type 'unknown'.
+src/routers/tenant.ts(432,15): error TS18046: 'error' is of type 'unknown'.
+src/routers/tenant.ts(485,15): error TS18046: 'error' is of type 'unknown'.
+src/routers/users/index.ts(4,24): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/access.service.ts(1,61): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/codes.service.ts(1,93): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/codes.service.ts(307,34): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(308,41): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(309,32): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(310,35): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(311,34): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(312,39): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/codes.service.ts(312,44): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/codes.service.ts(349,35): error TS7006: Parameter 'code' implicitly has an 'any' type.
+src/services/invites.service.ts(1,65): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/invites.service.ts(115,58): error TS7006: Parameter 'inv' implicitly has an 'any' type.
+src/services/invites.service.ts(277,36): error TS7006: Parameter 'inv' implicitly has an 'any' type.
+src/services/invites.service.ts(278,37): error TS7006: Parameter 'inv' implicitly has an 'any' type.
+src/services/invites.service.ts(279,36): error TS7006: Parameter 'inv' implicitly has an 'any' type.
+src/services/invites.service.ts(280,38): error TS7006: Parameter 'sum' implicitly has an 'any' type.
+src/services/invites.service.ts(280,43): error TS7006: Parameter 'inv' implicitly has an 'any' type.
+src/services/pools.service.ts(1,49): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/registration.service.ts(1,61): error TS6305: Output file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/dist/index.d.ts' has not been built from source file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts'.
+src/services/registration.service.ts(192,17): error TS7006: Parameter 'batch' implicitly has an 'any' type.
+src/services/registration.service.ts(193,14): error TS7006: Parameter 'c' implicitly has an 'any' type.
+src/services/registration.service.ts(436,44): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/services/registration.service.ts(437,38): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/services/registration.service.ts(438,40): error TS7006: Parameter 'r' implicitly has an 'any' type.
+src/services/registration.service.ts(439,37): error TS7006: Parameter 'r' implicitly has an 'any' type.
+ ELIFECYCLE  Command failed with exit code 2.

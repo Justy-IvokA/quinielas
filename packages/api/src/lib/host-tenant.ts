@@ -137,7 +137,7 @@ export async function resolveTenantAndBrandFromHost(
         const demoBrand = await prisma.brand.findFirst({
           where: {
             tenantId: demoTenant.id,
-            slug: "default"
+            slug: "ivoka"
           }
         });
 

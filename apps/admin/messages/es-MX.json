@@ -23,6 +23,38 @@
     "brands": "Marcas",
     "analytics": "Analítica"
   },
+  "auth": {
+    "signin": {
+      "title": "Acceso Administrativo",
+      "subtitle": "Inicia sesión en el panel de administración",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "admin@ejemplo.com",
+      "sendLink": "Enviar enlace de acceso",
+      "sendingLink": "Enviando...",
+      "checkEmail": "Revisa tu correo",
+      "emailSent": "Te enviamos un enlace de acceso a {email}",
+      "emailSentDescription": "Haz clic en el enlace para iniciar sesión. El enlace expira en 24 horas.",
+      "orContinueWith": "O continúa con",
+      "googleSignin": "Continuar con Google",
+      "microsoftSignin": "Continuar con Microsoft",
+      "backToSignin": "Volver a inicio de sesión"
+    },
+    "errors": {
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Correo electrónico inválido",
+      "captchaRequired": "Por favor completa el captcha",
+      "rateLimitExceeded": "Demasiados intentos. Intenta de nuevo en {seconds} segundos",
+      "providerNotConfigured": "Este proveedor no está configurado",
+      "invalidCallbackUrl": "URL de redirección inválida",
+      "signInFailed": "Error al iniciar sesión. Intenta de nuevo",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo"
+    },
+    "verify": {
+      "title": "Verifica tu correo",
+      "description": "Te enviamos un enlace de acceso a tu correo electrónico",
+      "checkSpam": "Si no lo ves, revisa tu carpeta de spam"
+    }
+  },
   "dashboard": {
     "statusOnline": "Servicios operativos",
     "statusCheck": "Verifica el estado del API",
@@ -225,28 +257,181 @@
   "pools": {
     "title": "Quinielas",
     "description": "Administra tus quinielas activas e inactivas.",
-    "create": "Crear pool",
+    "create": "Crear quiniela",
     "empty": {
-      "title": "No hay pools creados",
-      "description": "Comienza creando tu primer pool para gestionar predicciones.",
-      "cta": "Crear primer pool"
+      "title": "Aún no hay quinielas creadas",
+      "description": "Comienza creando tu primera quiniela para gestionar predicciones.",
+      "cta": "Crea tu primera quiniela"
     },
     "status": {
       "active": "Activo",
       "inactive": "Inactivo",
+      "finalized": "Finalizado",
       "noBrand": "Sin marca"
     },
     "actions": {
+      "add": "Agregar",
       "view": "Ver detalles",
       "edit": "Editar",
       "delete": "Eliminar",
-      "deleteConfirm": "¿Estás seguro de eliminar el pool \"{name}\"?",
-      "deleteSuccess": "Pool eliminado exitosamente",
-      "deleteError": "Error al eliminar: {message}"
+      "deleteConfirm": "¿Estás seguro de eliminar la quiniela \"{name}\"?",
+      "deleteSuccess": "Quiniela eliminada exitosamente",
+      "deleteError": "Error al eliminar: {message}",
+      "copyUrl": "Copiar URL pública",
+      "urlCopied": "URL copiada al portapapeles",
+      "finalize": "Finalizar quiniela",
+      "syncFixtures": "Sincronizar partidos"
     },
     "stats": {
       "registrations": "{count} registros",
       "prizes": "{count} premios"
+    },
+    "details": {
+      "title": "Detalles de la quiniela",
+      "description": "Detalles de la quiniela",
+      "rules": "Reglas",
+      "prizes": "Premios",
+      "participants": "Participantes",
+      "startDate": "Fecha de inicio",
+      "endDate": "Fecha de finalización",
+      "status": "Estado",
+      "actions": {
+        "view": "Ver detalles",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "deleteConfirm": "¿Estás seguro de eliminar la quiniela \"{name}\"?",
+        "deleteSuccess": "Quiniela eliminada exitosamente",
+        "deleteError": "Error al eliminar: {message}"
+      }
+    },
+    "edit": {
+      "title": "Editar quiniela",
+      "breadcrumb": "Editar",
+      "unauthorized": "No tienes permisos para editar esta quiniela",
+      "tabs": {
+        "general": "General",
+        "access": "Acceso",
+        "prizes": "Premios",
+        "settings": "Configuración",
+        "fixtures": "Partidos"
+      },
+      "general": {
+        "title": "Información general",
+        "description": "Configura los datos básicos de la quiniela",
+        "form": {
+          "name": "Nombre",
+          "namePlaceholder": "Mundial 2026",
+          "slug": "Slug (URL)",
+          "slugPlaceholder": "mundial-2026",
+          "slugHelp": "Solo minúsculas, números y guiones",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Descripción de la quiniela...",
+          "brand": "Marca",
+          "brandPlaceholder": "Selecciona una marca",
+          "season": "Temporada",
+          "sport": "Deporte",
+          "competition": "Competición",
+          "prizeSummary": "Resumen de premios",
+          "prizeSummaryPlaceholder": "Premios en efectivo y experiencias",
+          "startDate": "Fecha de inicio",
+          "endDate": "Fecha de finalización",
+          "isActive": "Quiniela activa",
+          "isPublic": "Visible públicamente"
+        },
+        "saveSuccess": "Cambios guardados exitosamente",
+        "saveError": "Error al guardar: {message}"
+      },
+      "access": {
+        "title": "Control de acceso",
+        "description": "Define cómo los usuarios pueden registrarse",
+        "form": {
+          "accessType": "Tipo de acceso",
+          "accessTypeOptions": {
+            "PUBLIC": "Público (sin restricciones)",
+            "CODE": "Por código de invitación",
+            "EMAIL_INVITE": "Por invitación de email"
+          },
+          "requireCaptcha": "Requerir CAPTCHA",
+          "requireCaptchaHelp": "Protege contra registros automatizados",
+          "requireEmailVerification": "Verificación de email",
+          "requireEmailVerificationHelp": "Requiere confirmación por correo",
+          "domainAllowList": "Dominios permitidos",
+          "domainAllowListPlaceholder": "ejemplo.com",
+          "domainAllowListHelp": "Deja vacío para permitir todos",
+          "maxRegistrations": "Máximo de registros",
+          "maxRegistrationsPlaceholder": "Sin límite",
+          "windowStart": "Inicio de registro",
+          "windowEnd": "Fin de registro"
+        },
+        "quickLinks": {
+          "title": "Accesos rápidos",
+          "invitations": "Gestionar invitaciones",
+          "codes": "Gestionar códigos"
+        },
+        "saveSuccess": "Política de acceso actualizada",
+        "saveError": "Error al actualizar: {message}"
+      },
+      "prizes": {
+        "title": "Premios",
+        "description": "Configura los premios del leaderboard",
+        "table": {
+          "rankFrom": "Del",
+          "rankTo": "Al",
+          "title": "Título",
+          "type": "Tipo",
+          "value": "Valor",
+          "actions": "Acciones"
+        },
+        "form": {
+          "rankFrom": "Posición desde",
+          "rankTo": "Posición hasta",
+          "title": "Título del premio",
+          "type": "Tipo de premio",
+          "typeOptions": {
+            "CASH": "Efectivo",
+            "DISCOUNT": "Descuento",
+            "SERVICE": "Servicio",
+            "DAY_OFF": "Día libre",
+            "EXPERIENCE": "Experiencia",
+            "OTHER": "Otro"
+          },
+          "value": "Valor",
+          "description": "Descripción",
+          "imageUrl": "URL de imagen"
+        },
+        "overlapError": "Las posiciones se superponen con otro premio",
+        "createSuccess": "Premio creado",
+        "updateSuccess": "Premio actualizado",
+        "deleteSuccess": "Premio eliminado",
+        "error": "Error: {message}"
+      },
+      "settings": {
+        "title": "Configuración avanzada",
+        "description": "Ajustes específicos de esta quiniela",
+        "inherited": "Heredado",
+        "overridden": "Personalizado",
+        "saveSuccess": "Configuración guardada",
+        "saveError": "Error al guardar: {message}"
+      },
+      "fixtures": {
+        "title": "Partidos",
+        "description": "Información de la temporada y partidos",
+        "season": "Temporada",
+        "totalMatches": "Total de partidos",
+        "nextKickoff": "Próximo partido",
+        "viewFixtures": "Ver partidos",
+        "syncNow": "Sincronizar ahora"
+      }
+    },
+    "prizes": {
+      "title": "Premios",
+      "description": "{count} premios configurados",
+      "create": "Crear premio",
+      "empty": {
+        "title": "Aún no hay premios",
+        "description": "Comienza creando tu primer premio para gestionar predicciones.",
+        "cta": "Crea tu primer premio"
+      }
     },
     "loading": "Cargando quinielas...",
     "list": {

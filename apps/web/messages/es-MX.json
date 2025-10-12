@@ -86,6 +86,45 @@
     "predictions": "Predicciones",
     "uptime": "Uptime"
   },
+  "auth": {
+    "signin": {
+      "title": "Iniciar sesión",
+      "subtitle": "Accede a tu cuenta",
+      "emailLabel": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
+      "sendLink": "Enviar enlace de acceso",
+      "sendingLink": "Enviando...",
+      "checkEmail": "Revisa tu correo",
+      "emailSent": "Te enviamos un enlace de acceso a {email}",
+      "emailSentDescription": "Haz clic en el enlace para iniciar sesión. El enlace expira en 24 horas.",
+      "orContinueWith": "O continúa con",
+      "googleSignin": "Continuar con Google",
+      "microsoftSignin": "Continuar con Microsoft",
+      "noAccount": "¿No tienes cuenta?",
+      "signupLink": "Regístrate aquí",
+      "backToSignin": "Volver a inicio de sesión",
+      "legal": "Al continuar, aceptas nuestros {terms} y {privacy}",
+      "termsLink": "Términos de Servicio",
+      "privacyLink": "Política de Privacidad"
+    },
+    "errors": {
+      "emailRequired": "El correo electrónico es requerido",
+      "emailInvalid": "Correo electrónico inválido",
+      "captchaRequired": "Por favor completa el captcha",
+      "rateLimitExceeded": "Demasiados intentos. Intenta de nuevo en {seconds} segundos",
+      "providerNotConfigured": "Este proveedor no está configurado",
+      "invalidCallbackUrl": "URL de redirección inválida",
+      "signInFailed": "Error al iniciar sesión. Intenta de nuevo",
+      "generic": "Algo salió mal. Por favor, intenta de nuevo"
+    },
+    "verify": {
+      "title": "Verifica tu correo",
+      "description": "Te enviamos un enlace de acceso a tu correo electrónico",
+      "checkSpam": "Si no lo ves, revisa tu carpeta de spam",
+      "resendLink": "Reenviar enlace",
+      "resending": "Reenviando..."
+    }
+  },
   "register": {
     "title": "Registro",
     "subtitle": "Únete a la quiniela",

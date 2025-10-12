@@ -5,10 +5,11 @@ import { useTranslations } from "next-intl";
 import { AccessPolicyManager } from "./components/access-policy-manager";
 
 export async function generateMetadata({
-  params: { locale }
+  params
 }: {
   params: { locale: string };
 }): Promise<Metadata> {
+  const locale = await params.locale;
   const t = await getTranslations({ locale, namespace: "access" });
 
   return {

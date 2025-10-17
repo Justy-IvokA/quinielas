@@ -67,7 +67,6 @@ export async function autoSyncFixturesJob() {
       });
 
       results.push({
-        seasonId: season.id,
         seasonName: season.name,
         success: true,
         ...result

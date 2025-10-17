@@ -1,7 +1,7 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 import { z } from "zod";
 import { prisma } from "@qp/db";
-import type { Tenant, Brand, PrismaClient } from "@qp/db";
+import type { Tenant, Brand, PrismaClient, Registration } from "@qp/db";
 import { createAuthConfig, createAuthInstance } from "@qp/auth";
 import type { Session } from "@qp/auth";
 
@@ -36,6 +36,7 @@ export interface AppContext {
   req?: Request;
   ip: string | null;
   userAgent: string | null;
+  registration?: Registration; // Added by requireRegistrationForPool middleware
 }
 
 /**

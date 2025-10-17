@@ -78,10 +78,10 @@ export function DemoSaveButton() {
         <CardDescription>{t("cardDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Alert variant="info">
+        {/* <Alert variant="info">
           <AlertTitle>{t("bannerTitle")}</AlertTitle>
           <AlertDescription>{t("bannerDescription")}</AlertDescription>
-        </Alert>
+        </Alert> */}
 
         <div className="space-y-2">
           <Label htmlFor="pool-name">{t("poolNameLabel")}</Label>

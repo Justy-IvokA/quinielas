@@ -70,7 +70,7 @@ export const syncRouter = router({
       teams: {
         total: totalTeams
       },
-      sources: externalSources.map(source => ({
+      sources: externalSources.map((source: any) => ({
         id: source.id,
         name: source.name,
         slug: source.slug,
@@ -177,7 +177,7 @@ export const syncRouter = router({
     });
 
     // Obtener todos los ExternalMaps de las competiciones
-    const competitionIds = seasons.map(s => s.competition.id);
+    const competitionIds = seasons.map((s: any) => s.competition.id);
     const externalMaps = await prisma.externalMap.findMany({
       where: {
         entityType: "competition",
@@ -190,10 +190,10 @@ export const syncRouter = router({
 
     // Crear un mapa para acceso rápido
     const mapsById = new Map(
-      externalMaps.map(map => [map.entityId, map])
+      externalMaps.map((map: any) => [map.entityId, map])
     );
 
-    return seasons.map(season => {
+    return seasons.map((season: any) => {
       const competitionMap = mapsById.get(season.competition.id);
 
       return {

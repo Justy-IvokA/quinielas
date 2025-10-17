@@ -114,9 +114,12 @@ model Brand {
 model User {
   id            String          @id @default(cuid())
   email         String          @unique
+  emailVerified DateTime?       // Auth.js requirement
+  image         String?         // Auth.js requirement (profile picture URL)
   phone         String?         @unique
   phoneVerified Boolean         @default(false)
   name          String?
+  metadata      Json?           // Flexible JSON field for extensibility (preferences, limits, flags, etc.)
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
   lastSignInAt  DateTime?

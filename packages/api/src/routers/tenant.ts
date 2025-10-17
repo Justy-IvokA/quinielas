@@ -182,7 +182,7 @@ export const tenantRouter = router({
         if (error instanceof TRPCError) throw error;
 
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2002") {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2002") {
             throw new TRPCError({
               code: "CONFLICT",
               message: "A tenant with this slug already exists"
@@ -259,7 +259,7 @@ export const tenantRouter = router({
         if (error instanceof TRPCError) throw error;
 
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2002") {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2002") {
             throw new TRPCError({
               code: "CONFLICT",
               message: "A tenant with this slug already exists"
@@ -389,7 +389,7 @@ export const tenantRouter = router({
         return membership;
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2003") {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2003") {
             throw new TRPCError({
               code: "NOT_FOUND",
               message: "Tenant not found"
@@ -429,7 +429,7 @@ export const tenantRouter = router({
         return { success: true };
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2025") {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025") {
             throw new TRPCError({
               code: "NOT_FOUND",
               message: "Membership not found"
@@ -482,7 +482,7 @@ export const tenantRouter = router({
         return membership;
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {
-          if (error.code === "P2025") {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025") {
             throw new TRPCError({
               code: "NOT_FOUND",
               message: "Membership not found"

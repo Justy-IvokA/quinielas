@@ -23,6 +23,12 @@
       "@admin/*": [
         "src/*"
       ],
+      "@admin/app/*": [
+        "app/*"
+      ],
+      "@admin/providers/*": [
+        "app/providers/*"
+      ],
       "@admin/trpc": [
         "src/trpc/react.ts"
       ],

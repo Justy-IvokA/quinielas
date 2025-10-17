@@ -1,3 +1,9 @@
+import { config } from "dotenv";
+import { resolve } from "path";
+
+// Load environment variables from .env file
+config({ path: resolve(__dirname, "../.env") });
+
 import { lockPredictionsJob } from "./jobs/lock-predictions";
 import { syncFixturesJob } from "./jobs/sync-fixtures";
 import { autoSyncFixturesJob } from "./jobs/auto-sync-fixtures";
@@ -5,6 +11,8 @@ import { scoreFinalJob } from "./jobs/score-final";
 import { leaderboardSnapshotJob } from "./jobs/leaderboard-snapshot";
 
 console.log("🚀 Worker starting...");
+console.log(`📊 Sports Provider: ${process.env.SPORTS_PROVIDER || "mock"}`);
+console.log(`🔑 API Key configured: ${process.env.SPORTS_API_KEY ? "✅ Yes" : "❌ No"}`);
 
 // Schedule lock predictions job (every minute)
 setInterval(async () => {

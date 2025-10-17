@@ -5,7 +5,11 @@
   "type": "module",
   "main": "src/index.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts",
+    "./contrast": "./src/contrast.ts",
+    "./colorUtils": "./src/colorUtils.ts",
+    "./resolveTheme": "./src/resolveTheme.ts"
   },
   "scripts": {
     "build": "tsc --build",

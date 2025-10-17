@@ -49,7 +49,9 @@ describe("Tenant Router", () => {
     tenant: null,
     brand: null,
     session,
-    req: undefined
+    req: undefined,
+    ip: null,
+    userAgent: null
   });
 
   describe("Authorization", () => {

@@ -8,9 +8,9 @@ import type { TenantRole } from "@qp/db";
  * Create auth instance from config
  * Returns the auth function to get the current session
  */
-export function createAuthInstance(authConfig: NextAuthConfig) {
+export function createAuthInstance(authConfig: NextAuthConfig): () => Promise<Session | null> {
   const { auth } = NextAuth(authConfig);
-  return auth;
+  return auth as () => Promise<Session | null>;
 }
 
 /**
@@ -82,7 +82,7 @@ export function getDefaultRedirectForRole(role: TenantRole | null, locale: strin
     case "TENANT_EDITOR":
       return `/${locale}/dashboard`;
     case "PLAYER":
-      return `/${locale}/(player)/dashboard`;
+      return `/${locale}/dashboard`; // Fixed: removed (player) route group
     default:
       return `/${locale}`;
   }

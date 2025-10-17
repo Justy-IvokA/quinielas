@@ -112,7 +112,7 @@ export class InvitesService {
       select: { email: true }
     });
 
-    const existingEmailSet = new Set(existingEmails.map((inv) => inv.email));
+    const existingEmailSet = new Set(existingEmails.map((inv: { email: string }) => inv.email));
     const newEmails = input.emails.filter((email) => !existingEmailSet.has(email.toLowerCase()));
 
     if (newEmails.length === 0) {
@@ -274,10 +274,10 @@ export class InvitesService {
 
     return {
       total: invitations.length,
-      pending: invitations.filter((inv) => inv.status === "PENDING").length,
-      accepted: invitations.filter((inv) => inv.status === "ACCEPTED").length,
-      expired: invitations.filter((inv) => inv.status === "EXPIRED").length,
-      totalSent: invitations.reduce((sum, inv) => sum + inv.sentCount, 0)
+      pending: invitations.filter((inv: { status: string }) => inv.status === "PENDING").length,
+      accepted: invitations.filter((inv: { status: string }) => inv.status === "ACCEPTED").length,
+      expired: invitations.filter((inv: { status: string }) => inv.status === "EXPIRED").length,
+      totalSent: invitations.reduce((sum: number, inv: { sentCount: number }) => sum + inv.sentCount, 0)
     };
   }
 }

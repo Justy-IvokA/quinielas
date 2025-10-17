@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { useSession, signOut } from "next-auth/react";
 import Image from "next/image";
 import { 
   Menu, 
@@ -14,12 +15,31 @@ import {
   Sun,
   Moon,
   Monitor,
-  Sparkles
+  Sparkles,
+  LogOut,
+  User,
+  Settings,
+  LayoutDashboard,
+  ListChecks,
+  Save,
+  Loader2
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
 import { Link } from "@web/i18n/navigation";
 import { LocaleSwitcher } from "./locale-switcher";
+import { Avatar } from "@qp/ui/components/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@qp/ui/components/dropdown-menu";
+import { Input } from "@qp/ui/components/input";
+import { trpc } from "@web/trpc/react";
+import { toast } from "sonner";
 
 type MenuPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -35,13 +55,68 @@ export function SiteHeader({
   logoUrl
 }: SiteHeaderProps) {
   const t = useTranslations("nav");
+  const { data: session, status, update: updateSession } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
+  
+  // Profile edit state
+  const [editName, setEditName] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  
+  // Get user profile with changes counter
+  const { data: userProfile, refetch: refetchProfile } = trpc.user.getProfile.useQuery(
+    undefined,
+    {
+      enabled: status === "authenticated",
+      refetchOnWindowFocus: false,
+    }
+  );
+  
+  // Calculate remaining changes from metadata
+  const profileChangesUsed = userProfile?.metadata?.limits?.profileChanges?.used ?? 0;
+  const profileChangesMax = userProfile?.metadata?.limits?.profileChanges?.max ?? 3;
+  const remainingChanges = profileChangesMax - profileChangesUsed;
+  const hasReachedLimit = remainingChanges <= 0;
+  
+  // tRPC mutation
+  const updateProfile = trpc.user.updateProfile.useMutation({
+    onSuccess: async (data) => {
+      const changesUsed = data.metadata?.limits?.profileChanges?.used ?? 0;
+      const changesMax = data.metadata?.limits?.profileChanges?.max ?? 3;
+      const remaining = changesMax - changesUsed;
+      
+      toast.success(`Perfil actualizado correctamente. Te quedan ${remaining} cambios.`);
+      
+      // Update session with new data
+      await updateSession({
+        user: {
+          ...session?.user,
+          name: data.name,
+          email: session?.user?.email || data.email,
+          image: session?.user?.image,
+        },
+      });
+      
+      // Refetch profile to update counter
+      await refetchProfile();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al actualizar el perfil");
+    },
+  });
 
   useEffect(() => {
     setMounted(true);
   }, []);
+  
+  // Initialize edit fields when profile loads
+  useEffect(() => {
+    if (userProfile) {
+      setEditName(userProfile.name || "");
+      setEditPhone(userProfile.phone || "");
+    }
+  }, [userProfile]);
 
   // Close menu on escape key
   useEffect(() => {
@@ -100,11 +175,24 @@ export function SiteHeader({
     }
   };
 
-  const navItems = [
-    { href: "/", label: t("home") || "Inicio", icon: Home },
-    { href: "/pools", label: t("pools") || "Quinielas", icon: Trophy },
-    { href: "/register", label: t("register") || "Registrarse", icon: UserPlus },
-  ];
+  // Navigation items based on authentication status
+  const getNavItems = () => {
+    // If not authenticated, show only public pages
+    if (status !== "authenticated" || !session?.user) {
+      return [
+        { href: "/", label: t("home") || "Inicio", icon: Home },
+        { href: "/auth/signin", label: t("signin") || "Regístrate", icon: UserPlus },
+      ];
+    }
+
+    // If authenticated, show user modules
+    return [
+      { href: "/", label: t("home") || "Inicio", icon: Home },
+      { href: "/dashboard", label: t("dashboard") || "Dashboard", icon: LayoutDashboard },
+    ];
+  };
+
+  const navItems = getNavItems();
 
   const themeOptions = [
     { value: "light", label: "Light", icon: Sun },
@@ -114,6 +202,7 @@ export function SiteHeader({
 
   return (
     <>
+
       {/* Floating Hamburger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -188,6 +277,152 @@ export function SiteHeader({
             )}
           </div>
 
+          {/* Authentication Section */}
+          {mounted && (
+            <div className="mb-8">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <div className="w-8 h-px bg-gradient-to-r from-primary to-transparent" />
+                <User className="w-3 h-3" />
+                Cuenta
+              </div>
+              {status === "authenticated" && session?.user ? (
+                <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Avatar
+                      src={session.user.image || undefined}
+                      alt={session.user.name || session.user.email || "User"}
+                      fallback={(session.user.name?.[0] || session.user.email?.[0] || "U").toUpperCase()}
+                      size="sm"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {session.user.name || "Usuario"}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {session.user.email}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Profile Edit Form */}
+                  <div className="space-y-3 mb-3">
+                    {/* Changes Counter */}
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Cambios restantes
+                      </span>
+                      <span className={`text-xs font-bold ${
+                        remainingChanges === 0 
+                          ? "text-destructive" 
+                          : remainingChanges === 1 
+                          ? "text-warning" 
+                          : "text-primary"
+                      }`}>
+                        {remainingChanges} / {profileChangesMax}
+                      </span>
+                    </div>
+                    
+                    {hasReachedLimit && (
+                      <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                        <p className="text-xs text-destructive font-medium">
+                          Has alcanzado el límite de cambios. Contacta al soporte si necesitas más modificaciones.
+                        </p>
+                      </div>
+                    )}
+                    
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Nombre
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="text"
+                          value={editName}
+                          onChange={(e) => setEditName(e.target.value)}
+                          placeholder="Tu nombre"
+                          className="flex-1 h-9 text-sm"
+                          disabled={updateProfile.isPending || hasReachedLimit}
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Teléfono (opcional)
+                      </label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="tel"
+                          value={editPhone}
+                          onChange={(e) => setEditPhone(e.target.value)}
+                          placeholder="+525512345678"
+                          className="flex-1 h-9 text-sm"
+                          disabled={updateProfile.isPending || hasReachedLimit}
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Formato internacional: +52 para México
+                      </p>
+                    </div>
+                    
+                    {/* Save Button */}
+                    <button
+                      onClick={() => {
+                        updateProfile.mutate({
+                          name: editName || undefined,
+                          phone: editPhone || null,
+                        });
+                      }}
+                      disabled={updateProfile.isPending || (!editName && !editPhone) || hasReachedLimit}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {updateProfile.isPending ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Guardando...
+                        </>
+                      ) : (
+                        <>
+                          <Save className="w-4 h-4" />
+                          Guardar cambios
+                        </>
+                      )}
+                    </button>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      setIsOpen(false);
+                      signOut({ callbackUrl: "/" });
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-destructive/10 hover:bg-destructive/20 text-destructive text-sm font-medium transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Cerrar sesión
+                  </button>
+                </div>
+              ) : status === "loading" ? (
+                <div className="p-4 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3 bg-muted rounded animate-pulse" />
+                      <div className="h-2 bg-muted rounded w-2/3 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/auth/signin"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full p-4 rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground text-center font-medium hover:shadow-lg hover:shadow-primary/20 transition-all duration-300"
+                >
+                  Iniciar sesión
+                </Link>
+              )}
+            </div>
+          )}
+
           {/* Navigation Links */}
           <nav className="flex flex-col gap-2 mb-8">
             <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 flex items-center gap-2">
@@ -201,7 +436,7 @@ export function SiteHeader({
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="group flex items-center gap-4 p-4 rounded-xl hover:bg-primary/10 transition-all duration-300 hover:translate-x-2"
+                  className="group flex items-center gap-4 p-1 rounded-xl hover:bg-primary/10 transition-all duration-300 hover:translate-x-2"
                 >
                   <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
                     <Icon className="w-5 h-5 text-primary" />
@@ -263,7 +498,7 @@ export function SiteHeader({
           {/* Footer */}
           <div className="mt-auto pt-8 border-t border-border/50">
             <p className="text-xs text-center text-muted-foreground">
-              Quinielas White-Label Platform
+              Quinielas
             </p>
             <p className="text-xs text-center text-muted-foreground/60 mt-1">
               © 2025 · Powered by Innotecnia

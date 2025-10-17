@@ -84,11 +84,26 @@ export async function syncFixturesJob(params: {
         }
       });
     } else {
-      // Create new team
-      const team = await prisma.team.create({
-        data: {
+      // Generate slug
+      const slug = teamDTO.name.toLowerCase().replace(/\s+/g, "-");
+      
+      // Upsert team (create or update if exists by sportId + slug)
+      const team = await prisma.team.upsert({
+        where: {
+          sportId_slug: {
+            sportId: season.competition.sportId,
+            slug: slug
+          }
+        },
+        update: {
+          name: teamDTO.name,
+          shortName: teamDTO.shortName,
+          logoUrl: teamDTO.logoUrl,
+          countryCode: teamDTO.countryCode
+        },
+        create: {
           sportId: season.competition.sportId,
-          slug: teamDTO.name.toLowerCase().replace(/\s+/g, "-"),
+          slug: slug,
           name: teamDTO.name,
           shortName: teamDTO.shortName,
           logoUrl: teamDTO.logoUrl,
@@ -98,9 +113,19 @@ export async function syncFixturesJob(params: {
 
       teamId = team.id;
 
-      // Create external mapping
-      await prisma.externalMap.create({
-        data: {
+      // Create external mapping if it doesn't exist
+      await prisma.externalMap.upsert({
+        where: {
+          sourceId_entityType_externalId: {
+            sourceId: externalSource.id,
+            entityType: "TEAM",
+            externalId: teamDTO.externalId
+          }
+        },
+        update: {
+          entityId: teamId
+        },
+        create: {
           sourceId: externalSource.id,
           entityType: "TEAM",
           entityId: teamId,

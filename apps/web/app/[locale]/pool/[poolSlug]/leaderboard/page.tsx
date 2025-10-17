@@ -7,10 +7,11 @@ import { prisma } from "@qp/db";
 import { LeaderboardView } from "./components/leaderboard-view";
 
 export async function generateMetadata({
-  params: { locale, poolSlug }
+  params
 }: {
-  params: { locale: string; poolSlug: string };
+  params: Promise<{ locale: string; poolSlug: string }>;
 }): Promise<Metadata> {
+  const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "pool.leaderboard" });
 
   return {
@@ -19,10 +20,11 @@ export async function generateMetadata({
 }
 
 export default async function PoolLeaderboardPage({
-  params: { poolSlug }
+  params
 }: {
-  params: { poolSlug: string };
+  params: Promise<{ poolSlug: string }>;
 }) {
+  const { poolSlug } = await params;
   const pool = await prisma.pool.findFirst({
     where: { slug: poolSlug },
     include: {

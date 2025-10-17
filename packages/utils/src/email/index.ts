@@ -1,10 +1,28 @@
 import type { EmailAdapter } from "./adapter";
 import { MockEmailAdapter } from "./mock";
 import { SMTPEmailAdapter } from "./smtp";
+import {
+  createInvitationEmail,
+  createInviteCodeEmail,
+  createMagicLinkEmail,
+} from "./templates";
+import type {
+  EmailBrandColors,
+  EmailBrandInfo,
+  EmailLocale,
+  InvitationEmailParams,
+  InviteCodeEmailParams,
+  MagicLinkEmailParams,
+  EmailTemplate,
+} from "./types";
 
 export * from "./adapter";
 export * from "./mock";
 export * from "./smtp";
+export * from "./types";
+export * from "./translations";
+export * from "./templates";
+export * from "./branding-helpers";
 
 /**
  * Get email adapter based on environment configuration
@@ -40,11 +58,43 @@ export function getEmailAdapter(config: {
 }
 
 /**
- * Email templates
+ * Modern email templates with branding and i18n support
  */
 export const emailTemplates = {
-  invitation: (params: { poolName: string; inviteUrl: string; expiresAt: Date }) => ({
-    subject: `You're invited to join ${params.poolName}`,
+  /**
+   * Create invitation email with brand colors and locale
+   */
+  invitation: (params: InvitationEmailParams): EmailTemplate => {
+    return createInvitationEmail(params);
+  },
+
+  /**
+   * Create invite code email with brand colors and locale
+   */
+  inviteCode: (params: InviteCodeEmailParams): EmailTemplate => {
+    return createInviteCodeEmail(params);
+  },
+
+  /**
+   * Create magic link email with brand colors and locale
+   */
+  magicLink: (params: MagicLinkEmailParams): EmailTemplate => {
+    return createMagicLinkEmail(params);
+  },
+};
+
+/**
+ * Legacy email templates (deprecated - use emailTemplates instead)
+ * Maintained for backward compatibility
+ */
+export const legacyEmailTemplates = {
+  invitation: (params: { 
+    poolName: string; 
+    inviteUrl: string; 
+    expiresAt: Date;
+    brandName?: string;
+  }) => ({
+    subject: `You're invited to join ${params.poolName}${params.brandName ? ` - ${params.brandName}` : ''}`,
     html: `
       <!DOCTYPE html>
       <html>
@@ -83,8 +133,13 @@ export const emailTemplates = {
     text: `You've been invited to join ${params.poolName}.\n\nAccept your invitation: ${params.inviteUrl}\n\nThis invitation expires on ${params.expiresAt.toLocaleDateString()}.`
   }),
 
-  inviteCode: (params: { poolName: string; code: string; poolUrl: string }) => ({
-    subject: `Your invite code for ${params.poolName}`,
+  inviteCode: (params: { 
+    poolName: string; 
+    code: string; 
+    poolUrl: string;
+    brandName?: string;
+  }) => ({
+    subject: `Your invite code for ${params.poolName}${params.brandName ? ` - ${params.brandName}` : ''}`,
     html: `
       <!DOCTYPE html>
       <html>

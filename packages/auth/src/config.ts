@@ -4,6 +4,7 @@ import type { PrismaClient, TenantRole } from "@qp/db";
 import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { parseAuthEnv } from "./env";
+import { createTransport } from "nodemailer";
 
 export interface AuthConfigOptions {
   prisma: PrismaClient;
@@ -47,7 +48,71 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
             pass: env.EMAIL_SERVER_PASSWORD
           }
         },
-        from: env.EMAIL_FROM
+        from: env.EMAIL_FROM,
+        // Custom sendVerificationRequest to preserve subdomain in magic link
+        async sendVerificationRequest(params) {
+          const { identifier: email, url, provider } = params;
+          const { host } = new URL(url);
+          
+          // Log for debugging
+          console.log('[auth] sendVerificationRequest called');
+          console.log('[auth] Email:', email);
+          console.log('[auth] Generated URL:', url);
+          console.log('[auth] Host from URL:', host);
+          
+          // Create transport
+          const transport = createTransport(provider.server);
+          
+          // Determine protocol based on hostname
+          const protocol = host.includes('localhost') ? 'http' : 'https';
+          
+          // Build email HTML
+          const html = `
+            <!DOCTYPE html>
+            <html>
+              <head>
+                <meta charset="utf-8">
+                <style>
+                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background: #0ea5e9; color: white; padding: 20px; text-align: center; }
+                  .content { padding: 20px; background: #f9fafb; }
+                  .button { display: inline-block; padding: 12px 24px; background: #0ea5e9; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
+                  .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
+                </style>
+              </head>
+              <body>
+                <div class="container">
+                  <div class="header">
+                    <h1>Sign in to Quinielas</h1>
+                  </div>
+                  <div class="content">
+                    <p>Click the button below to sign in to your account:</p>
+                    <p style="text-align: center;">
+                      <a href="${url}" class="button">Sign In</a>
+                    </p>
+                    <p><small>This link will expire in 24 hours.</small></p>
+                    <p><small>If you didn't request this email, you can safely ignore it.</small></p>
+                    <p><small>If the button doesn't work, copy and paste this link into your browser:<br>${url}</small></p>
+                  </div>
+                  <div class="footer">
+                    <p>Quinielas WL - Sports Prediction Platform</p>
+                  </div>
+                </div>
+              </body>
+            </html>
+          `;
+          
+          const text = `Sign in to Quinielas\n\nClick this link to sign in: ${url}\n\nThis link will expire in 24 hours.\nIf you didn't request this email, you can safely ignore it.`;
+          
+          await transport.sendMail({
+            to: email,
+            from: provider.from,
+            subject: `Sign in to Quinielas`,
+            text,
+            html,
+          });
+        }
       })
     );
   }
@@ -69,6 +134,9 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
     adapter: PrismaAdapter(prisma) as any,
     providers,
     
+    // CRITICAL: Trust the host header for subdomain support
+    trustHost: true,
+    
     session: {
       strategy: "jwt",
       maxAge: 30 * 24 * 60 * 60 // 30 days
@@ -79,6 +147,23 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
       verifyRequest: "/es-MX/auth/verify-request",
       error: "/es-MX/auth/error"
     },
+
+    // Use JWT strategy to allow cross-subdomain sessions
+    useSecureCookies: process.env.NODE_ENV === "production",
+    
+    // Set cookies to work across subdomains in production
+    cookies: process.env.NODE_ENV === "production" ? {
+      sessionToken: {
+        name: `__Secure-next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          secure: true,
+          domain: `.${process.env.NEXT_PUBLIC_BASE_DOMAIN || 'quinielas.mx'}` // Share across subdomains
+        }
+      }
+    } : undefined,
 
     callbacks: {
       async jwt({ token, user, trigger }) {

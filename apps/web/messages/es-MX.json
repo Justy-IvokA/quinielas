@@ -19,26 +19,32 @@
     "sort": "Ordenar",
     "actions": "Acciones",
     "noResults": "No se encontraron resultados",
-    "selectLanguage": "Seleccionar idioma"
+    "selectLanguage": "Seleccionar idioma",
+    "page": "Página {current} de {total}"
   },
   "nav": {
     "home": "Inicio",
     "pools": "Quinielas",
+    "myPools": "Mis Quinielas",
     "leaderboard": "Tabla de posiciones",
     "fixtures": "Partidos",
     "rules": "Reglas",
     "register": "Registrarse",
+    "signin": "Iniciar sesión",
     "login": "Iniciar sesión",
     "logout": "Cerrar sesión",
     "profile": "Perfil",
+    "dashboard": "Dashboard",
     "admin": "Administración"
   },
   "home": {
     "hero": {
       "title": "Bienvenido a {brandName}",
+      "title0": "Quiniela Mundial 2026",
       "subtitle": "La plataforma de quinielas deportivas más completa",
       "tagline": "Usa el 100% de tu branding para crear quinielas en las que pueden participar tus clientes y/o empleados. Asigna premios y reglas personalizadas.",
       "cta": "Únete ahora",
+      "viewMyPools": "Ver mis quinielas",
       "learnMore": "Conoce más",
       "platformLabel": "Innotecnia",
       "healthOnline": "Servicios en línea",
@@ -103,7 +109,7 @@
       "noAccount": "¿No tienes cuenta?",
       "signupLink": "Regístrate aquí",
       "backToSignin": "Volver a inicio de sesión",
-      "legal": "Al continuar, aceptas nuestros {terms} y {privacy}",
+      "legal": "Al continuar, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>",
       "termsLink": "Términos de Servicio",
       "privacyLink": "Política de Privacidad"
     },
@@ -123,6 +129,27 @@
       "checkSpam": "Si no lo ves, revisa tu carpeta de spam",
       "resendLink": "Reenviar enlace",
       "resending": "Reenviando..."
+    },
+    "completeProfile": {
+      "title": "Completa tu perfil",
+      "subtitle": "Solo necesitamos algunos datos más para comenzar",
+      "emailLabel": "Correo electrónico",
+      "emailVerified": "Tu correo ha sido verificado",
+      "nameLabel": "Nombre completo",
+      "namePlaceholder": "Juan Pérez",
+      "nameDescription": "Así aparecerás en las tablas de posiciones",
+      "nameRequired": "El nombre es requerido",
+      "nameMinLength": "El nombre debe tener al menos 2 caracteres",
+      "nameMaxLength": "El nombre no puede exceder 100 caracteres",
+      "phoneLabel": "Teléfono (opcional)",
+      "phonePlaceholder": "+525512345678",
+      "phoneDescription": "Para recibir notificaciones por WhatsApp o SMS",
+      "phoneInvalid": "Formato inválido. Usa formato internacional: +525512345678",
+      "phoneAlreadyExists": "Este número de teléfono ya está registrado",
+      "submit": "Continuar",
+      "submitting": "Guardando...",
+      "success": "¡Perfil completado exitosamente!",
+      "error": "Error al actualizar perfil"
     }
   },
   "register": {
@@ -185,11 +212,26 @@
     },
     "sections": {
       "prizes": "Premios",
-      "howItWorks": "¿Cómo funciona?"
+      "howItWorks": "¿Cómo funciona?",
+      "rules": "Reglas"
     },
     "prize": {
       "rank": "Lugar",
       "ranks": "Lugares"
+    },
+    "howItWorks": {
+      "step1": {
+        "title": "Regístrate",
+        "description": "Únete a la quiniela y crea tu cuenta"
+      },
+      "step2": {
+        "title": "Haz tus pronósticos",
+        "description": "Predice los marcadores antes de cada partido"
+      },
+      "step3": {
+        "title": "Gana premios",
+        "description": "Acumula puntos y compite por los premios"
+      }
     },
     "join": "Unirse",
     "leave": "Salir",
@@ -197,32 +239,97 @@
     "full": "Quiniela llena"
   },
   "predictions": {
-    "title": "Predicciones",
+    "title": "Pronósticos - {poolSlug}",
     "makeYourPrediction": "Haz tu predicción",
     "homeTeam": "Equipo local",
     "awayTeam": "Equipo visitante",
+    "homeScore": "Marcador local",
+    "awayScore": "Marcador visitante",
     "score": "Marcador",
     "locked": "Bloqueado",
-    "saved": "Guardado",
-    "save": "Guardar predicción",
-    "edit": "Editar predicción",
+    "saved": "Pronóstico guardado exitosamente",
+    "save": "Guardar pronóstico",
+    "saveAll": "Guardar todo",
+    "saving": "Guardando...",
+    "edit": "Editar",
+    "cancel": "Cancelar",
     "deadline": "Fecha límite",
     "points": "Puntos",
     "exactScore": "Marcador exacto",
     "correctSign": "Signo correcto",
-    "goalDifference": "Diferencia de goles"
+    "goalDifference": "Diferencia de goles",
+    "loading": "Cargando partidos...",
+    "noMatches": "No hay partidos disponibles",
+    "unsavedChanges": "{count} cambios sin guardar",
+    "savedSuccess": "{count} pronósticos guardados",
+    "savedWithErrors": "{count} guardados, {errors} errores",
+    "filters": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "today": "Hoy",
+      "finished": "Finalizados"
+    },
+    "status": {
+      "scheduled": "Programado",
+      "live": "En vivo",
+      "finished": "Finalizado",
+      "locked": "Bloqueado"
+    },
+    "errors": {
+      "nothingToSave": "No hay cambios para guardar",
+      "saveFailed": "Error al guardar pronósticos",
+      "matchLocked": "El partido ya comenzó, no puedes modificar tu pronóstico"
+    }
+  },
+  "participants": {
+    "title": "Participantes - {poolSlug}",
+    "loading": "Cargando participantes...",
+    "noParticipants": "No hay participantes aún",
+    "searchPlaceholder": "Buscar por nombre o correo...",
+    "status": {
+      "finalized": "Finalizada"
+    },
+    "stats": {
+      "totalParticipants": "Participantes",
+      "averagePoints": "Puntos promedio",
+      "averageExacts": "Exactos promedio",
+      "totalPredictions": "Pronósticos totales"
+    },
+    "columns": {
+      "name": "Nombre",
+      "points": "Puntos",
+      "exacts": "Exactos",
+      "signs": "Signos",
+      "misses": "Fallas",
+      "draws": "Empates",
+      "predictions": "Pronósticos",
+      "onTime": "A tiempo"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página {current} de {total}"
+    }
   },
   "leaderboard": {
     "title": "Tabla de posiciones",
-    "rank": "Posición",
+    "rank": "Pos",
     "player": "Jugador",
     "points": "Puntos",
+    "exact": "Exactos",
+    "sign": "Signos",
+    "predictions": "Pronósticos",
     "exactScores": "Marcadores exactos",
     "correctSigns": "Signos correctos",
     "matches": "Partidos",
     "lastUpdated": "Última actualización",
     "live": "En vivo",
-    "final": "Final"
+    "final": "Final",
+    "you": "Tú",
+    "noEntries": "No hay entradas en la tabla de posiciones",
+    "errors": {
+      "loadFailed": "Error al cargar la tabla de posiciones"
+    }
   },
   "matches": {
     "title": "Partidos",
@@ -311,6 +418,125 @@
       "server": "import { useTranslations } from \"next-intl\";\n\nexport default function MyPage() {\n  const t = useTranslations(\"common\");\n  return <h1>{t(\"appName\")}</h1>;\n}",
       "client": "\"use client\";\n\nimport { useTranslations } from \"next-intl\";\n\nexport function MyComponent() {\n  const t = useTranslations(\"common\");\n  return <button>{t(\"submit\")}</button>;\n}",
       "navigation": "import { Link } from \"@web/i18n/navigation\";\n\n// Agrega automáticamente el prefijo del locale\n<Link href=\"/register\">{tNav(\"register\")}</Link>"
+    }
+  },
+  "myPools": {
+    "title": "Mis Quinielas",
+    "subtitle": "Quinielas en las que participas e invitaciones pendientes",
+    "loading": "Cargando tus quinielas...",
+    "filters": {
+      "all": "Todas",
+      "active": "Activas",
+      "finalized": "Finalizadas",
+      "pending": "Pendientes"
+    },
+    "sort": {
+      "recent": "Recientes",
+      "nextKickoff": "Próximo partido",
+      "finalizedRecent": "Finalizadas recientes"
+    },
+    "searchPlaceholder": "Buscar por título o competición...",
+    "status": {
+      "active": "Activa",
+      "finalized": "Finalizada",
+      "pendingInvite": "Invitación pendiente"
+    },
+    "actions": {
+      "myPredictions": "Mis pronósticos",
+      "viewResults": "Ver resultados",
+      "acceptInvite": "Aceptar invitación",
+      "joinNow": "Unirme"
+    },
+    "info": {
+      "participants": "{count} participantes",
+      "nextMatch": "Próximo partido: {date}",
+      "allFinished": "Todos los partidos finalizados",
+      "noNextMatch": "Sin partidos programados"
+    },
+    "empty": {
+      "title": "Aún no formas parte de ninguna quiniela",
+      "description": "¿Tienes un código o invitación por email?",
+      "noResults": "No se encontraron quinielas con los filtros aplicados",
+      "tryDifferentFilters": "Intenta con diferentes filtros o búsqueda"
+    },
+    "errors": {
+      "loadFailed": "Error al cargar tus quinielas",
+      "retry": "Reintentar"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "subtitle": "Gestiona tus quinielas y pronósticos",
+    "stats": {
+      "activePools": "Quinielas activas",
+      "upcomingMatches": "Partidos próximos",
+      "totalParticipants": "Total participantes"
+    },
+    "sections": {
+      "myPools": "Mis Quinielas"
+    },
+    "card": {
+      "nextMatch": "Próximo partido",
+      "participants": "Participantes",
+      "active": "Activa",
+      "finalized": "Finalizada",
+      "viewFixtures": "Ver partidos"
+    },
+    "empty": {
+      "title": "No tienes quinielas activas",
+      "description": "Únete a una quiniela para comenzar a hacer pronósticos",
+      "browseButton": "Explorar quinielas",
+      "noResults": "No se encontraron quinielas",
+      "tryDifferentFilters": "Intenta con diferentes filtros o búsqueda",
+      "clearFilters": "Limpiar filtros"
+    },
+    "errors": {
+      "loadFailed": "Error al cargar el panel",
+      "retry": "Reintentar"
+    }
+  },
+  "fixtures": {
+    "title": "Partidos - {poolSlug}",
+    "subtitle": "Haz tus pronósticos antes del inicio de cada partido",
+    "loading": "Cargando partidos...",
+    "noMatches": "No hay partidos disponibles",
+    "round": "Jornada {number}",
+    "tabs": {
+      "fixtures": "Partidos",
+      "leaderboard": "Tabla de posiciones",
+      "stats": "Estadísticas"
+    },
+    "filters": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "live": "En vivo",
+      "finished": "Finalizados"
+    },
+    "status": {
+      "scheduled": "Programado",
+      "live": "En vivo",
+      "finished": "Finalizado",
+      "locked": "Bloqueado"
+    },
+    "yourPrediction": "Tu pronóstico",
+    "noPrediction": "Sin pronóstico",
+    "points": "puntos",
+    "exactScore": "Exacto",
+    "errors": {
+      "loadFailed": "Error al cargar partidos",
+      "matchLocked": "El partido ya comenzó"
+    },
+    "stats": {
+      "apiKeyRequired": "Se requiere configurar la API key de API-Football para mostrar estadísticas",
+      "setupTitle": "Configuración requerida",
+      "setupDescription": "Para habilitar las estadísticas en tiempo real, sigue estos pasos:",
+      "setupStep1": "Obtén una API key gratuita en https://www.api-football.com",
+      "setupStep2": "Agrega NEXT_PUBLIC_SPORTS_API_KEY=tu_api_key en el archivo .env.local",
+      "setupStep3": "Reinicia el servidor de desarrollo",
+      "livescoreTitle": "Marcadores en vivo",
+      "fixturesTitle": "Calendario de partidos",
+      "standingsTitle": "Tabla de posiciones",
+      "poweredBy": "Estadísticas proporcionadas por"
     }
   }
 }

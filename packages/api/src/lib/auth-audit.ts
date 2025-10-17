@@ -37,11 +37,16 @@ export async function logAuthEvent(data: AuthAuditData): Promise<void> {
     // Sanitize IP based on privacy settings
     const sanitizedIp = await sanitizeIpAddress(data.ipAddress, context);
 
+    // Skip audit log if no tenantId (system-level auth events)
+    if (!data.tenantId) {
+      return;
+    }
+
     await prisma.auditLog.create({
       data: {
-        tenantId: data.tenantId || null,
-        actorId: data.userId || null,
-        userId: data.userId || null,
+        tenantId: data.tenantId,
+        actorId: data.userId || undefined,
+        userId: data.userId || undefined,
         action: data.action,
         ipAddress: sanitizedIp,
         userAgent: data.userAgent,

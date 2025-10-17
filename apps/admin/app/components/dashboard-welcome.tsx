@@ -34,9 +34,9 @@ export function DashboardWelcome({ tenantName, brandName }: DashboardWelcomeProp
           <Link href="/pools/new">{t("createPool")}</Link>
         </Button>
         <Button asChild variant="outline">
-          <Link href="/brands">{t("manageBrands")}</Link>
+          <Link href="/branding">{t("manageBrands")}</Link>
         </Button>
-        <ThemeToggle />
+        
       </div>
     </section>
   );

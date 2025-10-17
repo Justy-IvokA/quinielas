@@ -78,6 +78,9 @@ export type { AlertProps } from "./components/alert";
 export { EmptyState } from "./components/empty-state";
 export type { EmptyStateProps } from "./components/empty-state";
 
+export { GlassCard } from "./components/glass-card";
+export type { GlassCardProps } from "./components/glass-card";
+
 export {
   Table,
   TableHeader,
@@ -98,6 +101,24 @@ export { RadioGroup, RadioGroupItem } from "./components/radio-group";
 export { Tabs, TabsList, TabsTrigger, TabsContent } from "./components/tabs";
 
 export { Popover, PopoverTrigger, PopoverContent } from "./components/popover";
+
+export {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuGroup,
+  DropdownMenuPortal,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup
+} from "./components/dropdown-menu";
 
 export { ThemeToggle } from "./components/theme-toggle";
 

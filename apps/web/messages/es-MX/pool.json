@@ -49,8 +49,10 @@
     },
     "validation": {
       "incomplete": "Ingresa ambos marcadores",
-      "noPredictions": "No hay pronósticos para guardar"
-    }
+      "noPredictions": "No hay pronósticos para guardar",
+      "noChanges": "No hay cambios para guardar"
+    },
+    "unsavedChanges": "Cambios sin guardar"
   },
   "leaderboard": {
     "title": "Tabla de Posiciones",

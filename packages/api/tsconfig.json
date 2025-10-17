@@ -10,7 +10,9 @@
   "include": ["src"],
   "references": [
     { "path": "../auth" },
+    { "path": "../branding" },
     { "path": "../db" },
+    { "path": "../scoring" },
     { "path": "../utils" }
   ]
 }

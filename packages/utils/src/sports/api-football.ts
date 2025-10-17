@@ -1,4 +1,5 @@
 import type { SportsProvider, SeasonDTO, ResultDTO, TeamDTO, MatchDTO } from "./provider";
+import type { ExtendedSportsProvider, CompetitionDTO, SeasonInfoDTO, StageDTO, FixturePreviewDTO } from "./extended-provider";
 import { sportsAPICache } from "./cache";
 
 /**
@@ -32,7 +33,7 @@ interface APIFootballResponse<T> {
   response: T;
 }
 
-export class APIFootballProvider implements SportsProvider {
+export class APIFootballProvider implements SportsProvider, ExtendedSportsProvider {
   private config: APIFootballConfig;
   private baseUrl: string;
   private maxRetries: number;
@@ -251,6 +252,204 @@ export class APIFootballProvider implements SportsProvider {
     }
 
     return results;
+  }
+
+  /**
+   * List available competitions with optional filtering
+   */
+  async listCompetitions(params: {
+    query?: string;
+    country?: string;
+    youthOnly?: boolean;
+    limit?: number;
+  }): Promise<CompetitionDTO[]> {
+    console.log(`[API-Football] Listing competitions`, params);
+
+    const requestParams: Record<string, string> = {};
+    
+    if (params.query) {
+      requestParams.search = params.query;
+    }
+    if (params.country) {
+      requestParams.country = params.country;
+    }
+
+    const response = await this.request<any[]>("/leagues", requestParams);
+
+    let competitions: CompetitionDTO[] = response.response.map((item: any) => {
+      const league = item.league;
+      const country = item.country;
+      
+      // Detect youth competitions from name
+      const isYouth = /U-?\d{2}|Under[- ]?\d{2}|Youth/i.test(league.name);
+      
+      return {
+        externalId: league.id.toString(),
+        name: league.name,
+        country: country?.name,
+        type: league.type === "Cup" ? "CUP" : league.type === "League" ? "LEAGUE" : "TOURNAMENT",
+        logoUrl: league.logo,
+        isYouth,
+        meta: {
+          countryCode: country?.code,
+          countryFlag: country?.flag
+        }
+      };
+    });
+
+    // Filter by youth if requested
+    if (params.youthOnly) {
+      competitions = competitions.filter(c => c.isYouth);
+    }
+
+    // Apply limit
+    if (params.limit) {
+      competitions = competitions.slice(0, params.limit);
+    }
+
+    return competitions;
+  }
+
+  /**
+   * List available seasons for a competition
+   */
+  async listSeasons(params: {
+    competitionExternalId: string;
+  }): Promise<SeasonInfoDTO[]> {
+    console.log(`[API-Football] Listing seasons for league ${params.competitionExternalId}`);
+
+    const response = await this.request<any[]>("/leagues", {
+      id: params.competitionExternalId
+    });
+
+    if (!response.response || response.response.length === 0) {
+      return [];
+    }
+
+    const league = response.response[0];
+    const seasons: SeasonInfoDTO[] = (league.seasons || []).map((season: any) => ({
+      year: season.year,
+      label: season.year.toString(),
+      startsAt: season.start ? new Date(season.start) : undefined,
+      endsAt: season.end ? new Date(season.end) : undefined,
+      isCurrent: season.current === true
+    }));
+
+    // Sort by year descending (most recent first)
+    return seasons.sort((a, b) => b.year - a.year);
+  }
+
+  /**
+   * List stages and rounds for a specific season
+   */
+  async listStagesAndRounds(params: {
+    competitionExternalId: string;
+    seasonYear: number;
+  }): Promise<StageDTO[]> {
+    console.log(`[API-Football] Listing stages/rounds for league ${params.competitionExternalId}, season ${params.seasonYear}`);
+
+    // Fetch all fixtures to extract unique stages/rounds
+    const response = await this.request<any[]>("/fixtures", {
+      league: params.competitionExternalId,
+      season: params.seasonYear.toString()
+    });
+
+    // Extract unique rounds and group by stage
+    const stagesMap = new Map<string, Set<string>>();
+
+    for (const item of response.response) {
+      const roundString = item.league.round || "Regular Season";
+      
+      // Parse stage and round from strings like:
+      // "Regular Season - 1", "Group A - 1", "Final Stages - Semi-finals"
+      const parts = roundString.split(" - ");
+      
+      if (parts.length >= 2) {
+        const stage = parts[0].trim();
+        const round = parts.slice(1).join(" - ").trim();
+        
+        if (!stagesMap.has(stage)) {
+          stagesMap.set(stage, new Set());
+        }
+        stagesMap.get(stage)!.add(round);
+      } else {
+        // Single-part round (no stage)
+        if (!stagesMap.has("Regular Season")) {
+          stagesMap.set("Regular Season", new Set());
+        }
+        stagesMap.get("Regular Season")!.add(roundString);
+      }
+    }
+
+    // Convert to DTO array
+    const stages: StageDTO[] = Array.from(stagesMap.entries()).map(([label, roundsSet]) => ({
+      label,
+      rounds: Array.from(roundsSet).sort()
+    }));
+
+    return stages;
+  }
+
+  /**
+   * Preview fixtures for a given scope (stage/round filter)
+   */
+  async previewFixtures(params: {
+    competitionExternalId: string;
+    seasonYear: number;
+    stageLabel?: string;
+    roundLabel?: string;
+  }): Promise<FixturePreviewDTO> {
+    console.log(`[API-Football] Previewing fixtures`, params);
+
+    // Fetch all fixtures
+    const response = await this.request<any[]>("/fixtures", {
+      league: params.competitionExternalId,
+      season: params.seasonYear.toString()
+    });
+
+    // Filter by stage/round if provided
+    let filteredFixtures = response.response;
+
+    if (params.stageLabel || params.roundLabel) {
+      filteredFixtures = filteredFixtures.filter((item: any) => {
+        const roundString = item.league.round || "";
+        
+        if (params.stageLabel && params.roundLabel) {
+          // Both stage and round must match
+          return roundString.includes(params.stageLabel) && roundString.includes(params.roundLabel);
+        } else if (params.stageLabel) {
+          // Only stage must match
+          return roundString.includes(params.stageLabel);
+        } else if (params.roundLabel) {
+          // Only round must match
+          return roundString.includes(params.roundLabel);
+        }
+        
+        return true;
+      });
+    }
+
+    // Extract unique teams
+    const teamsSet = new Set<string>();
+    filteredFixtures.forEach((item: any) => {
+      teamsSet.add(item.teams.home.id.toString());
+      teamsSet.add(item.teams.away.id.toString());
+    });
+
+    // Sample matches (up to 5)
+    const sampleMatches = filteredFixtures.slice(0, 5).map((item: any) => ({
+      homeTeam: item.teams.home.name,
+      awayTeam: item.teams.away.name,
+      kickoffTime: new Date(item.fixture.date),
+      round: item.league.round,
+      stage: params.stageLabel
+    }));
+
+    return {
+      teamsCount: teamsSet.size,
+      matchesCount: filteredFixtures.length,
+      sampleMatches
+    };
   }
 }
 

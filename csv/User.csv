@@ -1,5 +1,5 @@
-"id","email","phone","phoneVerified","name","createdAt","updatedAt","lastSignInAt"
-"cmgk8rmq20003uve4bhc958il","vemancera@gmail.com","+522221757251",True,"Víctor E. Mancera G.","2025-10-10 02:42:57.098","2025-10-10 02:42:57.098",NULL
-"cmgk8rmr7000nuve4vvcjvqog","player1@demo.com","+525512345678",True,"Demo Player 1","2025-10-10 02:42:57.14","2025-10-10 02:42:57.14",NULL
-"cmgk8rmr9000ouve441qjqbul","player2@demo.com","+525587654321",True,"Demo Player 2","2025-10-10 02:42:57.141","2025-10-10 02:42:57.141",NULL
-"cmgk8rmra000puve4cujfrzvv","vemancera@ivoka.ai","+522213528341",True,"Eduardo Mancera G.","2025-10-10 02:42:57.143","2025-10-10 02:42:57.143",NULL
+"id","email","phone","phoneVerified","name","createdAt","updatedAt","lastSignInAt","emailVerified","image"
+"cmgk8rmq20003uve4bhc958il","vemancera@gmail.com","+522221757251",True,"Víctor E. Mancera G.","2025-10-10 02:42:57.098","2025-10-10 02:42:57.098",NULL,NULL,NULL
+"cmgk8rmr7000nuve4vvcjvqog","chronos.devs@gmail.com","+522225102025",True,"Angelica Osorio Aceves","2025-10-10 02:42:57.14","2025-10-15 01:49:28.591","2025-10-15 01:49:28.587","2025-10-15 01:49:28.566",NULL
+"cmgk8rmr9000ouve441qjqbul","sergio.sanchez@ivoka.ai","+522227690231",True,"Sergio Sánchez del Valle","2025-10-10 02:42:57.141","2025-10-10 02:42:57.141",NULL,NULL,NULL
+"cmgk8rmra000puve4cujfrzvv","vemancera@ivoka.ai","+522213528341",True,"Eduardo Mancera G.","2025-10-10 02:42:57.143","2025-10-14 15:16:54.165","2025-10-14 15:16:54.163","2025-10-14 15:16:54.154",NULL

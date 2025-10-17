@@ -7,7 +7,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
-    "./sports": "./src/sports/index.ts"
+    "./sports": "./src/sports/index.ts",
+    "./storage/adapter": "./src/storage/adapter.ts"
   },
   "scripts": {
     "build": "tsc --build",
@@ -18,9 +19,14 @@
     "format": "prettier --check ."
   },
   "dependencies": {
-    "nodemailer": "^7.0.9"
+    "nodemailer": "^7.0.9",
+    "cloudinary": "^2.0.1",
+    "@aws-sdk/client-s3": "^3.515.0",
+    "@aws-sdk/s3-request-presigner": "^3.515.0",
+    "firebase-admin": "^12.0.0"
   },
   "devDependencies": {
+    "@aws-sdk/types": "^3.515.0",
     "@types/node": "^20.12.7",
     "@types/nodemailer": "^7.0.2",
     "@typescript-eslint/eslint-plugin": "^7.3.1",

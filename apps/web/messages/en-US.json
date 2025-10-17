@@ -24,13 +24,16 @@
   "nav": {
     "home": "Home",
     "pools": "Pools",
+    "myPools": "My Pools",
     "leaderboard": "Leaderboard",
     "fixtures": "Fixtures",
     "rules": "Rules",
     "register": "Register",
+    "signin": "Sign In",
     "login": "Login",
     "logout": "Logout",
     "profile": "Profile",
+    "dashboard": "Dashboard",
     "admin": "Admin"
   },
   "home": {
@@ -38,6 +41,7 @@
       "title": "Welcome to {brandName}",
       "subtitle": "The most complete sports prediction platform",
       "cta": "Join the demo pool",
+      "viewMyPools": "View my pools",
       "learnMore": "Learn more",
       "platformLabel": "White-Label Platform",
       "healthOnline": "Services online",
@@ -110,6 +114,37 @@
     "error": "Registration failed. Please try again.",
     "alreadyHaveAccount": "Already have an account?",
     "loginLink": "Login here"
+  },
+  "auth": {
+    "signin": {
+      "title": "Sign In",
+      "subtitle": "Access your account",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "sendLink": "Send magic link",
+      "sendingLink": "Sending...",
+      "checkEmail": "Check your email",
+      "emailSent": "We sent an access link to {email}",
+      "emailSentDescription": "Click the link to sign in. The link expires in 24 hours.",
+      "orContinueWith": "Or continue with",
+      "googleSignin": "Continue with Google",
+      "microsoftSignin": "Continue with Microsoft",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign up here",
+      "backToSignin": "Back to sign in",
+      "legal": "By continuing, you accept our <terms>Terms of Service</terms> and <privacy>Privacy Policy</privacy>",
+      "termsLink": "Terms of Service",
+      "privacyLink": "Privacy Policy"
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "captchaRequired": "Please complete the captcha",
+      "rateLimitExceeded": "Too many attempts. Try again in {seconds} seconds",
+      "providerNotConfigured": "This provider is not configured",
+      "invalidCallbackUrl": "Invalid redirect URL",
+      "signInFailed": "Sign in failed. Please try again"
+    }
   },
   "pool": {
     "title": "Pool",
@@ -246,6 +281,50 @@
       "server": "import { useTranslations } from \"next-intl\";\n\nexport default function MyPage() {\n  const t = useTranslations(\"common\");\n  return <h1>{t(\"appName\")}</h1>;\n}",
       "client": "\"use client\";\n\nimport { useTranslations } from \"next-intl\";\n\nexport function MyComponent() {\n  const t = useTranslations(\"common\");\n  return <button>{t(\"submit\")}</button>;\n}",
       "navigation": "import { Link } from \"@web/i18n/navigation\";\n\n// Automatically adds the locale prefix\n<Link href=\"/register\">{tNav(\"register\")}</Link>"
+    }
+  },
+  "fixtures": {
+    "title": "Fixtures - {poolSlug}",
+    "subtitle": "Make your predictions before each match starts",
+    "loading": "Loading fixtures...",
+    "noMatches": "No matches available",
+    "round": "Round {number}",
+    "tabs": {
+      "fixtures": "Fixtures",
+      "leaderboard": "Leaderboard",
+      "stats": "Statistics"
+    },
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "live": "Live",
+      "finished": "Finished"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "live": "Live",
+      "finished": "Finished",
+      "locked": "Locked"
+    },
+    "yourPrediction": "Your prediction",
+    "noPrediction": "No prediction",
+    "points": "points",
+    "exactScore": "Exact",
+    "errors": {
+      "loadFailed": "Failed to load fixtures",
+      "matchLocked": "Match has already started"
+    },
+    "stats": {
+      "apiKeyRequired": "API-Football API key configuration required to display statistics",
+      "setupTitle": "Configuration Required",
+      "setupDescription": "To enable real-time statistics, follow these steps:",
+      "setupStep1": "Get a free API key at https://www.api-football.com",
+      "setupStep2": "Add NEXT_PUBLIC_SPORTS_API_KEY=your_api_key to your .env.local file",
+      "setupStep3": "Restart the development server",
+      "livescoreTitle": "Live Scores",
+      "fixturesTitle": "Match Schedule",
+      "standingsTitle": "Standings",
+      "poweredBy": "Statistics powered by"
     }
   }
 }

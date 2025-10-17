@@ -58,38 +58,86 @@ describe("getBrandCanonicalUrl", () => {
   it("should construct subdomain URL if no custom domain", () => {
     const brand = {
       id: "brand1",
+      slug: "demo-brand",
       domains: [],
       tenant: {
         slug: "demo",
       },
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
-    expect(getBrandCanonicalUrl(brand)).toBe("https://demo.quinielas.mx");
+    expect(getBrandCanonicalUrl(brand)).toBe("http://demo-brand.localhost:3000");
+  });
+
+  it("should handle localhost domains correctly", () => {
+    const brand = {
+      id: "brand1",
+      slug: "cocacola",
+      domains: ["cocacola.localhost"],
+      tenant: {
+        slug: "ivoka",
+      },
+    } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
+
+    expect(getBrandCanonicalUrl(brand)).toBe("http://cocacola.localhost");
   });
 });
 
 describe("buildPoolUrl", () => {
-  it("should build pool URL with custom domain", () => {
+  it("should build pool URL with custom domain and locale", () => {
     const brand = {
       id: "brand1",
+      slug: "cemex-brand",
       domains: ["quinielas.cemex.com"],
       tenant: {
         slug: "cemex",
       },
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
-    expect(buildPoolUrl(brand, "mundial-2026")).toBe("https://quinielas.cemex.com/mundial-2026");
+    expect(buildPoolUrl(brand, "mundial-2026")).toBe("https://quinielas.cemex.com/es-MX/pools/mundial-2026");
   });
 
-  it("should build pool URL with subdomain", () => {
+  it("should build pool URL with subdomain and custom locale", () => {
     const brand = {
       id: "brand1",
+      slug: "demo-brand",
       domains: [],
       tenant: {
         slug: "demo",
       },
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
-    expect(buildPoolUrl(brand, "test-pool")).toBe("https://demo.quinielas.mx/test-pool");
+    expect(buildPoolUrl(brand, "test-pool", "en-US")).toBe("http://demo-brand.localhost:3000/en-US/pools/test-pool");
+  });
+});
+
+describe("buildInvitationUrl", () => {
+  it("should build invitation URL with token", () => {
+    const brand = {
+      id: "brand1",
+      slug: "cocacola",
+      domains: ["cocacola.localhost"],
+      tenant: {
+        slug: "ivoka",
+      },
+    } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
+
+    expect(buildInvitationUrl(brand, "mundial-2026", "abc123token")).toBe(
+      "http://cocacola.localhost/es-MX/pools/mundial-2026/join?token=abc123token"
+    );
+  });
+});
+
+describe("buildAuthCallbackUrl", () => {
+  it("should build auth callback URL for brand", () => {
+    const brand = {
+      id: "brand1",
+      slug: "pepsi",
+      domains: ["pepsi.localhost"],
+      tenant: {
+        slug: "ivoka",
+      },
+    } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
+
+    expect(buildAuthCallbackUrl(brand)).toBe("http://pepsi.localhost/es-MX/auth/callback");
   });
 });

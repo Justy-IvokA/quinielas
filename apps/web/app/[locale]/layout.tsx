@@ -6,15 +6,19 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { type ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { applyBrandTheme, resolveTheme } from "@qp/branding";
 import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
 import { ThemeProvider, ToastProvider } from "@qp/ui";
+import { getOptimizedMediaUrl } from "@qp/utils/client";
 
 import { webEnv } from "@web/env";
 import { locales, type Locale } from "@web/i18n/config";
 import { TrpcProvider } from "@web/trpc/provider";
 import { SiteHeader } from "../components/site-header";
+import { BrandThemeInjector } from "../components/brand-theme-injector";
 import { SpeculationRules } from "../speculation-rules";
 
 const manrope = Manrope({
@@ -61,7 +65,11 @@ export async function generateMetadata({
   
   const brandName = brand?.name || webEnv.NEXT_PUBLIC_APP_NAME;
 
+  // Base URL for absolute URLs in metadata (OG images, etc.)
+  const baseUrl = webEnv.NEXT_PUBLIC_WEBAPP_URL || "http://localhost:3000";
+
   return {
+    metadataBase: new URL(baseUrl),
     title: {
       default: t("title.default", {
         appName: webEnv.NEXT_PUBLIC_APP_NAME,
@@ -151,6 +159,16 @@ export default async function LocaleLayout({
   // The layout only provides default theme as fallback
   const brandThemeStyle = applyBrandTheme(null);
 
+  // Get hero assets from brand theme with URL optimization
+  const heroAssets = brand?.theme && typeof brand.theme === 'object' 
+    ? (brand.theme as any).heroAssets 
+    : null;
+  
+  // Convert Google Drive URLs to direct download links
+  const optimizedAssetUrl = getOptimizedMediaUrl(heroAssets?.url);
+  const optimizedFallbackUrl = getOptimizedMediaUrl(heroAssets?.fallbackImageUrl);
+  const hasHeroMedia = optimizedAssetUrl;
+
   // Load messages for the current locale
   const messages = await getMessages();
 
@@ -165,26 +183,63 @@ export default async function LocaleLayout({
       >
         <SpeculationRules
           prerenderPathsOnHover={[
-            "/register",
+            "/auth/signin",
             "/pools",
             "/leaderboard",
             "/fixtures",
             "/rules",
           ]}
         />
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
-            <ToastProvider>
-              <TrpcProvider>
-                <SiteHeader 
-                  brandName={brand?.name || webEnv.NEXT_PUBLIC_APP_NAME}
-                  logoUrl={brand?.theme && typeof brand.theme === 'object' && 'logo' in brand.theme ? (brand.theme as any).logo : null}
-                />
-                <main className="min-h-screen flex flex-col">{children}</main>
-              </TrpcProvider>
-            </ToastProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeProvider>
+              <ToastProvider>
+                <TrpcProvider>
+                  <NuqsAdapter>
+                    {/* Inject brand theme dynamically on client */}
+                    {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
+                    
+                    {/* Hero background media (video or image) - Global background */}
+                    {hasHeroMedia && (
+                      <div className="pointer-events-none fixed inset-0 -z-10">
+                        {heroAssets.kind === "video" ? (
+                          // Video background
+                          <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="absolute inset-0 w-full h-full object-cover"
+                            poster={optimizedFallbackUrl || undefined}
+                          >
+                            <source src={optimizedAssetUrl} type="video/mp4" />
+                          </video>
+                        ) : (
+                          // Image background
+                          <img
+                            src={optimizedAssetUrl}
+                            alt="Hero background"
+                            className="absolute inset-0 w-full h-full object-cover"
+                          />
+                        )}
+                        {/* Gradient overlay for readability */}
+                        {heroAssets.overlay ?? (
+                          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+                        )}
+                      </div>
+                    )}
+
+                    <SiteHeader 
+                      brandName={brand?.name || webEnv.NEXT_PUBLIC_APP_NAME}
+                      logoUrl={brand?.theme && typeof brand.theme === 'object' && 'logo' in brand.theme ? (brand.theme as any).logo.url : null}
+                    />
+                    <main className="min-h-screen flex flex-col">{children}</main>
+                  </NuqsAdapter>
+                </TrpcProvider>
+              </ToastProvider>
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

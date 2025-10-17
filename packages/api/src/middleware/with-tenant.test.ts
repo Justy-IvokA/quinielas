@@ -10,7 +10,9 @@ describe("Tenant Middleware", () => {
         env: {} as any,
         tenant: null,
         brand: null,
-        session: null
+        session: null,
+        ip: null,
+        userAgent: null
       };
 
       // The middleware would throw in real usage
@@ -30,7 +32,9 @@ describe("Tenant Middleware", () => {
           updatedAt: new Date()
         },
         brand: null,
-        session: null
+        session: null,
+        ip: null,
+        userAgent: null
       };
 
       expect(ctx.tenant).not.toBeNull();
@@ -45,7 +49,9 @@ describe("Tenant Middleware", () => {
         env: {} as any,
         tenant: null,
         brand: null,
-        session: null
+        session: null,
+        ip: null,
+        userAgent: null
       };
 
       expect(ctx.session).toBeNull();
@@ -61,9 +67,14 @@ describe("Tenant Middleware", () => {
           user: {
             id: "user1",
             email: "test@example.com",
-            name: "Test User"
-          }
-        }
+            name: "Test User",
+            highestRole: null,
+            tenantRoles: {}
+          },
+          expires: new Date(Date.now() + 86400000).toISOString()
+        },
+        ip: null,
+        userAgent: null
       };
 
       expect(ctx.session).not.toBeNull();

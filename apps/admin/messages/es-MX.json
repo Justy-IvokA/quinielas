@@ -21,6 +21,7 @@
     "sync": "Sincronización",
     "access": "Acceso",
     "brands": "Marcas",
+    "branding": "Personalización",
     "analytics": "Analítica"
   },
   "auth": {
@@ -47,7 +48,10 @@
       "providerNotConfigured": "Este proveedor no está configurado",
       "invalidCallbackUrl": "URL de redirección inválida",
       "signInFailed": "Error al iniciar sesión. Intenta de nuevo",
-      "generic": "Algo salió mal. Por favor, intenta de nuevo"
+      "generic": "Algo salió mal. Por favor, intenta de nuevo",
+      "insufficientPrivileges": "Este correo no tiene permisos de administrador. Solo usuarios con rol SUPERADMIN o ADMIN pueden acceder.",
+      "userNotFound": "No se encontró una cuenta con este correo electrónico",
+      "checkingPermissions": "Verificando permisos..."
     },
     "verify": {
       "title": "Verifica tu correo",
@@ -59,24 +63,29 @@
     "statusOnline": "Servicios operativos",
     "statusCheck": "Verifica el estado del API",
     "welcome": "Bienvenido, {tenant}",
-    "subtitle": "Administra pools y marcas del portafolio {brand}.",
-    "createPool": "Crear pool",
-    "manageBrands": "Gestionar marcas",
+    "subtitle": "Administra tus quinielas y el branding para la marca {brand}.",
+    "createPool": "Crear quiniela",
+    "manageBrands": "Gestiona tu marca",
+    "analytics": {
+      "title": "Resumen General",
+      "activePools": "Quinielas Activas",
+      "activePoolsDesc": "Quinielas en curso",
+      "totalPlayers": "Jugadores Totales",
+      "totalPlayersDesc": "Registros activos",
+      "totalPrizes": "Premios Configurados",
+      "totalPrizesDesc": "En todas las quinielas"
+    },
     "quickActions": {
+      "title": "Acciones Rápidas",
       "pools": {
-        "title": "Pools activos",
-        "description": "Supervisa el estado, acceso y cronología de tus quinielas en vivo.",
-        "cta": "Ir a pools"
+        "title": "Gestionar Quinielas",
+        "description": "Crea, edita y administra tus quinielas. Configura partidos, premios y políticas de acceso.",
+        "cta": "Ver quinielas"
       },
-      "fixtures": {
-        "title": "Próximos partidos",
-        "description": "Valida horarios, bloqueos de predicciones y resultados pendientes.",
-        "cta": "Ir a partidos"
-      },
-      "access": {
-        "title": "Invitaciones y códigos",
-        "description": "Gestiona batch de códigos, invitaciones por correo y consumo por jugador.",
-        "cta": "Ir a accesos"
+      "branding": {
+        "title": "Personalizar Marca",
+        "description": "Configura los colores, logo y estilo visual de tu marca para las quinielas.",
+        "cta": "Ir a personalización"
       }
     }
   },
@@ -258,6 +267,71 @@
     "title": "Quinielas",
     "description": "Administra tus quinielas activas e inactivas.",
     "create": "Crear quiniela",
+    "tabs": {
+      "overview": "Resumen",
+      "fixtures": "Partidos",
+      "registrations": "Jugadores",
+      "prizes": "Premios",
+      "settings": "Configuración"
+    },
+    "registrations": {
+      "title": "Jugadores Registrados",
+      "description": "{count} jugadores registrados",
+      "empty": {
+        "title": "No hay jugadores registrados",
+        "description": "Los jugadores aparecerán aquí cuando se registren en este pool"
+      },
+      "table": {
+        "user": "Usuario",
+        "email": "Email",
+        "status": "Estado",
+        "registeredAt": "Fecha de registro",
+        "predictions": "Predicciones",
+        "noName": "Sin nombre"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      }
+    },
+    "settings": {
+      "status": {
+        "title": "Estado de la Quiniela",
+        "description": "Controla si la quiniela está activa o inactiva",
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "activeDescription": "La quiniela está activa y los jugadores pueden registrarse y hacer predicciones",
+        "inactiveDescription": "La quiniela está inactiva. Los jugadores no pueden registrarse ni hacer predicciones"
+      },
+      "actions": {
+        "activate": "Activar Quiniela",
+        "deactivate": "Desactivar Quiniela",
+        "activateConfirm": "¿Estás seguro de activar {name}?",
+        "deactivateConfirm": "¿Estás seguro de desactivar {name}?",
+        "activateSuccess": "Quiniela activada correctamente",
+        "deactivateSuccess": "Quiniela desactivada correctamente",
+        "error": "Error: {message}"
+      },
+      "danger": {
+        "title": "Zona de Peligro",
+        "description": "Acciones irreversibles",
+        "deleteTitle": "Eliminar Quiniela",
+        "deleteDescription": "Una vez eliminado, no se puede recuperar:",
+        "deleteWarning1": "Todos los registros de jugadores se eliminarán",
+        "deleteWarning2": "Todas las predicciones se perderán",
+        "deleteWarning3": "Los premios asignados se eliminarán",
+        "deleteButton": "Eliminar Quiniela Permanentemente",
+        "deleteNote": "Esta función está deshabilitada por seguridad"
+      },
+      "info": {
+        "title": "Información de la Quiniela",
+        "description": "Datos técnicos de la quiniela",
+        "id": "ID",
+        "slug": "Slug",
+        "createdAt": "Creado",
+        "updatedAt": "Actualizado"
+      }
+    },
     "empty": {
       "title": "Aún no hay quinielas creadas",
       "description": "Comienza creando tu primera quiniela para gestionar predicciones.",
@@ -440,14 +514,17 @@
       "description": "{description}",
       "registrations": "{count} registros",
       "prizes": "{count} premios"
+    },
+    "details": {
+      "title": "Detalles de la quiniela"
     }
   },
   "demo": {
-    "cardTitle": "Configuración de Pool",
+    "cardTitle": "Configuración de Quiniela",
     "cardDescription": "Configura el acceso y las reglas de tu quiniela",
     "bannerTitle": "Modo demo",
     "bannerDescription": "Este es un ejemplo de formulario con componentes UI mejorados",
-    "poolNameLabel": "Nombre del Pool",
+    "poolNameLabel": "Nombre de la Quiniela",
     "poolNamePlaceholder": "Mundial 2026",
     "accessTypeLabel": "Tipo de Acceso",
     "accessTypePlaceholder": "Selecciona el tipo",
@@ -459,7 +536,7 @@
     "helper": "Ejemplos de guardado con diferentes patrones de toast",
     "buttons": {
       "manual": "Guardar (Manual)",
-      "promise": "Guardar (Promise)"
+      "promise": "Guardar (Promesa)"
     },
     "toasts": {
       "successTitle": "Configuración guardada",
@@ -475,6 +552,27 @@
     "title": "Sincronización de Fixtures",
     "description": "Monitorea y controla la sincronización con proveedores externos"
   },
+  "profile": {
+    "title": "Mi Perfil",
+    "accountInfo": "Información de Cuenta",
+    "verificationStatus": "Estado de Verificación",
+    "tenantMemberships": "Membresías de Tenants",
+    "activeRegistrations": "Quinielas Activas",
+    "memberSince": "Miembro desde",
+    "lastAccess": "Último acceso",
+    "predictions": "Predicciones",
+    "prizesWon": "Premios ganados",
+    "emailVerified": "Email Verificado",
+    "emailNotVerified": "Email No Verificado",
+    "phoneVerified": "Teléfono Verificado",
+    "phoneNotVerified": "Teléfono No Verificado",
+    "verifiedOn": "Verificado el {date}",
+    "pleaseVerify": "Por favor verifica tu email para acceso completo",
+    "tenants": "Tenants",
+    "pools": "Quinielas",
+    "active": "Activo",
+    "andMore": "Y {count} más..."
+  },
   "metadata": {
     "title": {
       "default": "{appName} · Admin",
@@ -482,5 +580,277 @@
     },
     "description": "{brand} · Panel administrativo",
     "keywords": "admin, quinielas, marcas, pools"
+  },
+  "branding": {
+    "title": "Personalización de Marca",
+    "description": "Configura los colores, logo, medios y tipografía de tu marca",
+    "noBrand": "No se encontró marca para este tenant",
+    "saveSuccess": "Cambios guardados exitosamente",
+    "saveError": "Error al guardar cambios",
+    "resetSuccess": "Tema restablecido a valores predeterminados",
+    "resetError": "Error al restablecer tema",
+    "resetConfirm": "¿Estás seguro de que deseas restablecer el tema a los valores predeterminados? Esta acción no se puede deshacer.",
+    "formTitle": "Editor de Marca",
+    "formDescription": "Personaliza la apariencia de tu marca. Los cambios se reflejan en tiempo real en la vista previa.",
+    "saving": "Guardando...",
+    "save": "Guardar Cambios",
+    "resetting": "Restableciendo...",
+    "reset": "Restablecer",
+    "copyJson": "Copiar JSON",
+    "copied": "Copiado",
+    "copiedToClipboard": "Tema copiado al portapapeles",
+    "tabs": {
+      "colors": "Colores",
+      "logo": "Logo",
+      "hero": "Hero",
+      "mainCard": "Tarjeta",
+      "typography": "Tipografía"
+    },
+    "colors": {
+      "presets": "Paletas Predefinidas",
+      "primary": "Primario",
+      "secondary": "Secundario",
+      "background": "Fondo",
+      "foreground": "Texto",
+      "accent": "Acento",
+      "card": "Tarjeta",
+      "muted": "Apagado",
+      "border": "Borde",
+      "helpText": "Los colores se pueden especificar en formato HSL (ej: 221 83% 53%) o HEX (ej: #3b82f6). Se recomienda HSL para mejor compatibilidad."
+    },
+    "logo": {
+      "logoTitle": "Logo Principal",
+      "logoDescription": "Logo que aparece en el encabezado y navegación",
+      "logotypeTitle": "Logotipo (Opcional)",
+      "logotypeDescription": "Versión de texto del logo para contextos específicos",
+      "url": "URL",
+      "altText": "Texto Alternativo",
+      "altPlaceholder": "Descripción del logo",
+      "uploadFile": "Subir Archivo",
+      "uploadHint": "PNG, JPG, WebP o SVG. Máximo 2MB. Recomendado: 256x256px o mayor.",
+      "preview": "Vista Previa",
+      "uploadSuccess": "Archivo subido exitosamente",
+      "uploadError": "Error al subir archivo",
+      "invalidFileType": "Tipo de archivo no válido. Solo se permiten imágenes.",
+      "fileTooLarge": "Archivo demasiado grande. Máximo 2MB.",
+      "guidelines": "Recomendaciones: Usa imágenes con fondo transparente (PNG). Asegúrate de que el logo sea legible en fondos claros y oscuros. Tamaño mínimo: 256x256px."
+    },
+    "hero": {
+      "kindLabel": "Tipo de Medio",
+      "kindNone": "Sin medio",
+      "kindImage": "Imagen",
+      "kindVideo": "Video",
+      "imageUrl": "URL de Imagen",
+      "videoUrl": "URL de Video",
+      "altText": "Texto Alternativo",
+      "altPlaceholder": "Descripción de la imagen",
+      "posterUrl": "URL del Póster",
+      "uploadFile": "Subir Archivo",
+      "uploadPoster": "Subir Póster",
+      "videoHint": "MP4 o WebM. Máximo 20MB. El video se reproduce automáticamente en silencio.",
+      "overlay": "Aplicar Overlay de Gradiente",
+      "loop": "Reproducir en Bucle",
+      "muted": "Silenciado",
+      "autoplay": "Reproducción Automática",
+      "uploadSuccess": "Archivo subido exitosamente",
+      "uploadError": "Error al subir archivo",
+      "invalidFileType": "Tipo de archivo no válido",
+      "fileTooLarge": "Archivo demasiado grande"
+    },
+    "mainCard": {
+      "kindLabel": "Tipo de Medio",
+      "kindNone": "Sin medio",
+      "kindImage": "Imagen",
+      "kindVideo": "Video",
+      "imageUrl": "URL de Imagen",
+      "videoUrl": "URL de Video",
+      "altText": "Texto Alternativo",
+      "altPlaceholder": "Descripción de la imagen",
+      "posterUrl": "URL del Póster",
+      "uploadFile": "Subir Archivo",
+      "uploadPoster": "Subir Póster",
+      "videoHint": "MP4 o WebM. Máximo 20MB.",
+      "loop": "Reproducir en Bucle",
+      "muted": "Silenciado",
+      "autoplay": "Reproducción Automática",
+      "uploadSuccess": "Archivo subido exitosamente",
+      "uploadError": "Error al subir archivo",
+      "invalidFileType": "Tipo de archivo no válido",
+      "fileTooLarge": "Archivo demasiado grande"
+    },
+    "typography": {
+      "fontFamily": "Fuente Principal",
+      "headingsFamily": "Fuente de Encabezados",
+      "optional": "(opcional)",
+      "headingsFamilyHint": "Si no se especifica, se usa la fuente principal",
+      "baseSize": "Tamaño Base",
+      "baseSizeHint": "Tamaño de fuente base en px, rem o em. Ejemplo: 16px",
+      "lineHeight": "Altura de Línea",
+      "lineHeightHint": "Altura de línea sin unidad. Ejemplo: 1.5",
+      "preview": "Vista Previa",
+      "previewHeading": "Título de Ejemplo",
+      "previewBody": "Este es un texto de ejemplo para visualizar la tipografía seleccionada. Puedes ver cómo se verá el texto en tu aplicación.",
+      "googleFontsTitle": "Usando Google Fonts",
+      "googleFontsDescription": "Para usar fuentes de Google Fonts, agrega el enlace en el <head> de tu aplicación. Ejemplo:"
+    },
+    "preview": {
+      "title": "Vista Previa en Vivo",
+      "heroTitle": "Bienvenido a tu Quiniela",
+      "heroSubtitle": "Participa y gana increíbles premios",
+      "cardTitle": "Tarjeta de Ejemplo",
+      "cardDescription": "Esta es una tarjeta de ejemplo que muestra cómo se verán los componentes con tu tema personalizado.",
+      "primaryButton": "Acción Principal",
+      "secondaryButton": "Acción Secundaria",
+      "primary": "Primario",
+      "secondary": "Secundario",
+      "accent": "Acento",
+      "muted": "Apagado"
+    }
+  },
+  "invitations": {
+    "title": "Invitaciones por Email",
+    "subtitle": "Gestiona las invitaciones por email para esta quiniela",
+    "uploadCsv": "Subir CSV",
+    "uploading": "Subiendo...",
+    "createInvitations": "Crear Invitaciones",
+    "createFirst": "Crear Primera Invitación",
+    "noInvitations": "No se encontraron invitaciones",
+    "loading": "Cargando invitaciones...",
+    "searchPlaceholder": "Buscar por email...",
+    "sendSelected": "Enviar Seleccionados",
+    "activationProgress": "Progreso de Activación",
+    "tableTitle": "Lista de Invitaciones",
+    "wrongAccessType": "Esta quiniela no usa invitaciones por email. Tipo de acceso: {type}",
+    "stats": {
+      "total": "Total Enviadas",
+      "sent": "Entregadas",
+      "opened": "Abiertas",
+      "activated": "Activadas",
+      "bounced": "Rebotadas"
+    },
+    "filters": {
+      "all": "Todos",
+      "pending": "Pendientes",
+      "sent": "Enviadas",
+      "opened": "Abiertas",
+      "accepted": "Aceptadas",
+      "expired": "Expiradas",
+      "bounced": "Rebotadas"
+    },
+    "table": {
+      "email": "Email",
+      "status": "Estado",
+      "sent": "Enviado",
+      "opened": "Abierto",
+      "activated": "Activado",
+      "actions": "Acciones"
+    },
+    "modal": {
+      "createTitle": "Crear Invitaciones por Email",
+      "createDescription": "Ingresa direcciones de email (una por línea) o sube un archivo CSV",
+      "emailsLabel": "Direcciones de Email",
+      "emailsPlaceholder": "user1@example.com\nuser2@example.com\nuser3@example.com",
+      "validEmailsCount": "{count} emails válidos",
+      "sendTitle": "Enviar Invitaciones",
+      "sendDescription": "¿Enviar {count} invitación(es) seleccionada(s)?",
+      "sendAllDescription": "¿Enviar todas las invitaciones pendientes?",
+      "sendNote": "Se enviarán emails de invitación a los destinatarios con un enlace único de registro.",
+      "sendNoteAll": "Esto enviará todas las invitaciones con estado PENDIENTE."
+    },
+    "actions": {
+      "resend": "Reenviar",
+      "copyLink": "Copiar Enlace",
+      "delete": "Eliminar"
+    },
+    "messages": {
+      "createSuccess": "{count} invitaciones creadas exitosamente",
+      "sendSuccess": "{count} invitaciones enviadas exitosamente",
+      "resendSuccess": "Invitación reenviada exitosamente",
+      "copySuccess": "Enlace copiado al portapapeles",
+      "noValidEmails": "No se encontraron emails válidos",
+      "missingData": "Faltan datos requeridos",
+      "cannotGenerateLink": "No se puede generar el enlace de invitación"
+    }
+  },
+  "codes": {
+    "title": "Códigos de Invitación",
+    "subtitle": "Gestiona lotes de códigos y rastrea canjes",
+    "createBatch": "Crear Lote",
+    "createFirst": "Crear Primer Lote",
+    "noBatches": "No hay lotes de códigos aún",
+    "loading": "Cargando lotes...",
+    "wrongAccessType": "Esta quiniela no usa códigos de invitación. Tipo de acceso: {type}",
+    "stats": {
+      "totalCodes": "Total de Códigos",
+      "unused": "Sin Usar",
+      "used": "Usados",
+      "redemptions": "Canjes",
+      "redemptionRate": "Tasa de Canje"
+    },
+    "batch": {
+      "unnamed": "Lote Sin Nombre",
+      "totalCodes": "Total de Códigos",
+      "usedCodes": "Usados",
+      "usesPerCode": "Usos por Código",
+      "created": "Creado",
+      "prefix": "Prefijo",
+      "usage": "Uso",
+      "status": {
+        "UNUSED": "Sin Usar",
+        "PARTIALLY_USED": "Parcialmente Usado",
+        "USED": "Usado",
+        "EXPIRED": "Expirado",
+        "PAUSED": "Pausado"
+      }
+    },
+    "actions": {
+      "downloadCsv": "Descargar CSV",
+      "viewCodes": "Ver Códigos",
+      "pause": "Pausar",
+      "unpause": "Reanudar"
+    },
+    "modal": {
+      "createTitle": "Crear Lote de Códigos",
+      "createDescription": "Genera un nuevo lote de códigos de invitación únicos",
+      "batchNameLabel": "Nombre del Lote",
+      "batchNamePlaceholder": "ej: Campaña de Lanzamiento",
+      "batchNameHelp": "Opcional - ayuda a identificar el lote",
+      "prefixLabel": "Prefijo",
+      "prefixPlaceholder": "ej: LAUNCH",
+      "prefixHelp": "Opcional - máximo 10 caracteres",
+      "quantityLabel": "Cantidad de Códigos",
+      "quantityPlaceholder": "100",
+      "quantityHelp": "Mínimo 1, máximo 1,000",
+      "usesPerCodeLabel": "Usos por Código",
+      "usesPerCodeHelp": "Cuántas veces se puede usar cada código",
+      "descriptionLabel": "Descripción",
+      "descriptionPlaceholder": "Notas opcionales sobre este lote...",
+      "validFromLabel": "Válido Desde",
+      "validToLabel": "Válido Hasta",
+      "expiresAtLabel": "Fecha de Expiración",
+      "preview": "Vista Previa del Código",
+      "previewFormat": "{prefix}-XXXX-XXXX",
+      "generating": "Generando códigos...",
+      "detailsTitle": "Detalles del Lote",
+      "detailsDescription": "Códigos en el lote {name}",
+      "searchPlaceholder": "Buscar código...",
+      "exportCsv": "Exportar CSV",
+      "codeColumn": "Código",
+      "statusColumn": "Estado",
+      "usedCountColumn": "Usos",
+      "maxUsesColumn": "Máx. Usos",
+      "expiresColumn": "Expira",
+      "redeemedByColumn": "Canjeado Por",
+      "redeemedAtColumn": "Canjeado El",
+      "never": "Nunca"
+    },
+    "messages": {
+      "createSuccess": "Lote de {count} códigos creado exitosamente",
+      "downloadSuccess": "CSV descargado exitosamente",
+      "pauseSuccess": "Lote pausado",
+      "unpauseSuccess": "Lote reanudado",
+      "copySuccess": "Código copiado al portapapeles",
+      "missingData": "Faltan datos requeridos"
+    }
   }
 }

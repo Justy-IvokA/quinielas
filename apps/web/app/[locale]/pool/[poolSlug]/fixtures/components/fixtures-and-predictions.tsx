@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Lock, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { Lock, Clock, CheckCircle2, AlertCircle, Save } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 import { useRouter } from "next/navigation";
@@ -44,6 +44,7 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
   const router = useRouter();
   const [predictions, setPredictions] = useState<Record<string, { home: number; away: number }>>({});
   const [editingMatchId, setEditingMatchId] = useState<string | null>(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
   // Check if user is registered
   const { data: registration, isLoading: isLoadingReg } = trpc.registration.checkRegistration.useQuery(
@@ -84,6 +85,7 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
       if (data.errors.length > 0) {
         toastError(t("bulkSave.partialError", { count: data.errors.length }));
       }
+      setHasUnsavedChanges(false);
     },
     onError: (error) => {
       toastError(error.message);
@@ -101,6 +103,7 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
         };
       }
       setPredictions(predMap);
+      setHasUnsavedChanges(false);
     }
   }, [userPredictions]);
 
@@ -124,6 +127,7 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
         [type]: numValue
       }
     }));
+    setHasUnsavedChanges(true);
   };
 
   const handleSavePrediction = (matchId: string) => {
@@ -142,22 +146,32 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
   };
 
   const handleBulkSave = () => {
-    const validPredictions = Object.entries(predictions)
-      .filter(([_, pred]) => pred.home !== undefined && pred.away !== undefined)
+    // Only save predictions that have changed
+    const changedPredictions = Object.entries(predictions)
+      .filter(([matchId, pred]) => {
+        // Check if prediction exists and has both scores
+        if (pred.home === undefined || pred.away === undefined) return false;
+        
+        // Check if it's different from saved prediction
+        const savedPred = userPredictions?.find(p => p.matchId === matchId);
+        if (!savedPred) return true; // New prediction
+        
+        return savedPred.homeScore !== pred.home || savedPred.awayScore !== pred.away;
+      })
       .map(([matchId, pred]) => ({
         matchId,
         homeScore: pred.home,
         awayScore: pred.away
       }));
 
-    if (validPredictions.length === 0) {
-      toastError(t("validation.noPredictions"));
+    if (changedPredictions.length === 0) {
+      toastError(t("validation.noChanges"));
       return;
     }
 
     bulkSave.mutate({
       poolId: pool.id,
-      predictions: validPredictions
+      predictions: changedPredictions
     });
   };
 
@@ -230,7 +244,7 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
         description={t("registration.required.description")}
         action={{
           label: t("registration.join"),
-          onClick: () => router.push(`/pool/${pool.slug}/register`)
+          onClick: () => router.push(`/auth/signin?callbackUrl=${encodeURIComponent(`/pools/${pool.slug}/fixtures`)}`)
         }}
       />
     );
@@ -271,13 +285,23 @@ export function FixturesAndPredictions({ pool }: FixturesAndPredictionsProps) {
               <CardTitle>{t("title")}</CardTitle>
               <CardDescription>{t("description")}</CardDescription>
             </div>
-            <Button
-              onClick={handleBulkSave}
-              loading={bulkSave.isPending}
-              disabled={Object.keys(predictions).length === 0}
-            >
-              {t("saveAll")}
-            </Button>
+            <div className="flex items-center gap-3">
+              {hasUnsavedChanges && (
+                <span className="text-sm text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  {t("unsavedChanges")}
+                </span>
+              )}
+              <Button
+                onClick={handleBulkSave}
+                loading={bulkSave.isPending}
+                disabled={!hasUnsavedChanges || bulkSave.isPending}
+                StartIcon={Save}
+                variant={hasUnsavedChanges ? "default" : "secondary"}
+              >
+                {t("saveAll")}
+              </Button>
+            </div>
           </div>
         </CardHeader>
       </Card>

@@ -189,8 +189,8 @@ export class RegistrationService {
 
     // Find the code
     const inviteCode = pool.accessPolicy.codeBatches
-      .flatMap((batch) => batch.codes)
-      .find((c) => c.code === input.inviteCode);
+      .flatMap((batch: any) => batch.codes)
+      .find((c: any) => c.code === input.inviteCode);
 
     if (!inviteCode) {
       throw new TRPCError({
@@ -433,10 +433,10 @@ export class RegistrationService {
 
     return {
       total: registrations.length,
-      emailVerified: registrations.filter((r) => r.emailVerified).length,
-      viaCode: registrations.filter((r) => r.inviteCodeId).length,
-      viaInvite: registrations.filter((r) => r.invitationId).length,
-      public: registrations.filter((r) => !r.inviteCodeId && !r.invitationId).length
+      emailVerified: registrations.filter((r: { emailVerified: boolean | null }) => r.emailVerified).length,
+      viaCode: registrations.filter((r: { inviteCodeId: string | null }) => r.inviteCodeId).length,
+      viaInvite: registrations.filter((r: { invitationId: string | null }) => r.invitationId).length,
+      public: registrations.filter((r: { inviteCodeId: string | null; invitationId: string | null }) => !r.inviteCodeId && !r.invitationId).length
     };
   }
 }

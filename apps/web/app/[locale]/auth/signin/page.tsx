@@ -1,57 +1,26 @@
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
-import { getTranslations } from "next-intl/server";
-import { prisma } from "@qp/db";
+import { headers } from "next/headers";
 import { authConfig } from "@qp/api/context";
-import { createAuthInstance } from "@qp/auth";
-import { applyBrandTheme, resolveTheme } from "@qp/branding";
+import { createAuthInstance, getDefaultRedirectForRole } from "@qp/auth";
+import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
 import { getCaptchaLevel } from "@qp/api/lib/settings";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@qp/ui/components/card";
-import { Separator } from "@qp/ui/components/separator";
-import { EmailForm } from "./_components/email-form";
-import { OAuthButtons } from "./_components/oauth-buttons";
+import { getOptimizedMediaUrl } from "@qp/utils/client";
+import { BrandThemeInjector } from "../../../components/brand-theme-injector";
+import { SignInForm } from "./_components/signin-form";
 import { sanitizeCallbackUrl } from "./_lib/callback-safe";
 import { parseAuthEnv } from "@qp/auth";
 
 interface SignInPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     callbackUrl?: string;
     error?: string;
-  };
+  }>;
 }
 
-async function getTenantFromHost(): Promise<{ tenantId: string | null; brandTheme: string }> {
-  // In a real implementation, resolve from headers
-  // For now, use a default or demo tenant
-  const tenant = await prisma.tenant.findFirst({
-    where: { slug: "demo" },
-    include: {
-      brands: {
-        take: 1,
-        select: {
-          id: true,
-          theme: true,
-        },
-      },
-    },
-  });
-
-  if (!tenant) {
-    return { tenantId: null, brandTheme: "" };
-  }
-
-  const brandTheme = tenant.brands[0]?.theme
-    ? applyBrandTheme(resolveTheme(tenant.brands[0].theme as any))
-    : applyBrandTheme(null);
-
-  return {
-    tenantId: tenant.id,
-    brandTheme,
-  };
-}
 
 async function getAvailableProviders(): Promise<string[]> {
   const env = parseAuthEnv();
@@ -75,7 +44,6 @@ async function getAvailableProviders(): Promise<string[]> {
 }
 
 async function SignInContent({ params, searchParams }: SignInPageProps) {
-  const t = await getTranslations("auth.signin");
   const { locale } = await params;
   const { callbackUrl, error } = await searchParams;
 
@@ -84,19 +52,38 @@ async function SignInContent({ params, searchParams }: SignInPageProps) {
   const session = await auth();
 
   if (session?.user) {
-    // Already logged in, redirect to dashboard or callback
-    const finalCallbackUrl = callbackUrl || `/${locale}`;
+    // Check if profile is complete (has name)
+    if (!session.user.name) {
+      // Profile incomplete, redirect to complete-profile
+      const completeProfileUrl = `/${locale}/auth/complete-profile${callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""}`;
+      redirect(completeProfileUrl);
+    }
+    
+    // Already logged in with complete profile, redirect to dashboard or callback
+    const defaultRedirect = getDefaultRedirectForRole(session.user.highestRole, locale);
+    const finalCallbackUrl = callbackUrl || defaultRedirect;
     redirect(finalCallbackUrl);
   }
 
-  // Get tenant and branding
-  const { tenantId, brandTheme } = await getTenantFromHost();
+  // Resolve brand from host
+  const headersList = await headers();
+  let host = headersList.get("host") || "localhost";
+  if (host.includes(":")) {
+    host = host.split(":")[0];
+  }
+  const pathname = headersList.get("x-pathname") || "";
+  
+  const { tenant, brand } = await resolveTenantAndBrandFromHost(host, pathname);
+  const tenantId = tenant?.id || null;
+
+  // Default redirect is dashboard for authenticated users
+  const defaultRedirect = `/${locale}/dashboard`;
 
   // Sanitize callback URL
   const safeCallbackUrl = await sanitizeCallbackUrl(
     callbackUrl,
     tenantId,
-    `/${locale}`
+    defaultRedirect
   );
 
   // Get captcha settings
@@ -105,88 +92,67 @@ async function SignInContent({ params, searchParams }: SignInPageProps) {
 
   // Get available providers
   const providers = await getAvailableProviders();
-  const oauthProviders = providers.filter((p) => p !== "email");
-  const hasEmail = providers.includes("email");
+
+  // Get hero assets from brand theme with URL optimization
+  const heroAssets = brand?.theme && typeof brand.theme === 'object' 
+    ? (brand.theme as any).heroAssets 
+    : null;
+  
+  // Convert Google Drive URLs to direct download links
+  const optimizedAssetUrl = getOptimizedMediaUrl(heroAssets?.assetUrl);
+  const optimizedFallbackUrl = getOptimizedMediaUrl(heroAssets?.fallbackImageUrl);
+  const hasHeroMedia = optimizedAssetUrl;
 
   return (
-    <>
-      {/* Inject brand theme */}
-      {brandTheme && (
-        <style dangerouslySetInnerHTML={{ __html: brandTheme }} />
+    <div className="relative isolate overflow-hidden min-h-screen">
+      {/* Inject brand theme dynamically on client */}
+      {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
+
+      {/* Hero background media (video or image) */}
+      {hasHeroMedia && (
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          {heroAssets?.video ? (
+            // Video background
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              poster={optimizedFallbackUrl || undefined}
+            >
+              <source src={optimizedAssetUrl} type="video/mp4" />
+            </video>
+          ) : (
+            // Image background
+            <img
+              src={optimizedAssetUrl}
+              alt="Hero background"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+          )}
+          {/* Gradient overlay for readability */}
+          {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" /> */}
+        </div>
       )}
 
-      <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12">
-        <Card className="w-full max-w-md">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">{t("title")}</CardTitle>
-            <CardDescription>{t("subtitle")}</CardDescription>
-          </CardHeader>
+      {/* Animated background gradients - uses brand primary color */}
+      {!hasHeroMedia && (
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <div className="absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary))/20%,_transparent_50%)]" />
+          <div className="absolute inset-x-0 bottom-0 h-[600px] bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent))/15%,_transparent_50%)]" />
+          <div className="absolute right-0 top-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--primary))/15%,_transparent_70%)] blur-3xl" />
+          <div className="absolute left-0 bottom-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--accent))/15%,_transparent_70%)] blur-3xl" />
+        </div>
+      )}
 
-          <CardContent className="space-y-6">
-            {/* Email Magic Link Form */}
-            {hasEmail && (
-              <EmailForm
-                callbackUrl={safeCallbackUrl}
-                requireCaptcha={requireCaptcha}
-              />
-            )}
-
-            {/* Divider */}
-            {hasEmail && oauthProviders.length > 0 && (
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    {t("orContinueWith")}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* OAuth Buttons */}
-            <OAuthButtons
-              callbackUrl={safeCallbackUrl}
-              providers={oauthProviders}
-            />
-
-            {/* Legal Notice */}
-            <p className="text-center text-xs text-muted-foreground">
-              {t.rich("legal", {
-                terms: (chunks) => (
-                  <a
-                    href="/terms"
-                    className="underline underline-offset-4 hover:text-primary"
-                  >
-                    {t("termsLink")}
-                  </a>
-                ),
-                privacy: (chunks) => (
-                  <a
-                    href="/privacy"
-                    className="underline underline-offset-4 hover:text-primary"
-                  >
-                    {t("privacyLink")}
-                  </a>
-                ),
-              })}
-            </p>
-
-            {/* Error Display */}
-            {error && (
-              <div
-                className="rounded-md bg-destructive/10 p-3 text-sm text-destructive"
-                role="alert"
-                aria-live="polite"
-              >
-                {error}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </>
+      <SignInForm
+        callbackUrl={safeCallbackUrl}
+        requireCaptcha={requireCaptcha}
+        providers={providers}
+        error={error}
+      />
+    </div>
   );
 }
 

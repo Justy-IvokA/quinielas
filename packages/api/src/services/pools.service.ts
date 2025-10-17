@@ -9,7 +9,7 @@ export interface CreatePoolInput {
   slug: string;
   description?: string;
   prizeSummary?: string;
-  ruleSet?: Prisma.JsonValue;
+  ruleSet?: Prisma.InputJsonValue;
   isActive?: boolean;
   isPublic?: boolean;
   startDate?: Date;
@@ -20,7 +20,7 @@ export interface UpdatePoolInput {
   name?: string;
   description?: string;
   prizeSummary?: string;
-  ruleSet?: Prisma.JsonValue;
+  ruleSet?: Prisma.InputJsonValue;
   isActive?: boolean;
   isPublic?: boolean;
   startDate?: Date;

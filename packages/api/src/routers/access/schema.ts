@@ -61,6 +61,7 @@ export const createEmailInvitationSchema = z.object({
   poolId: z.string().cuid(),
   accessPolicyId: z.string().cuid(),
   tenantId: z.string().cuid(),
+  brandId: z.string().cuid(),
   email: z.string().email(),
   expiresAt: z.date().optional()
 });
@@ -69,6 +70,7 @@ export const uploadInvitationsCsvSchema = z.object({
   poolId: z.string().cuid(),
   accessPolicyId: z.string().cuid(),
   tenantId: z.string().cuid(),
+  brandId: z.string().cuid(),
   emails: z.array(z.string().email()).min(1).max(1000),
   expiresAt: z.date().optional()
 });
@@ -76,6 +78,7 @@ export const uploadInvitationsCsvSchema = z.object({
 export const sendInvitationsSchema = z.object({
   poolId: z.string().cuid(),
   tenantId: z.string().cuid(),
+  brandId: z.string().cuid(),
   invitationIds: z.array(z.string().cuid()).optional()
 });
 

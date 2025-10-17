@@ -107,7 +107,7 @@ export default function ExamplePage() {
               {tNav("home")}
             </Link>
             <Link
-              href="/register"
+              href="/auth/signin"
               className="px-4 py-2 rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/90 transition-colors"
             >
               {tNav("register")}

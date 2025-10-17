@@ -52,7 +52,7 @@ export function EmailForm({ callbackUrl, requireCaptcha, onCaptchaNeeded }: Emai
       const result = await signIn("email", {
         email,
         redirect: false,
-        callbackUrl: callbackUrl || "/",
+        callbackUrl: callbackUrl, // callbackUrl is always provided by parent
       });
 
       if (result?.error) {

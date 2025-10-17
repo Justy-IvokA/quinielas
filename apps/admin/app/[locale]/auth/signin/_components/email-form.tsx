@@ -47,13 +47,59 @@ export function EmailForm({ callbackUrl, requireCaptcha }: EmailFormProps) {
     setIsLoading(true);
 
     try {
-      const result = await signIn("email", {
+      // Check if email has admin privileges before sending magic link
+      // tRPC expects input in the format: input={"json":{"email":"..."}}
+      const input = {
+        json: { email }
+      };
+      const queryString = `input=${encodeURIComponent(JSON.stringify(input))}`;
+      const url = `/api/trpc/auth.checkAdminEmail?${queryString}`;
+      
+      const checkResponse = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!checkResponse.ok) {
+        toast.error(tErrors("generic"));
+        setIsLoading(false);
+        return;
+      }
+
+      const checkData = await checkResponse.json();
+      
+      // tRPC with superjson returns data in result.data.json
+      const result = checkData.result?.data?.json || checkData.result?.data || checkData;
+
+      if (!result || typeof result.hasAdminAccess === "undefined") {
+        toast.error(tErrors("generic"));
+        setIsLoading(false);
+        return;
+      }
+
+      // If user doesn't have admin access, show error
+      if (!result.hasAdminAccess) {
+        if (result.reason === "USER_NOT_FOUND") {
+          toast.error(tErrors("userNotFound"));
+        } else if (result.reason === "INSUFFICIENT_PRIVILEGES") {
+          toast.error(tErrors("insufficientPrivileges"));
+        } else {
+          toast.error(tErrors("generic"));
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      // User has admin access, proceed with magic link
+      const signInResult = await signIn("email", {
         email,
         redirect: false,
         callbackUrl: callbackUrl || "/",
       });
 
-      if (result?.error) {
+      if (signInResult?.error) {
         toast.error(tErrors("signInFailed"));
       } else {
         setEmailSent(true);

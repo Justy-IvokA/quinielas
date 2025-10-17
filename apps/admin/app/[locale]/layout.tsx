@@ -4,8 +4,10 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { type ReactNode } from "react";
+import { SessionProvider } from "next-auth/react";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import { applyBrandTheme } from "@qp/branding";
 import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
@@ -17,7 +19,7 @@ import { adminEnv } from "@admin/env";
 import { locales, type Locale } from "@admin/i18n/config";
 import { TrpcProvider } from "@admin/trpc/provider";
 import { SpeculationRules } from "../speculation-rules";
-import { AdminHeader } from "../components/admin-header";
+// import { AdminHeader } from "../components/admin-header";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -64,6 +66,7 @@ export async function generateMetadata({
   const brandName = brand?.name || adminEnv.NEXT_PUBLIC_APP_NAME;
 
   return {
+    metadataBase: new URL(adminEnv.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3001"),
     title: {
       default: t("title.default", { appName: adminEnv.NEXT_PUBLIC_APP_NAME, brandName }),
       template: t("title.template", { appName: adminEnv.NEXT_PUBLIC_APP_NAME }),
@@ -142,7 +145,7 @@ export default async function LocaleLayout({
       <head>
         <style id="brand-theme">{brandThemeStyle}</style>
       </head>
-      <body className="min-h-screen bg-background text-foreground antialiased font-sans" suppressHydrationWarning>
+      <body className="min-h-screen bg-none text-foreground antialiased font-sans" suppressHydrationWarning>
         <SpeculationRules
           prerenderPathsOnHover={[
             "/pools",
@@ -153,24 +156,28 @@ export default async function LocaleLayout({
             "/analytics",
           ]}
         />
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
-            <ToastProvider>
-              <TrpcProvider>
-                {/* Inject brand theme dynamically on client */}
-                {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
-                
-                <AdminHeader 
-                  brandName={brand?.name || adminEnv.NEXT_PUBLIC_APP_NAME}
-                  logoUrl={brand?.theme && typeof brand.theme === 'object' && 'logo' in brand.theme ? (brand.theme as any).logo : null}
-                />
-                <main className="min-h-screen bg-background/95 py-10">
-                  <div className="mx-auto w-full max-w-5xl px-6 md:px-10">{children}</div>
-                </main>
-              </TrpcProvider>
-            </ToastProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
+        <SessionProvider>
+          <NextIntlClientProvider messages={messages}>
+            <ThemeProvider>
+              <ToastProvider>
+                <TrpcProvider>
+                  <NuqsAdapter>
+                    {/* Inject brand theme dynamically on client */}
+                    {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
+                    
+                    {/* <AdminHeader 
+                      brandName={brand?.name || adminEnv.NEXT_PUBLIC_APP_NAME}
+                      logoUrl={brand?.theme && typeof brand.theme === 'object' && 'logo' in brand.theme ? (brand.theme as any).logo : null}
+                    /> */}
+                    <main className="bg-none py-2">
+                      <div className="mx-auto w-full h-full max-w-5xl px-4 md:px-6">{children}</div>
+                    </main>
+                  </NuqsAdapter>
+                </TrpcProvider>
+              </ToastProvider>
+            </ThemeProvider>
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

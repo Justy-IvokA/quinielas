@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { prisma } from "@qp/db";
+import { buildInvitationUrl } from "../../lib/host-tenant";
 
 import { publicProcedure, router } from "../../trpc";
 import {
@@ -168,7 +169,7 @@ export const accessRouter = router({
 
   // Create email invitation
   createEmailInvitation: publicProcedure.input(createEmailInvitationSchema).mutation(async ({ input }) => {
-    const { poolId, accessPolicyId, tenantId, email, expiresAt } = input;
+    const { poolId, accessPolicyId, tenantId, brandId, email, expiresAt } = input;
 
     const policy = await prisma.accessPolicy.findUnique({
       where: { id: accessPolicyId }
@@ -183,7 +184,28 @@ export const accessRouter = router({
 
     const token = generateInviteToken();
 
-    return prisma.invitation.create({
+    // Get brand and pool info to build invitation URL
+    const brand = await prisma.brand.findUnique({
+      where: { id: brandId },
+      include: { tenant: true }
+    });
+
+    const pool = await prisma.pool.findUnique({
+      where: { id: poolId },
+      select: { slug: true }
+    });
+
+    if (!brand || !pool) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Brand or pool not found"
+      });
+    }
+
+    // Build invitation URL with correct subdomain
+    const invitationUrl = buildInvitationUrl(brand as any, pool.slug, token);
+
+    const invitation = await prisma.invitation.create({
       data: {
         poolId,
         accessPolicyId,
@@ -194,6 +216,12 @@ export const accessRouter = router({
         expiresAt: expiresAt || new Date(Date.now() + 72 * 60 * 60 * 1000) // 72h default
       }
     });
+
+    // TODO: Send email with invitationUrl using email adapter
+    // For now, just log the URL
+    console.log(`[access] Invitation URL for ${email}: ${invitationUrl}`);
+
+    return invitation;
   }),
 
   // Get email invitations for policy
@@ -207,38 +235,67 @@ export const accessRouter = router({
     }),
 
   // Resend email invitation
-  resendEmailInvitation: publicProcedure.input(z.object({ id: z.string().cuid() })).mutation(async ({ input }) => {
-    const invitation = await prisma.invitation.findUnique({
-      where: { id: input.id }
-    });
-
-    if (!invitation) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Invitation not found"
+  resendEmailInvitation: publicProcedure
+    .input(z.object({ 
+      id: z.string().cuid(),
+      brandId: z.string().cuid()
+    }))
+    .mutation(async ({ input }) => {
+      const invitation = await prisma.invitation.findUnique({
+        where: { id: input.id },
+        include: {
+          pool: {
+            select: { slug: true, name: true }
+          }
+        }
       });
-    }
 
-    if (invitation.status === "ACCEPTED") {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Invitation already accepted"
-      });
-    }
-
-    // Update sent count and timestamp
-    return prisma.invitation.update({
-      where: { id: input.id },
-      data: {
-        sentCount: { increment: 1 },
-        lastSentAt: new Date()
+      if (!invitation) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Invitation not found"
+        });
       }
-    });
-  }),
+
+      if (invitation.status === "ACCEPTED") {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invitation already accepted"
+        });
+      }
+
+      // Get brand info
+      const brand = await prisma.brand.findUnique({
+        where: { id: input.brandId },
+        include: { tenant: true }
+      });
+
+      if (!brand) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Brand not found"
+        });
+      }
+
+      // Build invitation URL
+      const invitationUrl = buildInvitationUrl(brand as any, invitation.pool.slug, invitation.token);
+
+      // TODO: Send email with invitationUrl
+      console.log(`[access] Resending invitation to ${invitation.email}: ${invitationUrl}`);
+
+      // Update sent count and timestamp
+      return prisma.invitation.update({
+        where: { id: input.id },
+        data: {
+          sentCount: { increment: 1 },
+          lastSentAt: new Date()
+        }
+      });
+    }),
 
   // Upload CSV of email invitations
   uploadInvitationsCsv: publicProcedure.input(uploadInvitationsCsvSchema).mutation(async ({ input }) => {
-    const { poolId, accessPolicyId, tenantId, emails, expiresAt } = input;
+    const { poolId, accessPolicyId, tenantId, brandId, emails, expiresAt } = input;
 
     const policy = await prisma.accessPolicy.findUnique({
       where: { id: accessPolicyId }
@@ -276,16 +333,42 @@ export const accessRouter = router({
       });
     }
 
+    // Get brand and pool info
+    const brand = await prisma.brand.findUnique({
+      where: { id: brandId },
+      include: { tenant: true }
+    });
+
+    const pool = await prisma.pool.findUnique({
+      where: { id: poolId },
+      select: { slug: true }
+    });
+
+    if (!brand || !pool) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Brand or pool not found"
+      });
+    }
+
     // Create invitations in batch
-    const invitations = uniqueEmails.map(email => ({
-      poolId,
-      accessPolicyId,
-      tenantId,
-      email,
-      token: generateInviteToken(),
-      status: "PENDING" as const,
-      expiresAt: expiresAt || new Date(Date.now() + 72 * 60 * 60 * 1000)
-    }));
+    const invitations = uniqueEmails.map(email => {
+      const token = generateInviteToken();
+      const invitationUrl = buildInvitationUrl(brand as any, pool.slug, token);
+      
+      // TODO: Queue email sending with invitationUrl
+      console.log(`[access] Invitation URL for ${email}: ${invitationUrl}`);
+      
+      return {
+        poolId,
+        accessPolicyId,
+        tenantId,
+        email,
+        token,
+        status: "PENDING" as const,
+        expiresAt: expiresAt || new Date(Date.now() + 72 * 60 * 60 * 1000)
+      };
+    });
 
     await prisma.invitation.createMany({
       data: invitations
@@ -299,7 +382,25 @@ export const accessRouter = router({
 
   // Send invitations (all or specific IDs)
   sendInvitations: publicProcedure.input(sendInvitationsSchema).mutation(async ({ input }) => {
-    const { poolId, tenantId, invitationIds } = input;
+    const { poolId, tenantId, brandId, invitationIds } = input;
+
+    // Get brand and pool info
+    const brand = await prisma.brand.findUnique({
+      where: { id: brandId },
+      include: { tenant: true }
+    });
+
+    const pool = await prisma.pool.findUnique({
+      where: { id: poolId },
+      select: { slug: true, name: true }
+    });
+
+    if (!brand || !pool) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Brand or pool not found"
+      });
+    }
 
     const where = invitationIds
       ? { id: { in: invitationIds }, poolId, tenantId }
@@ -307,7 +408,7 @@ export const accessRouter = router({
 
     const invitations = await prisma.invitation.findMany({
       where,
-      select: { id: true, email: true, status: true }
+      select: { id: true, email: true, status: true, token: true }
     });
 
     if (invitations.length === 0) {
@@ -316,6 +417,12 @@ export const accessRouter = router({
         message: "No invitations found to send"
       });
     }
+
+    // Build invitation URLs for each invitation
+    const invitationsWithUrls = invitations.map((inv: { id: string; email: string; token: string }) => ({
+      ...inv,
+      url: buildInvitationUrl(brand as any, pool.slug, inv.token)
+    }));
 
     // Update sent count and timestamp
     await prisma.invitation.updateMany({
@@ -327,7 +434,19 @@ export const accessRouter = router({
     });
 
     // TODO: Integrate with email service (EmailAdapter)
-    // For now, return the list to be processed by worker
+    // Send emails with correct subdomain URLs
+    invitationsWithUrls.forEach((inv) => {
+      console.log(`[access] Sending invitation to ${inv.email}: ${inv.url}`);
+      // emailAdapter.send({
+      //   to: inv.email,
+      //   ...emailTemplates.invitation({
+      //     poolName: pool.name,
+      //     inviteUrl: inv.url,
+      //     expiresAt: ...,
+      //     brandName: brand.name
+      //   })
+      // });
+    });
 
     return {
       sent: invitations.length,

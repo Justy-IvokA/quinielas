@@ -2,15 +2,3 @@
 > @qp/db@0.0.1 build C:\Users\victo\Documents\reactNextJS\quinielas\packages\db
 > tsc --build
 
-src/seed.ts(916,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(917,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(933,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(934,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(950,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(951,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(967,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(968,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(984,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(985,9): error TS2322: Type 'null' is not assignable to type 'string'.
-src/seed.ts(1008,9): error TS2322: Type 'null' is not assignable to type 'string'.
- ELIFECYCLE  Command failed with exit code 1.

@@ -5,12 +5,12 @@ import { Button } from "@qp/ui/components/button";
 import { AlertCircle } from "lucide-react";
 
 interface ErrorPageProps {
-  params: {
+  params: Promise<{
     locale: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     error?: string;
-  };
+  }>;
 }
 
 export default async function AuthErrorPage({ params, searchParams }: ErrorPageProps) {

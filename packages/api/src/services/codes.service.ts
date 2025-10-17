@@ -346,7 +346,7 @@ export class CodesService {
     const batch = await this.getBatchById(batchId, tenantId);
 
     const headers = ["Code", "Status", "Used Count", "Uses Per Code", "Expires At"];
-    const rows = batch.codes.map((code) => [
+    const rows = batch.codes.map((code: InviteCode) => [
       code.code,
       code.status,
       code.usedCount.toString(),

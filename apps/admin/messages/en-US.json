@@ -22,6 +22,41 @@
     "brands": "Brands",
     "analytics": "Analytics"
   },
+  "auth": {
+    "signin": {
+      "title": "Admin Access",
+      "subtitle": "Sign in to the admin panel",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "admin@example.com",
+      "sendLink": "Send access link",
+      "sendingLink": "Sending...",
+      "checkEmail": "Check your email",
+      "emailSent": "We sent an access link to {email}",
+      "emailSentDescription": "Click the link to sign in. The link expires in 24 hours.",
+      "orContinueWith": "Or continue with",
+      "googleSignin": "Continue with Google",
+      "microsoftSignin": "Continue with Microsoft",
+      "backToSignin": "Back to sign in"
+    },
+    "errors": {
+      "emailRequired": "Email address is required",
+      "emailInvalid": "Invalid email address",
+      "captchaRequired": "Please complete the captcha",
+      "rateLimitExceeded": "Too many attempts. Try again in {seconds} seconds",
+      "providerNotConfigured": "This provider is not configured",
+      "invalidCallbackUrl": "Invalid redirect URL",
+      "signInFailed": "Sign in failed. Please try again",
+      "generic": "Something went wrong. Please try again",
+      "insufficientPrivileges": "This email does not have admin permissions. Only users with SUPERADMIN or ADMIN role can access.",
+      "userNotFound": "No account found with this email address",
+      "checkingPermissions": "Checking permissions..."
+    },
+    "verify": {
+      "title": "Verify your email",
+      "description": "We sent an access link to your email",
+      "checkSpam": "If you don't see it, check your spam folder"
+    }
+  },
   "dashboard": {
     "statusOnline": "Services operational",
     "statusCheck": "Check API status",
@@ -29,21 +64,26 @@
     "subtitle": "Manage pools and brands for {brand} portfolio.",
     "createPool": "Create pool",
     "manageBrands": "Manage brands",
+    "analytics": {
+      "title": "Overview",
+      "activePools": "Active Pools",
+      "activePoolsDesc": "Pools in progress",
+      "totalPlayers": "Total Players",
+      "totalPlayersDesc": "Active registrations",
+      "totalPrizes": "Configured Prizes",
+      "totalPrizesDesc": "Across all pools"
+    },
     "quickActions": {
+      "title": "Quick Actions",
       "pools": {
-        "title": "Active pools",
-        "description": "Monitor status, access, and timeline of your live pools.",
-        "cta": "Go to pools"
+        "title": "Manage Pools",
+        "description": "Create, edit and manage your pools. Configure fixtures, prizes and access policies.",
+        "cta": "View pools"
       },
-      "fixtures": {
-        "title": "Upcoming fixtures",
-        "description": "Review schedules, prediction locks, and pending results.",
-        "cta": "Go to fixtures"
-      },
-      "access": {
-        "title": "Invites & codes",
-        "description": "Manage code batches, email invitations, and player usage.",
-        "cta": "Go to access"
+      "branding": {
+        "title": "Customize Brand",
+        "description": "Configure colors, logo and visual style for your brand's pools.",
+        "cta": "Go to branding"
       }
     }
   },
@@ -225,6 +265,71 @@
     "title": "Pools",
     "description": "Manage your active and inactive pools.",
     "create": "Create pool",
+    "tabs": {
+      "overview": "Overview",
+      "fixtures": "Fixtures",
+      "registrations": "Registrations",
+      "prizes": "Prizes",
+      "settings": "Settings"
+    },
+    "registrations": {
+      "title": "Registered Players",
+      "description": "{count} registered players",
+      "empty": {
+        "title": "No registered players",
+        "description": "Players will appear here when they register to this pool"
+      },
+      "table": {
+        "user": "User",
+        "email": "Email",
+        "status": "Status",
+        "registeredAt": "Registration date",
+        "predictions": "Predictions",
+        "noName": "No name"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    },
+    "settings": {
+      "status": {
+        "title": "Pool Status",
+        "description": "Control whether the pool is active or inactive",
+        "active": "Active",
+        "inactive": "Inactive",
+        "activeDescription": "The pool is active and players can register and make predictions",
+        "inactiveDescription": "The pool is inactive. Players cannot register or make predictions"
+      },
+      "actions": {
+        "activate": "Activate Pool",
+        "deactivate": "Deactivate Pool",
+        "activateConfirm": "Are you sure you want to activate {name}?",
+        "deactivateConfirm": "Are you sure you want to deactivate {name}?",
+        "activateSuccess": "Pool activated successfully",
+        "deactivateSuccess": "Pool deactivated successfully",
+        "error": "Error: {message}"
+      },
+      "danger": {
+        "title": "Danger Zone",
+        "description": "Irreversible actions",
+        "deleteTitle": "Delete Pool",
+        "deleteDescription": "Once deleted, it cannot be recovered:",
+        "deleteWarning1": "All player registrations will be deleted",
+        "deleteWarning2": "All predictions will be lost",
+        "deleteWarning3": "Assigned prizes will be deleted",
+        "deleteButton": "Delete Pool Permanently",
+        "deleteNote": "This function is disabled for security"
+      },
+      "info": {
+        "title": "Pool Information",
+        "description": "Technical pool data",
+        "id": "ID",
+        "slug": "Slug",
+        "createdAt": "Created",
+        "updatedAt": "Updated"
+      }
+    },
     "empty": {
       "title": "No pools created",
       "description": "Start by creating your first pool to manage predictions.",
@@ -246,6 +351,9 @@
     "stats": {
       "registrations": "{count} registrations",
       "prizes": "{count} prizes"
+    },
+    "details": {
+      "title": "Pool details"
     }
   },
   "demo": {

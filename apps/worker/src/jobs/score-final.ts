@@ -9,12 +9,24 @@ import { scoreMatch, DEFAULT_RULE_SET, type RuleSet } from "@qp/scoring";
 export async function scoreFinalJob() {
   console.log("[ScoreFinal] Starting job...");
 
+  // Only check matches from the last 7 days to avoid processing old matches
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
   // Find finished matches that haven't been scored yet
   const finishedMatches = await prisma.match.findMany({
     where: {
       status: "FINISHED",
       homeScore: { not: null },
-      awayScore: { not: null }
+      awayScore: { not: null },
+      kickoffTime: {
+        gte: sevenDaysAgo // Only matches from last 7 days
+      },
+      predictions: {
+        some: {
+          awardedPoints: 0 // Only include matches with unscored predictions
+        }
+      }
     },
     include: {
       predictions: {

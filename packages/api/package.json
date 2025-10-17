@@ -21,6 +21,7 @@
     "@qp/db": "workspace:*",
     "@qp/auth": "workspace:*",
     "@qp/utils": "workspace:*",
+    "@qp/scoring": "workspace:*",
     "@trpc/server": "^11.6.0",
     "next-auth": "^5.0.0-beta.4",
     "superjson": "^1.13.3",

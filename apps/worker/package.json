@@ -17,6 +17,7 @@
     "@qp/db": "workspace:*",
     "@qp/scoring": "workspace:*",
     "@qp/utils": "workspace:*",
+    "dotenv": "^16.4.5",
     "tsx": "^4.7.0"
   },
   "devDependencies": {

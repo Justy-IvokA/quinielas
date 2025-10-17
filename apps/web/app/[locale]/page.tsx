@@ -12,11 +12,9 @@ import { getTranslations } from "next-intl/server";
 import { headers } from "next/headers";
 
 import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
-import { getOptimizedMediaUrl } from "@qp/utils/client";
 import { webEnv } from "@web/env";
 import { HomeHero } from "../components/home-hero";
 import { StatsSection } from "../components/stats-section";
-import { BrandThemeInjector } from "../components/brand-theme-injector";
 
 export default async function HomePage() {
   // Resolve brand from host
@@ -62,56 +60,8 @@ export default async function HomePage() {
     { icon: Code, label: t("techFeatures.apiFirst") },
   ];
 
-  // Get hero assets from brand theme with URL optimization
-  const heroAssets = brand?.theme && typeof brand.theme === 'object' 
-    ? (brand.theme as any).heroAssets 
-    : null;
-  
-  // Convert Google Drive URLs to direct download links
-  const optimizedAssetUrl = getOptimizedMediaUrl(heroAssets?.assetUrl);
-  const optimizedFallbackUrl = getOptimizedMediaUrl(heroAssets?.fallbackImageUrl);
-  const hasHeroMedia = optimizedAssetUrl;
-
   return (
     <div className="relative isolate overflow-hidden min-h-screen">
-      {/* Inject brand theme dynamically on client */}
-      {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
-      
-      {/* Hero background media (video or image) */}
-      {hasHeroMedia && (
-        <div className="pointer-events-none fixed inset-0 -z-10">
-          {heroAssets.video ? (
-            // Video background
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              poster={optimizedFallbackUrl || undefined}
-            >
-              <source src={optimizedAssetUrl} type="video/mp4" />
-            </video>
-          ) : (
-            // Image background
-            <img
-              src={optimizedAssetUrl}
-              alt="Hero background"
-              className="absolute inset-0 w-full h-full object-cover"
-            />
-          )}
-          {/* Gradient overlay for readability (Comentado por VEMG) */}
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" /> */}
-        </div>
-      )}
-
-      {/* Animated background gradients - uses brand primary color */}
-      {/* <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary))/20%,_transparent_50%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-[600px] bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent))/15%,_transparent_50%)]" />
-        <div className="absolute right-0 top-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--primary))/15%,_transparent_70%)] blur-3xl" />
-        <div className="absolute left-0 bottom-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--accent))/15%,_transparent_70%)] blur-3xl" />
-      </div> */}
 
       {/* Hero Section - Full viewport height */}
       <div className="flex items-center justify-center min-h-screen w-full px-6 py-16 md:px-10 md:py-24">
@@ -120,9 +70,8 @@ export default async function HomePage() {
             brandName={brandName}
             tagline={t("hero.tagline")}
             ctaLabel={t("hero.cta")}
-            ctaHref="/register"
-            logoUrl={brand?.logoUrl}
-            mascotUrl={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).mascotUrl : null}
+            logo={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).logo.url : null}
+            mainCard={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).mainCard : null}
           />
         </div>
       </div>

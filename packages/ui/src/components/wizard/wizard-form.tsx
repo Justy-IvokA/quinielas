@@ -58,16 +58,17 @@ export function WizardForm({
   }, [currentStep]);
 
   return (
-    <div className="mx-auto mt-4 print:w-full" data-testid="wizard-form">
-      <div className={cn("overflow-hidden md:mb-2 md:w-[700px]", containerClassname)}>
-        <div className="px-6 py-5">
-          <h1 className="font-cal text-emphasis text-2xl" data-testid="step-title">
-            {currentStepData.title}
-          </h1>
-          <p className="text-subtle text-sm" data-testid="step-description">
-            {currentStepData.description}
-          </p>
-          {!disableNavigation && (
+    <div className="w-full p-6" data-testid="wizard-form">
+      {/* Step Header */}
+      <div className={cn("mb-6", containerClassname)}>
+        <h2 className="text-2xl font-semibold" data-testid="step-title">
+          {currentStepData.title}
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground" data-testid="step-description">
+          {currentStepData.description}
+        </p>
+        {!disableNavigation && (
+          <div className="mt-4">
             <Steps
               maxSteps={maxSteps}
               currentStep={currentStep}
@@ -75,13 +76,15 @@ export function WizardForm({
               stepLabel={stepLabel}
               data-testid="wizard-step-component"
             />
-          )}
-        </div>
+          </div>
+        )}
       </div>
-      <div className={cn("mb-8 overflow-hidden md:w-[700px]", containerClassname)}>
+
+      {/* Step Content */}
+      <div className={cn("mb-6", containerClassname)}>
         <div
           className={cn(
-            "bg-default border-subtle max-w-3xl rounded-2xl border px-4 py-3 sm:p-4 ",
+            "rounded-xl border border-border/50 bg-background/50 p-6",
             currentStepData.contentClassname
           )}>
           {typeof currentStepData.content === "function"
@@ -93,10 +96,12 @@ export function WizardForm({
               })
             : currentStepData.content}
         </div>
+
+        {/* Navigation Buttons */}
         {!disableNavigation && !currentStepData.customActions && (
-          <div className="flex justify-end px-4 py-4 print:hidden sm:px-6">
+          <div className="flex justify-end gap-3 mt-6">
             {!isFirstStep && (
-              <Button color="secondary" onClick={prevStep}>
+              <Button variant="outline" onClick={prevStep}>
                 {prevLabel}
               </Button>
             )}
@@ -104,11 +109,9 @@ export function WizardForm({
             <Button
               tabIndex={0}
               loading={currentStepisPending}
-              type="submit"
-              color="primary"
-              form={`wizard-step-${currentStep}`}
-              disabled={currentStepData.isEnabled === false}
-              className="relative ml-2">
+              type="button"
+              onClick={nextStep}
+              disabled={currentStepData.isEnabled === false}>
               {isLastStep ? finishLabel : nextLabel}
             </Button>
           </div>

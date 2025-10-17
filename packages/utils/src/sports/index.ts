@@ -3,6 +3,7 @@ import { MockSportsProvider } from "./mock";
 import { APIFootballProvider } from "./api-football";
 
 export * from "./provider";
+export * from "./extended-provider";
 export * from "./mock";
 export * from "./api-football";
 export * from "./cache";

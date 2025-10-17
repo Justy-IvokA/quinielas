@@ -3,6 +3,7 @@ import { z } from "zod";
 export const authEnvSchema = z.object({
   AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters"),
   AUTH_URL: z.string().url().optional(),
+  AUTH_TRUST_HOST: z.coerce.boolean().default(true), // Trust host header for subdomain support
   
   // Email provider (magic link)
   EMAIL_SERVER_HOST: z.string().optional(),

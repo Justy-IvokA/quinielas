@@ -11,3 +11,9 @@ export * from "./csv";
 
 // Export media URL utilities (CLIENT SAFE)
 export * from "./media-url";
+
+// Export storage utilities (SERVER ONLY)
+export * from "./storage/adapter";
+
+// Export slug utilities (CLIENT SAFE)
+export * from "./lib/slug";

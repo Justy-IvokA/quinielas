@@ -107,8 +107,8 @@ export const registrationRouter = router({
     }
 
     const code = pool.accessPolicy.codeBatches
-      .flatMap((batch) => batch.codes)
-      .find((c) => c.code === input.code);
+      .flatMap((batch: any) => batch.codes)
+      .find((c: any) => c.code === input.code);
 
     if (!code) {
       throw new TRPCError({
@@ -357,8 +357,8 @@ export const registrationRouter = router({
     }
 
     const inviteCode = pool.accessPolicy.codeBatches
-      .flatMap((batch) => batch.codes)
-      .find((c) => c.code === input.inviteCode);
+      .flatMap((batch: any) => batch.codes)
+      .find((c: any) => c.code === input.inviteCode);
 
     if (!inviteCode) {
       throw new TRPCError({

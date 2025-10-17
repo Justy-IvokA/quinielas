@@ -1,7 +1,7 @@
 {
   "name": "quinielas-wl",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.18.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/Justy-IvokA/quinielas.git"
@@ -15,8 +15,14 @@
     "format": "turbo run format",
     "db:generate": "pnpm --filter @qp/db exec prisma generate",
     "db:push": "pnpm --filter @qp/db exec prisma db push",
+    "db:migrate": "pnpm --filter @qp/db exec prisma migrate deploy",
     "seed": "pnpm --filter @qp/db run seed",
-    "npm:package_versions": "npm view tailwindcss versions"
+    "deploy:web": "pnpm --filter @qp/web run deploy",
+    "deploy:admin": "pnpm --filter @qp/admin run deploy",
+    "deploy:all": "pnpm deploy:web && pnpm deploy:admin",
+    "npm:package_versions": "npm view tailwindcss versions",
+    "powershell:adminCache": "Remove-Item -Recurse -Force .\\apps\\admin\\.next",
+    "powershell:webCache": "Remove-Item -Recurse -Force .\\apps\\web\\.next"
   },
   "dependencies": {
     "@qp/db": "workspace:*"

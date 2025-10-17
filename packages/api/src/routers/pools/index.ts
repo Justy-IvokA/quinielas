@@ -37,6 +37,47 @@ export const poolsRouter = router({
       });
     }),
 
+  // Get registrations for a pool
+  getRegistrations: publicProcedure
+    .input(z.object({ poolId: z.string().cuid() }))
+    .query(async ({ input }) => {
+      const registrations = await prisma.registration.findMany({
+        where: { poolId: input.poolId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true
+            }
+          }
+        },
+        orderBy: { joinedAt: "desc" }
+      });
+
+      // Get prediction counts for each user in this pool
+      const registrationsWithCounts = await Promise.all(
+        registrations.map(async (registration) => {
+          const predictionsCount = await prisma.prediction.count({
+            where: {
+              userId: registration.userId,
+              poolId: input.poolId
+            }
+          });
+
+          return {
+            ...registration,
+            _count: {
+              predictions: predictionsCount
+            }
+          };
+        })
+      );
+
+      return registrationsWithCounts;
+    }),
+
   // Get pool by ID
   getById: publicProcedure.input(z.object({ id: z.string().cuid() })).query(async ({ input }) => {
     const pool = await prisma.pool.findUnique({
@@ -179,36 +220,92 @@ export const poolsRouter = router({
     });
   }),
 
+  // Toggle pool active status
+  toggleActive: publicProcedure
+    .input(z.object({ 
+      id: z.string().cuid(),
+      isActive: z.boolean()
+    }))
+    .mutation(async ({ input }) => {
+      return prisma.pool.update({
+        where: { id: input.id },
+        data: { isActive: input.isActive }
+      });
+    }),
+
   // Delete pool
-  delete: publicProcedure.input(z.object({ id: z.string().cuid() })).mutation(async ({ input }) => {
-    // Check if pool has registrations
-    const pool = await prisma.pool.findUnique({
-      where: { id: input.id },
-      include: {
-        _count: {
-          select: { registrations: true }
+  delete: publicProcedure
+    .use(withTenant)
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ ctx, input }) => {
+      // Check if pool exists and belongs to tenant
+      const pool = await prisma.pool.findUnique({
+        where: { id: input.id },
+        include: {
+          _count: {
+            select: {
+              registrations: true,
+              predictions: true,
+              prizes: true,
+              invitations: true,
+              scoreAudits: true,
+              leaderboards: true
+            }
+          }
         }
+      });
+
+      if (!pool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Pool not found"
+        });
       }
-    });
 
-    if (!pool) {
-      throw new TRPCError({
-        code: "NOT_FOUND",
-        message: "Pool not found"
+      // Verify tenant ownership
+      if (pool.tenantId !== ctx.tenant.id) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You don't have permission to delete this pool"
+        });
+      }
+
+      // Prevent deletion if pool has registrations (users have participated)
+      if (pool._count.registrations > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot delete pool with existing registrations. Deactivate it instead."
+        });
+      }
+
+      console.log(`[Pool Delete] Deleting pool ${input.id} with:`, {
+        predictions: pool._count.predictions,
+        prizes: pool._count.prizes,
+        invitations: pool._count.invitations,
+        scoreAudits: pool._count.scoreAudits,
+        leaderboards: pool._count.leaderboards
       });
-    }
 
-    if (pool._count.registrations > 0) {
-      throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Cannot delete pool with existing registrations. Deactivate it instead."
+      // Delete pool (cascade will handle related records)
+      // Relations with onDelete: Cascade in schema:
+      // - AccessPolicy
+      // - Predictions
+      // - Prizes
+      // - Invitations
+      // - ScoreAudits
+      // - LeaderboardSnapshots
+      // - Settings
+      // - PolicyDocuments
+      // - ConsentRecords
+      // - DataRetentionPolicies
+      await prisma.pool.delete({
+        where: { id: input.id }
       });
-    }
 
-    return prisma.pool.delete({
-      where: { id: input.id }
-    });
-  }),
+      console.log(`[Pool Delete] Successfully deleted pool ${input.id}`);
+
+      return { success: true, deletedPoolId: input.id };
+    }),
 
   // Prize management
   prizes: router({

@@ -162,22 +162,59 @@ export async function resolveTenantAndBrandFromHost(
 /**
  * Get canonical URL for a brand
  * Uses first domain in Brand.domains array or constructs subdomain URL
+ * Handles both development (localhost) and production environments
  */
 export function getBrandCanonicalUrl(brand: Brand & { tenant: Tenant }): string {
   // Prefer custom domain
   if (brand.domains && brand.domains.length > 0) {
-    return `https://${brand.domains[0]}`;
+    const domain = brand.domains[0];
+    // Check if domain includes localhost (development)
+    const protocol = domain.includes('localhost') ? 'http' : 'https';
+    return `${protocol}://${domain}`;
   }
 
   // Fallback to subdomain pattern
-  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "quinielas.mx";
-  return `https://${brand.tenant.slug}.${baseDomain}`;
+  const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "localhost:3000";
+  const protocol = baseDomain.includes('localhost') ? 'http' : 'https';
+  
+  // Use brand slug as subdomain
+  return `${protocol}://${brand.slug}.${baseDomain}`;
 }
 
 /**
  * Build pool URL for a given brand and pool slug
+ * Includes locale in the path
  */
-export function buildPoolUrl(brand: Brand & { tenant: Tenant }, poolSlug: string): string {
+export function buildPoolUrl(
+  brand: Brand & { tenant: Tenant }, 
+  poolSlug: string,
+  locale: string = 'es-MX'
+): string {
   const baseUrl = getBrandCanonicalUrl(brand);
-  return `${baseUrl}/${poolSlug}`;
+  return `${baseUrl}/${locale}/pools/${poolSlug}`;
+}
+
+/**
+ * Build invitation URL for a given brand, pool, and token
+ */
+export function buildInvitationUrl(
+  brand: Brand & { tenant: Tenant },
+  poolSlug: string,
+  token: string,
+  locale: string = 'es-MX'
+): string {
+  const baseUrl = getBrandCanonicalUrl(brand);
+  return `${baseUrl}/${locale}/pools/${poolSlug}/join?token=${token}`;
+}
+
+/**
+ * Build auth callback URL for a given brand
+ * Used for magic link authentication
+ */
+export function buildAuthCallbackUrl(
+  brand: Brand & { tenant: Tenant },
+  locale: string = 'es-MX'
+): string {
+  const baseUrl = getBrandCanonicalUrl(brand);
+  return `${baseUrl}/${locale}/auth/callback`;
 }

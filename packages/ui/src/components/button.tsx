@@ -199,8 +199,8 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   loading?: boolean;
-  StartIcon?: LucideIcon;
-  EndIcon?: LucideIcon;
+  StartIcon?: LucideIcon | React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  EndIcon?: LucideIcon | React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href?: string;
   shallow?: boolean;
 }
@@ -227,9 +227,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const isDisabled = disabled || loading;
     const isLink = typeof href !== "undefined";
 
+    // When using asChild, don't render StartIcon/EndIcon - let the child handle its own content
+    const shouldRenderIcons = !asChild;
+
     const content = (
       <>
-        {StartIcon && (
+        {shouldRenderIcons && StartIcon && (
           <StartIcon
             className={cn(
               "h-4 w-4 stroke-[1.5px] transition-transform group-active:translate-y-[0.5px]",
@@ -237,8 +240,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             )}
           />
         )}
-        <span className={cn(loading && "invisible")}>{children}</span>
-        {EndIcon && (
+        {shouldRenderIcons ? (
+          <span className={cn(loading && "invisible")}>{children}</span>
+        ) : (
+          children
+        )}
+        {shouldRenderIcons && EndIcon && (
           <EndIcon
             className={cn(
               "h-4 w-4 stroke-[1.5px] transition-transform group-active:translate-y-[0.5px]",

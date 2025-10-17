@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { prisma } from "@qp/db";
 
 import { protectedProcedure, router } from "../../trpc";
+import { requireRegistrationForPool } from "../../middleware/require-registration";
 import {
   createPredictionSchema,
   updatePredictionSchema,
@@ -13,25 +14,11 @@ import {
 
 export const predictionsRouter = router({
   // Get user's predictions for a pool
-  getByPool: protectedProcedure.input(getPredictionsByPoolSchema).query(async ({ input, ctx }) => {
+  getByPool: protectedProcedure
+    .input(getPredictionsByPoolSchema)
+    .use(requireRegistrationForPool())
+    .query(async ({ input, ctx }) => {
     const userId = ctx.session.user.id;
-
-    // Verify user is registered for this pool
-    const registration = await prisma.registration.findUnique({
-      where: {
-        userId_poolId: {
-          userId,
-          poolId: input.poolId
-        }
-      }
-    });
-
-    if (!registration) {
-      throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You must be registered for this pool to view predictions"
-      });
-    }
 
     const predictions = await prisma.prediction.findMany({
       where: {
@@ -77,32 +64,20 @@ export const predictionsRouter = router({
   }),
 
   // Create or update a single prediction
-  save: protectedProcedure.input(createPredictionSchema).mutation(async ({ input, ctx }) => {
+  save: protectedProcedure
+    .input(createPredictionSchema)
+    .use(requireRegistrationForPool())
+    .mutation(async ({ input, ctx }) => {
     const userId = ctx.session.user.id;
-
-    // Verify user is registered for this pool
-    const registration = await prisma.registration.findUnique({
-      where: {
-        userId_poolId: {
-          userId,
-          poolId: input.poolId
-        }
-      },
-      include: {
-        pool: {
-          select: {
-            tenantId: true
-          }
-        }
-      }
-    });
-
-    if (!registration) {
+    
+    if (!ctx.registration) {
       throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You must be registered for this pool to make predictions"
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Registration not found in context"
       });
     }
+    
+    const registration = ctx.registration;
 
     // Check if match is locked
     const match = await prisma.match.findUnique({
@@ -120,8 +95,8 @@ export const predictionsRouter = router({
     const now = new Date();
     if (match.locked || match.kickoffTime <= now) {
       throw new TRPCError({
-        code: "BAD_REQUEST",
-        message: "Cannot save prediction: match has started or is locked"
+        code: "FORBIDDEN",
+        message: "MATCH_LOCKED"
       });
     }
 
@@ -138,7 +113,7 @@ export const predictionsRouter = router({
         matchId: input.matchId,
         poolId: input.poolId,
         userId,
-        tenantId: registration.pool.tenantId,
+        tenantId: registration.tenantId,
         homeScore: input.homeScore,
         awayScore: input.awayScore
       },
@@ -152,40 +127,26 @@ export const predictionsRouter = router({
   }),
 
   // Bulk save predictions
-  bulkSave: protectedProcedure.input(bulkSavePredictionsSchema).mutation(async ({ input, ctx }) => {
+  bulkSave: protectedProcedure
+    .input(bulkSavePredictionsSchema)
+    .use(requireRegistrationForPool())
+    .mutation(async ({ input, ctx }) => {
     const userId = ctx.session.user.id;
-
-    // Verify user is registered for this pool
-    const registration = await prisma.registration.findUnique({
-      where: {
-        userId_poolId: {
-          userId,
-          poolId: input.poolId
-        }
-      },
-      include: {
-        pool: {
-          select: {
-            tenantId: true,
-            seasonId: true
-          }
-        }
-      }
-    });
-
-    if (!registration) {
+    
+    if (!ctx.registration) {
       throw new TRPCError({
-        code: "FORBIDDEN",
-        message: "You must be registered for this pool to make predictions"
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Registration not found in context"
       });
     }
+    
+    const registration = ctx.registration;
 
     // Get all matches to validate
     const matchIds = input.predictions.map((p) => p.matchId);
     const matches = await prisma.match.findMany({
       where: {
-        id: { in: matchIds },
-        seasonId: registration.pool.seasonId
+        id: { in: matchIds }
       }
     });
 
@@ -210,7 +171,7 @@ export const predictionsRouter = router({
 
       // Skip locked or started matches
       if (match.locked || match.kickoffTime <= now) {
-        errors.push({ matchId: predInput.matchId, error: "Match has started or is locked" });
+        errors.push({ matchId: predInput.matchId, error: "MATCH_LOCKED" });
         continue;
       }
 
@@ -227,7 +188,7 @@ export const predictionsRouter = router({
             matchId: predInput.matchId,
             poolId: input.poolId,
             userId,
-            tenantId: registration.pool.tenantId,
+            tenantId: registration.tenantId,
             homeScore: predInput.homeScore,
             awayScore: predInput.awayScore
           },

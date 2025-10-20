@@ -32,7 +32,7 @@ export default async function AdminHome() {
   const t = await getTranslations("dashboard");
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       <DashboardWelcome
         tenantName={tenantName}
         brandName={brandName}
@@ -40,13 +40,13 @@ export default async function AdminHome() {
 
       {/* Analytics Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">{t("analytics.title")}</h2>
+        <h2 className="text-xl font-semibold mb-4 text-primary">{t("analytics.title")}</h2>
         <DashboardAnalytics />
       </section>
 
       {/* Quick Actions Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">{t("quickActions.title")}</h2>
+        <h2 className="text-xl font-semibold mb-4 text-primary">{t("quickActions.title")}</h2>
         <div className="grid gap-6 md:grid-cols-2">
         {quickActionKeys.map(({ key, href }) => (
           <article
@@ -61,7 +61,7 @@ export default async function AdminHome() {
             </p>
             <Link
               href={href}
-              className="text-sm font-medium text-primary hover:underline"
+              className="text-sm font-medium text-secondary hover:underline hover:text-foreground"
             >
               {t(`quickActions.${key}.cta`)}
             </Link>

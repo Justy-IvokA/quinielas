@@ -78,7 +78,7 @@ export default function PoolInvitationsPage() {
   // Mutations
   const uploadCsvMutation = trpc.access.uploadInvitationsCsv.useMutation({
     onSuccess: (data) => {
-      toastSuccess(`${data.created} invitations created successfully`);
+      toastSuccess(t("messages.createSuccess", { count: data.created }));
       refetch();
       utils.access.invitationStats.invalidate({ poolId, tenantId: pool?.tenantId || "" });
       setShowCreateModal(false);
@@ -91,7 +91,7 @@ export default function PoolInvitationsPage() {
 
   const sendInvitationsMutation = trpc.access.sendInvitations.useMutation({
     onSuccess: (data) => {
-      toastSuccess(`${data.sent} invitations sent successfully`);
+      toastSuccess(t("messages.sendSuccess", { count: data.sent }));
       refetch();
       setShowSendModal(false);
       setSelectedIds([]);
@@ -103,7 +103,7 @@ export default function PoolInvitationsPage() {
 
   const resendMutation = trpc.access.resendEmailInvitation.useMutation({
     onSuccess: () => {
-      toastSuccess("Invitation resent successfully");
+      toastSuccess(t("messages.resendSuccess"));
       refetch();
     },
     onError: (error) => {
@@ -125,12 +125,12 @@ export default function PoolInvitationsPage() {
         .filter((line) => line && line.includes("@"));
 
       if (emails.length === 0) {
-        toastError("No valid emails found in CSV");
+        toastError(t("messages.noValidEmailsCsv"));
         return;
       }
 
       if (!accessPolicy?.id || !pool?.tenantId || !pool?.brandId) {
-        toastError("Missing required data");
+        toastError(t("messages.missingData"));
         return;
       }
 
@@ -142,7 +142,7 @@ export default function PoolInvitationsPage() {
         emails
       });
     } catch (error: any) {
-      toastError(error.message || "Failed to upload CSV");
+      toastError(error.message || t("messages.uploadFailed"));
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -158,12 +158,12 @@ export default function PoolInvitationsPage() {
       .filter((line) => line && line.includes("@"));
 
     if (emails.length === 0) {
-      toastError("No valid emails found");
+      toastError(t("messages.noValidEmails"));
       return;
     }
 
     if (!accessPolicy?.id || !pool?.tenantId || !pool?.brandId) {
-      toastError("Missing required data");
+      toastError(t("messages.missingData"));
       return;
     }
 
@@ -192,7 +192,7 @@ export default function PoolInvitationsPage() {
 
   const handleResend = async (invitationId: string) => {
     if (!pool?.brandId) {
-      toastError("Missing brand data");
+      toastError(t("messages.missingBrandData"));
       return;
     }
 
@@ -204,13 +204,13 @@ export default function PoolInvitationsPage() {
 
   const handleCopyLink = (token: string) => {
     if (!pool?.brand?.domains?.[0] || !pool?.slug) {
-      toastError("Cannot generate invitation link");
+      toastError(t("messages.cannotGenerateLink"));
       return;
     }
     const domain = pool.brand.domains[0];
     const url = `https://${domain}/pools/${pool.slug}/register?token=${token}`;
     navigator.clipboard.writeText(url);
-    toastSuccess("Link copied to clipboard");
+    toastSuccess(t("messages.copySuccess"));
   };
 
   // Filter invitations
@@ -251,7 +251,7 @@ export default function PoolInvitationsPage() {
         <Card>
           <CardContent className="pt-6">
             <p className="text-muted-foreground text-center">
-              This pool does not use email invitations. Access type: {accessPolicy.accessType}
+              {t("wrongAccessType", { type: accessPolicy.accessType })}
             </p>
           </CardContent>
         </Card>
@@ -266,10 +266,10 @@ export default function PoolInvitationsPage() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Mail className="h-8 w-8" />
-            Email Invitations
+            {t("title")}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage email invitations for {pool.name}
+            {t("subtitle")} - {pool.name}
           </p>
         </div>
         <div className="flex gap-2">
@@ -277,13 +277,12 @@ export default function PoolInvitationsPage() {
             variant="outline"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading}
+            StartIcon={Upload}
           >
-            <Upload className="h-4 w-4 mr-2" />
-            {uploading ? "Uploading..." : "Upload CSV"}
+            {uploading ? t("uploading") : t("uploadCsv")}
           </Button>
-          <Button onClick={() => setShowCreateModal(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Create Invitations
+          <Button onClick={() => setShowCreateModal(true)} StartIcon={Plus}>
+            {t("createInvitations")}
           </Button>
         </div>
       </div>
@@ -302,7 +301,7 @@ export default function PoolInvitationsPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Sent
+                {t("stats.total")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -312,7 +311,7 @@ export default function PoolInvitationsPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Delivered
+                {t("stats.sent")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -322,7 +321,7 @@ export default function PoolInvitationsPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Opened
+                {t("stats.opened")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -337,7 +336,7 @@ export default function PoolInvitationsPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Activated
+                {t("stats.activated")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -352,7 +351,7 @@ export default function PoolInvitationsPage() {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">
-                Bounced
+                {t("stats.bounced")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -367,7 +366,7 @@ export default function PoolInvitationsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex justify-between text-sm mb-2">
-              <span className="font-medium">Activation Progress</span>
+              <span className="font-medium">{t("activationProgress")}</span>
               <span className="text-muted-foreground">{stats.activationRate}%</span>
             </div>
             <Progress value={stats.activationRate} className="h-2" />
@@ -383,7 +382,7 @@ export default function PoolInvitationsPage() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search by email..."
+                  placeholder={t("searchPlaceholder")}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -396,18 +395,17 @@ export default function PoolInvitationsPage() {
                 onChange={(e) => setStatusFilter(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
               >
-                <option value="ALL">All Status</option>
-                <option value="PENDING">Pending</option>
-                <option value="SENT">Sent</option>
-                <option value="OPENED">Opened</option>
-                <option value="ACCEPTED">Accepted</option>
-                <option value="EXPIRED">Expired</option>
-                <option value="BOUNCED">Bounced</option>
+                <option value="ALL">{t("filters.all")}</option>
+                <option value="PENDING">{t("filters.pending")}</option>
+                <option value="SENT">{t("filters.sent")}</option>
+                <option value="OPENED">{t("filters.opened")}</option>
+                <option value="ACCEPTED">{t("filters.accepted")}</option>
+                <option value="EXPIRED">{t("filters.expired")}</option>
+                <option value="BOUNCED">{t("filters.bounced")}</option>
               </select>
               {selectedIds.length > 0 && (
-                <Button onClick={() => setShowSendModal(true)}>
-                  <Send className="h-4 w-4 mr-2" />
-                  Send Selected ({selectedIds.length})
+                <Button onClick={() => setShowSendModal(true)} StartIcon={Send}>
+                  {t("sendSelected")} ({selectedIds.length})
                 </Button>
               )}
             </div>
@@ -418,21 +416,20 @@ export default function PoolInvitationsPage() {
       {/* Invitations Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Invitations List</CardTitle>
+          <CardTitle>{t("tableTitle")}</CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="text-center py-12">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent"></div>
-              <p className="mt-2 text-muted-foreground">Loading invitations...</p>
+              <p className="mt-2 text-muted-foreground">{t("loading")}</p>
             </div>
           ) : filteredInvitations.length === 0 ? (
             <div className="text-center py-12">
               <Mail className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-4">No invitations found</p>
-              <Button onClick={() => setShowCreateModal(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Create First Invitation
+              <p className="text-muted-foreground mb-4">{t("noInvitations")}</p>
+              <Button onClick={() => setShowCreateModal(true)} StartIcon={Plus}>
+                {t("createFirst")}
               </Button>
             </div>
           ) : (
@@ -454,12 +451,12 @@ export default function PoolInvitationsPage() {
                         className="rounded"
                       />
                     </TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Sent</TableHead>
-                    <TableHead>Opened</TableHead>
-                    <TableHead>Activated</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t("table.email")}</TableHead>
+                    <TableHead>{t("table.status")}</TableHead>
+                    <TableHead>{t("table.sent")}</TableHead>
+                    <TableHead>{t("table.opened")}</TableHead>
+                    <TableHead>{t("table.activated")}</TableHead>
+                    <TableHead className="text-right">{t("table.actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -512,17 +509,15 @@ export default function PoolInvitationsPage() {
                               size="sm"
                               onClick={() => handleResend(inv.id)}
                               disabled={resendMutation.isPending}
-                            >
-                              <RefreshCw className="h-4 w-4" />
-                            </Button>
+                              StartIcon={RefreshCw}
+                            />
                           )}
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleCopyLink(inv.token)}
-                          >
-                            <Copy className="h-4 w-4" />
-                          </Button>
+                            StartIcon={Copy}
+                          />
                         </div>
                       </TableCell>
                     </TableRow>
@@ -538,24 +533,24 @@ export default function PoolInvitationsPage() {
       <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Create Email Invitations</DialogTitle>
+            <DialogTitle>{t("modal.createTitle")}</DialogTitle>
             <DialogDescription>
-              Enter email addresses (one per line) or upload a CSV file
+              {t("modal.createDescription")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="emails">Email Addresses</Label>
+              <Label htmlFor="emails">{t("modal.emailsLabel")}</Label>
               <Textarea
                 id="emails"
-                placeholder="user1@example.com&#10;user2@example.com&#10;user3@example.com"
+                placeholder={t("modal.emailsPlaceholder")}
                 value={emailsText}
                 onChange={(e) => setEmailsText(e.target.value)}
                 rows={10}
                 className="font-mono text-sm"
               />
               <p className="text-sm text-muted-foreground mt-2">
-                {emailsText.split("\n").filter((line) => line.trim() && line.includes("@")).length} valid emails
+                {t("modal.validEmailsCount", { count: emailsText.split("\n").filter((line) => line.trim() && line.includes("@")).length })}
               </p>
             </div>
           </div>
@@ -567,13 +562,13 @@ export default function PoolInvitationsPage() {
                 setEmailsText("");
               }}
             >
-              Cancel
+              {t("messages.cancel")}
             </Button>
             <Button
               onClick={handleCreateFromText}
               disabled={uploadCsvMutation.isPending || !emailsText.trim()}
             >
-              {uploadCsvMutation.isPending ? "Creating..." : "Create Invitations"}
+              {uploadCsvMutation.isPending ? t("messages.creating") : t("createInvitations")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -583,28 +578,28 @@ export default function PoolInvitationsPage() {
       <Dialog open={showSendModal} onOpenChange={setShowSendModal}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send Invitations</DialogTitle>
+            <DialogTitle>{t("modal.sendTitle")}</DialogTitle>
             <DialogDescription>
               {selectedIds.length > 0
-                ? `Send ${selectedIds.length} selected invitation(s)?`
-                : "Send all pending invitations?"}
+                ? t("modal.sendDescription", { count: selectedIds.length })
+                : t("modal.sendAllDescription")}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              Invitation emails will be sent to the recipients with a unique registration link.
-              {selectedIds.length === 0 && " This will send all invitations with PENDING status."}
+              {t("modal.sendNote")}
+              {selectedIds.length === 0 && " " + t("modal.sendNoteAll")}
             </p>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowSendModal(false)}>
-              Cancel
+              {t("messages.cancel")}
             </Button>
             <Button
               onClick={handleSendSelected}
               disabled={sendInvitationsMutation.isPending}
             >
-              {sendInvitationsMutation.isPending ? "Sending..." : "Send Invitations"}
+              {sendInvitationsMutation.isPending ? t("messages.sending") : t("modal.sendTitle")}
             </Button>
           </DialogFooter>
         </DialogContent>

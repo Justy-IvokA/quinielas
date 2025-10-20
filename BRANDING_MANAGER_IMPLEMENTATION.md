@@ -53,6 +53,8 @@ S3_SECRET_ACCESS_KEY=your-secret
 - `getCurrentBrand()`: Get current tenant's brand (any authenticated user)
 - `updateBrandTheme(theme)`: Update brand theme (TENANT_ADMIN only)
 - `uploadMedia(kind, file)`: Upload logo/hero/mainCard media (TENANT_ADMIN only)
+  - **✅ NEW:** Automatically deletes old files to prevent storage bloat
+- `deleteMedia(url, kind)`: Manually delete media file (TENANT_ADMIN only)
 - `getBrandById(id)`: Get specific brand by ID
 - `resetTheme()`: Reset to default theme (TENANT_ADMIN only)
 
@@ -61,6 +63,7 @@ S3_SECRET_ACCESS_KEY=your-secret
 - Tenant scoping (no cross-tenant access)
 - Audit logging for all mutations
 - File validation on server side
+- **✅ NEW:** Automatic cleanup of old files on upload
 
 ### 4. Contrast Checker (`packages/branding/src/contrast.ts`)
 - **WCAG Compliance**: Checks contrast ratios for AA/AAA standards

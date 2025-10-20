@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "Quinielas",
-    "loading": "Cargando...",
+    "loading": "Cargando",
     "error": "Error",
     "success": "Éxito",
     "cancel": "Cancelar",
@@ -39,39 +39,48 @@
   },
   "home": {
     "hero": {
-      "title": "Bienvenido a {brandName}",
-      "title0": "Quiniela Mundial 2026",
-      "subtitle": "La plataforma de quinielas deportivas más completa",
-      "tagline": "Usa el 100% de tu branding para crear quinielas en las que pueden participar tus clientes y/o empleados. Asigna premios y reglas personalizadas.",
-      "cta": "Únete ahora",
+      "title": "!Únete a la Quiniela!",
+      "title0": "Bienvenido a {brandName}",
+      "subtitle": "Quinielas deportivas para tus clientes y/o empleados",
+      "tagline": "Demuestra tus conocimientos deportivos y compite por increíbles premios. Predice los resultados, acumula puntos y escala en el ranking.",
+      "tagline0": "Usa tu identidad de marca para crear quinielas en las que pueden participar clientes, empleados y/o el público en general. Asignando premios y reglas personalizadas.",
+      "cta": "¡Registrate ahora!",
       "viewMyPools": "Ver mis quinielas",
-      "learnMore": "Conoce más",
+      "learnMore": "¿Cómo funciona?",
       "platformLabel": "Innotecnia",
       "healthOnline": "Servicios en línea",
       "healthIssue": "Servicios con incidencia",
       "healthChecking": "Comprobando estado…",
       "multiTenantBadge": "Multi-tenant",
       "multiUserBadge": "Multi-usuario",
-      "realTimeBadge": "Tiempo real"
+      "realTimeBadge": "Tiempo real",
+      "howItWorks": {
+        "title": "¿Cómo funciona?",
+        "step1": "Regístrate con tu email",
+        "step2": "Haz tus predicciones antes de cada partido",
+        "step3": "Gana puntos por acertar resultados",
+        "step4": "Compite por los premios",
+        "footer": "⚡ Es gratis y solo toma 1 minuto"
+      }
     },
     "features": {
       "multiTenant": {
-        "title": "Pools multi-tenant",
+        "title": "Quinielas multi-usuario",
         "description": "Lanza quinielas para tus marcas con reglas, premios y acceso personalizados."
       },
       "realTime": {
         "title": "Resultados en tiempo real",
-        "description": "Ingesta automática de fixtures y marcadores para mantener a tu comunidad informada."
+        "description": "Ingesta automática de partidos y marcadores para mantener a tu comunidad informada."
       },
       "leaderboard": {
-        "title": "Leaderboard auditable",
+        "title": "Tabla de clasificación auditada",
         "description": "Puntos exactos, diferenciales y auditorías completas para cada jornada."
       }
     },
     "techFeatures": {
       "secure": "Seguro & Auditable",
-      "multiTenant": "Multi-tenant",
-      "whiteLabel": "White-label",
+      "multiTenant": "Multi-usuario",
+      "whiteLabel": "Personalizable",
       "apiFirst": "API-first"
     },
     "devInfo": {
@@ -150,6 +159,83 @@
       "submitting": "Guardando...",
       "success": "¡Perfil completado exitosamente!",
       "error": "Error al actualizar perfil"
+    },
+    "registration": {
+      "submit": "Registrarse",
+      "fields": {
+        "displayName": {
+          "label": "Nombre para mostrar",
+          "placeholder": "Tu nombre"
+        },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "tu@correo.com"
+        },
+        "phone": {
+          "label": "Teléfono (opcional)",
+          "placeholder": "+525512345678"
+        },
+        "inviteCode": {
+          "label": "Código de invitación",
+          "placeholder": "XXXXXXXX-XXXXXXXX",
+          "description": "Ingresa el código de 16 caracteres",
+          "validate": "Validar"
+        },
+        "acceptTerms": {
+          "label": "Acepto los",
+          "termsLink": "términos y condiciones",
+          "and": "y",
+          "privacyLink": "política de privacidad"
+        }
+      },
+      "spotsRemaining": "{count, plural, =0 {Sin lugares disponibles} =1 {1 lugar disponible} other {# lugares disponibles}}",
+      "window": {
+        "endsOn": "Cierra el {date}",
+        "startsIn": "{days, plural, =0 {Abre en {hours} horas} =1 {Abre en 1 día} other {Abre en # días}}",
+        "ended": "El periodo de registro ha finalizado"
+      },
+      "code": {
+        "description": "Escribe el código que te mandaron para unirte a esta quiniela",
+        "formTitle": "Código de invitación",
+        "validated": "{remaining, plural, =0 {Código válido (último uso)} =1 {Código válido (1 uso restante)} other {Código válido (# usos restantes)}}",
+        "returningUser": "No es necesario capturar tus datos personales, solo haz click en Registrarse para agregar la quiniela a tu cuenta."
+      },
+      "invite": {
+        "description": "Has sido invitado a unirte a esta quiniela",
+        "emailLocked": "El correo electrónico está vinculado a tu invitación",
+        "validating": "Validando invitación...",
+        "resend": "Reenviar invitación",
+        "returningUser": "Usaremos tu información de registro anterior"
+      },
+      "public": {
+        "returningUser": "Usaremos tu información de registro anterior"
+      },
+      "success": {
+        "title": "¡Registro exitoso!",
+        "message": "Te has unido a {poolName}",
+        "nextSteps": "Próximos pasos",
+        "nextStepsWithDate": "Haz tus pronósticos antes del {date}",
+        "nextStepsDefault": "Haz tus pronósticos antes del inicio de cada partido",
+        "goToDashboard": "Ir a hacer pronósticos",
+        "sharePrompt": "Invita a tus amigos",
+        "share": {
+          "text": "¡Me uní a {poolName}! Únete tú también:"
+        }
+      },
+      "errors": {
+        "captchaRequired": "Por favor completa la verificación CAPTCHA",
+        "captchaError": "Error al verificar CAPTCHA. Intenta de nuevo",
+        "poolFull": "Esta quiniela ha alcanzado su límite de participantes",
+        "codeNotValidated": "Por favor valida el código de invitación primero",
+        "invalidToken": "Token de invitación inválido",
+        "inviteExpired": "Esta invitación ha expirado",
+        "inviteInvalid": "Invitación inválida o ya utilizada"
+      }
+    },
+    "captcha": {
+      "loading": "Cargando verificación",
+      "loadError": "Error al cargar verificación CAPTCHA",
+      "initError": "Error al inicializar CAPTCHA"
     }
   },
   "register": {
@@ -258,7 +344,7 @@
     "exactScore": "Marcador exacto",
     "correctSign": "Signo correcto",
     "goalDifference": "Diferencia de goles",
-    "loading": "Cargando partidos...",
+    "loading": "Cargando partidos",
     "noMatches": "No hay partidos disponibles",
     "unsavedChanges": "{count} cambios sin guardar",
     "savedSuccess": "{count} pronósticos guardados",
@@ -283,9 +369,9 @@
   },
   "participants": {
     "title": "Participantes - {poolSlug}",
-    "loading": "Cargando participantes...",
+    "loading": "Cargando participantes",
     "noParticipants": "No hay participantes aún",
-    "searchPlaceholder": "Buscar por nombre o correo...",
+    "searchPlaceholder": "Buscar por nombre o correo",
     "status": {
       "finalized": "Finalizada"
     },
@@ -423,7 +509,7 @@
   "myPools": {
     "title": "Mis Quinielas",
     "subtitle": "Quinielas en las que participas e invitaciones pendientes",
-    "loading": "Cargando tus quinielas...",
+    "loading": "Cargando tus quinielas",
     "filters": {
       "all": "Todas",
       "active": "Activas",
@@ -498,13 +584,14 @@
   "fixtures": {
     "title": "Partidos - {poolSlug}",
     "subtitle": "Haz tus pronósticos antes del inicio de cada partido",
-    "loading": "Cargando partidos...",
+    "loading": "Cargando partidos",
     "noMatches": "No hay partidos disponibles",
     "round": "Jornada {number}",
     "tabs": {
       "fixtures": "Partidos",
       "leaderboard": "Tabla de posiciones",
-      "stats": "Estadísticas"
+      "stats": "Estadísticas",
+      "prizes": "Premios"
     },
     "filters": {
       "all": "Todos",
@@ -537,6 +624,63 @@
       "fixturesTitle": "Calendario de partidos",
       "standingsTitle": "Tabla de posiciones",
       "poweredBy": "Estadísticas proporcionadas por"
+    }
+  },
+  "prizes": {
+    "tabs": {
+      "prizes": "Premios"
+    },
+    "hero": {
+      "inPlay": "{count} Premios en Juego",
+      "compete": "Compite por increíbles premios",
+      "keepCompeting": "Sigue compitiendo por estos premios"
+    },
+    "myChances": {
+      "title": "Tus Oportunidades",
+      "inZone": "¡Estás en zona de premios!",
+      "currentRank": "Puesto actual: #{rank}",
+      "close": "¡Estás cerca! Alcanza el puesto {rank}",
+      "improve": "Mejora tus predicciones para entrar en zona de premios",
+      "topClassify": "Top {count} clasifican",
+      "spotsAway": "{count} puestos para entrar en zona de premios",
+      "keepImproving": "¡Sigue mejorando!"
+    },
+    "types": {
+      "CASH": "Efectivo",
+      "DISCOUNT": "Descuento",
+      "SERVICE": "Servicio",
+      "DAY_OFF": "Día Libre",
+      "EXPERIENCE": "Experiencia",
+      "OTHER": "Otro"
+    },
+    "rank": {
+      "single": "{rank}° Lugar",
+      "range": "{from}° - {to}° Lugar"
+    },
+    "stats": {
+      "participants": "Participantes",
+      "active": "{count} activos",
+      "predictions": "Predicciones",
+      "totalMade": "{count} realizadas",
+      "leader": "Líder Actual",
+      "points": "{count} puntos",
+      "matches": "Partidos",
+      "completed": "{count} completados",
+      "pending": "{count} pendientes",
+      "completion": "Completitud",
+      "completionRate": "{rate}% completado",
+      "avgPoints": "Promedio de puntos",
+      "perUser": "{points} por usuario"
+    },
+    "empty": {
+      "title": "Sin Premios Configurados",
+      "description": "El organizador aún no ha agregado premios. Revisa más adelante.",
+      "notRegistered": "Regístrate para ver tus oportunidades de ganar",
+      "registerButton": "Registrarme"
+    },
+    "grid": {
+      "title": "Todos los Premios",
+      "subtitle": "Compite por estos increíbles premios"
     }
   }
 }

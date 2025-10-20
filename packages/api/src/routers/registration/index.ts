@@ -14,6 +14,27 @@ import {
   validateInviteTokenSchema
 } from "./schema";
 
+/**
+ * Helper function to get user data from existing registrations
+ * Used when user is already authenticated and doesn't need to provide personal data again
+ */
+async function getUserDataFromExistingRegistration(userId: string) {
+  const existingReg = await prisma.registration.findFirst({
+    where: { userId },
+    orderBy: { joinedAt: 'desc' }
+  });
+
+  if (existingReg) {
+    return {
+      displayName: existingReg.displayName,
+      email: existingReg.email,
+      phone: existingReg.phone
+    };
+  }
+
+  return null;
+}
+
 export const registrationRouter = router({
   // Check if user is already registered
   checkRegistration: publicProcedure.input(checkRegistrationSchema).query(async ({ input }) => {
@@ -31,6 +52,22 @@ export const registrationRouter = router({
       registration
     };
   }),
+
+  // Check if user has any previous registrations (for returning user detection)
+  hasExistingData: publicProcedure
+    .input(z.object({ userId: z.string().cuid() }))
+    .query(async ({ input }) => {
+      const existingReg = await prisma.registration.findFirst({
+        where: { userId: input.userId },
+        orderBy: { joinedAt: 'desc' }
+      });
+
+      return {
+        hasData: !!existingReg,
+        displayName: existingReg?.displayName,
+        email: existingReg?.email
+      };
+    }),
 
   // Check registration status by pool slug (uses ctx.tenant and ctx.session)
   checkByPoolSlug: publicProcedure
@@ -145,27 +182,25 @@ export const registrationRouter = router({
     const pool = await prisma.pool.findUnique({
       where: { id: input.poolId },
       include: {
-        accessPolicy: {
-          include: {
-            invitations: {
-              where: {
-                token: input.token,
-                status: "PENDING"
-              }
-            }
-          }
-        }
+        accessPolicy: true
       }
     });
 
-    if (!pool?.accessPolicy || pool.accessPolicy.accessType !== "EMAIL_INVITE") {
+    if (!pool?.accessPolicy) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "This pool does not accept email invitations"
+        message: "This pool does not have an access policy configured"
       });
     }
 
-    const invitation = pool.accessPolicy.invitations[0];
+    // Find invitation by token directly (not through accessPolicy relation)
+    const invitation = await prisma.invitation.findFirst({
+      where: {
+        token: input.token,
+        poolId: input.poolId,
+        status: "PENDING"
+      }
+    });
 
     if (!invitation) {
       throw new TRPCError({
@@ -275,15 +310,33 @@ export const registrationRouter = router({
       });
     }
 
+    // Get user data from input or existing registration
+    let displayName = input.displayName;
+    let email = input.email;
+    let phone = input.phone;
+
+    if (!displayName || !email) {
+      const userData = await getUserDataFromExistingRegistration(input.userId);
+      if (!userData) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Display name and email are required for first-time registration"
+        });
+      }
+      displayName = displayName || userData.displayName || undefined;
+      email = email || userData.email || undefined;
+      phone = phone || userData.phone || undefined;
+    }
+
     // Create registration
     const registration = await prisma.registration.create({
       data: {
         userId: input.userId,
         poolId: input.poolId,
         tenantId: pool.tenantId,
-        displayName: input.displayName,
-        email: input.email,
-        phone: input.phone || null,
+        displayName,
+        email,
+        phone: phone || null,
         phoneVerified: false,
         emailVerified: !pool.accessPolicy.requireEmailVerification
       }
@@ -367,6 +420,24 @@ export const registrationRouter = router({
       });
     }
 
+    // Get user data from input or existing registration
+    let displayName = input.displayName;
+    let email = input.email;
+    let phone = input.phone;
+
+    if (!displayName || !email) {
+      const userData = await getUserDataFromExistingRegistration(input.userId);
+      if (!userData) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Display name and email are required for first-time registration"
+        });
+      }
+      displayName = displayName || userData.displayName || undefined;
+      email = email || userData.email || undefined;
+      phone = phone || userData.phone || undefined;
+    }
+
     // Create registration and update code usage in transaction
     const [registration] = await prisma.$transaction([
       prisma.registration.create({
@@ -374,9 +445,9 @@ export const registrationRouter = router({
           userId: input.userId,
           poolId: input.poolId,
           tenantId: pool.tenantId,
-          displayName: input.displayName,
-          email: input.email,
-          phone: input.phone || null,
+          displayName,
+          email,
+          phone: phone || null,
           phoneVerified: false,
           emailVerified: !pool.accessPolicy.requireEmailVerification,
           inviteCodeId: inviteCode.id
@@ -444,8 +515,8 @@ export const registrationRouter = router({
       });
     }
 
-    // Verify email matches invitation
-    if (invitation.email.toLowerCase() !== input.email.toLowerCase()) {
+    // Verify email matches invitation (only if email is provided)
+    if (input.email && invitation.email.toLowerCase() !== input.email.toLowerCase()) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Email does not match the invitation"
@@ -469,6 +540,23 @@ export const registrationRouter = router({
       });
     }
 
+    // Get user data from input or existing registration
+    let displayName = input.displayName;
+    let email = input.email || invitation.email; // Use invitation email if not provided
+    let phone = input.phone;
+
+    if (!displayName) {
+      const userData = await getUserDataFromExistingRegistration(input.userId);
+      if (!userData) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Display name is required for first-time registration"
+        });
+      }
+      displayName = displayName || userData.displayName || undefined;
+      phone = phone || userData.phone || undefined;
+    }
+
     // Create registration and mark invitation as accepted
     const [registration] = await prisma.$transaction([
       prisma.registration.create({
@@ -476,9 +564,9 @@ export const registrationRouter = router({
           userId: input.userId,
           poolId: input.poolId,
           tenantId: pool.tenantId,
-          displayName: input.displayName,
-          email: input.email,
-          phone: input.phone || null,
+          displayName,
+          email,
+          phone: phone || null,
           phoneVerified: false,
           emailVerified: true,
           invitationId: invitation.id

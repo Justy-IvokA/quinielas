@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Award, Edit, Plus, Trash2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Award, Plus, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   Badge,
@@ -20,6 +22,11 @@ import {
   DialogTrigger,
   FormField,
   Input,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
   Table,
   TableBody,
   TableCell,
@@ -33,29 +40,37 @@ import {
 
 import { trpc } from "@admin/trpc";
 
+const prizeFormSchema = z.object({
+  rankFrom: z.number().int().min(1, "Mínimo 1"),
+  rankTo: z.number().int().min(1, "Mínimo 1"),
+  type: z.enum(["CASH", "DISCOUNT", "SERVICE", "DAY_OFF", "EXPERIENCE", "OTHER"]),
+  title: z.string().min(1, "Requerido").max(200),
+  description: z.string().max(1000).optional(),
+  value: z.string().max(100).optional(),
+  imageUrl: z.string().url("URL inválida").optional().or(z.literal(""))
+});
+
+type PrizeFormData = z.infer<typeof prizeFormSchema>;
+
 interface PrizesManagerProps {
   poolId: string;
-}
-
-interface PrizeFormData {
-  position: number;
-  rankFrom: number;
-  rankTo: number;
-  title: string;
-  description?: string;
-  value?: string;
-  imageUrl?: string;
 }
 
 export function PrizesManager({ poolId }: PrizesManagerProps) {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [editingPrize, setEditingPrize] = useState<string | null>(null);
   const utils = trpc.useUtils();
-  const tenantId = "demo-tenant-id"; // Replace with actual tenant context
   const t = useTranslations("pools");
+  
+  const { data: pool } = trpc.pools.getById.useQuery({ id: poolId });
   const { data: prizes, isLoading } = trpc.pools.prizes.list.useQuery({ poolId });
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<PrizeFormData>();
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<PrizeFormData>({
+    resolver: zodResolver(prizeFormSchema),
+    defaultValues: {
+      type: "OTHER"
+    }
+  });
 
   const createMutation = trpc.pools.prizes.create.useMutation({
     onSuccess: () => {
@@ -66,6 +81,7 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
     },
     onError: (error) => {
       toastError(`Error al crear premio: ${error.message}`);
+      console.error(error);
     }
   });
 
@@ -80,10 +96,40 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
   });
 
   const onSubmit = (data: PrizeFormData) => {
+    if (!pool?.tenantId) {
+      toastError("Tenant ID no disponible");
+      return;
+    }
+
+    // Validate rank range
+    if (data.rankTo < data.rankFrom) {
+      toastError("La posición 'hasta' debe ser mayor o igual a 'desde'");
+      return;
+    }
+
+    // Check for overlaps
+    const hasOverlap = prizes?.some((prize) => {
+      const overlapStart = Math.max(data.rankFrom, prize.rankFrom);
+      const overlapEnd = Math.min(data.rankTo, prize.rankTo);
+      return overlapStart <= overlapEnd;
+    });
+
+    if (hasOverlap) {
+      toastError("Los rangos de posiciones se superponen con un premio existente");
+      return;
+    }
+
     createMutation.mutate({
       poolId,
-      tenantId,
-      ...data
+      tenantId: pool.tenantId,
+      position: (prizes?.length || 0) + 1,
+      rankFrom: data.rankFrom,
+      rankTo: data.rankTo,
+      type: data.type,
+      title: data.title,
+      description: data.description,
+      value: data.value,
+      imageUrl: data.imageUrl && data.imageUrl !== "" ? data.imageUrl : undefined
     });
   };
 
@@ -119,16 +165,6 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-                {/* <FormField label="Posición" htmlFor="position" required error={errors.position?.message}>
-                  <Input
-                    id="position"
-                    type="number"
-                    min={1}
-                    placeholder="1"
-                    {...register("position", { required: "La posición es requerida", valueAsNumber: true })}
-                  />
-                </FormField> */}
-
                 <div className="flex justify-between gap-2">
                   <FormField label="Del" htmlFor="rankFrom" required error={errors.rankFrom?.message}>
                     <Input
@@ -150,6 +186,25 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                     />
                   </FormField>
                 </div>
+
+                <FormField label="Tipo" htmlFor="type" required error={errors.type?.message}>
+                  <Select
+                    value={watch("type")}
+                    onValueChange={(value) => setValue("type", value as any)}
+                  >
+                    <SelectTrigger id="type">
+                      <SelectValue placeholder="Selecciona un tipo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="CASH">Efectivo</SelectItem>
+                      <SelectItem value="DISCOUNT">Descuento</SelectItem>
+                      <SelectItem value="SERVICE">Servicio</SelectItem>
+                      <SelectItem value="DAY_OFF">Día libre</SelectItem>
+                      <SelectItem value="EXPERIENCE">Experiencia</SelectItem>
+                      <SelectItem value="OTHER">Otro</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormField>
 
                 <FormField label="Título" htmlFor="title" required error={errors.title?.message}>
                   <Input

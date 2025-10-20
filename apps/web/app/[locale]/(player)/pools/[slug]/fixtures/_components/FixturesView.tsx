@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Calendar, Trophy, AlertCircle } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { Button, Alert, AlertDescription, Tabs, TabsList, TabsTrigger, TabsContent } from "@qp/ui";
 import { BackButton } from "../../../../../../components/back-button";
 import { trpc } from "@web/trpc";
@@ -10,6 +11,7 @@ import { trpc } from "@web/trpc";
 import { MatchCard } from "./MatchCard";
 import { LiveLeaderboard } from "./LiveLeaderboard";
 import { StatsWidget } from "./StatsWidget";
+import { PrizesAnalyticsView } from "./PrizesAnalyticsView";
 
 interface FixturesViewProps {
   locale: string;
@@ -23,6 +25,7 @@ interface FixturesViewProps {
       name: string;
       year: number;
       competition: {
+        id: string;
         name: string;
         logoUrl: string | null;
       };
@@ -50,6 +53,20 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
   // Fetch user predictions
   const { data: predictions, isLoading: predictionsLoading } = trpc.predictions.getByPool.useQuery({
     poolId: pool.id
+  });
+
+  // Fetch external league mapping for stats
+  const { data: externalMap } = trpc.externalMaps.getByEntity.useQuery({
+    entityType: "COMPETITION",
+    entityId: pool.season.competition.id
+  });
+
+  // Debug: Log external map data
+  console.log("🔍 External Map Debug:", {
+    competitionId: pool.season.competition.id,
+    externalMap,
+    leagueId: externalMap?.externalId,
+    season: pool.season.year,
   });
 
   const isLoading = matchesLoading || predictionsLoading;
@@ -93,10 +110,7 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-white/70">{t("loading")}</p>
-          </div>
+          <SportsLoader size="lg" text={tCommon("loading")} />
         </div>
       </div>
     );
@@ -115,11 +129,11 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
       {/* Header */}
-      <header className="mb-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
+      <header className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <BackButton />
+          <BackButton fallbackHref={`/`} />
           {pool.brand?.logoUrl && (
             <img
               src={pool.brand.logoUrl}
@@ -134,7 +148,7 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
         </div>
       </header>
 
-      {/* Tabs: Fixtures, Leaderboard & Stats */}
+      {/* Tabs: Fixtures, Leaderboard, Stats & Prizes */}
       <Tabs defaultValue="fixtures" className="mb-8">
         <TabsList className="bg-white/10 border border-white/20">
           <TabsTrigger value="fixtures" className="data-[state=active]:bg-primary">
@@ -142,6 +156,9 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
           </TabsTrigger>
           <TabsTrigger value="leaderboard" className="data-[state=active]:bg-primary">
             {t("tabs.leaderboard")}
+          </TabsTrigger>
+          <TabsTrigger value="prizes" className="data-[state=active]:bg-primary">
+            {t("tabs.prizes")}
           </TabsTrigger>
           <TabsTrigger value="stats" className="data-[state=active]:bg-primary">
             {t("tabs.stats")}
@@ -214,14 +231,19 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
         <TabsContent value="leaderboard" className="mt-6">
           <LiveLeaderboard poolId={pool.id} userId={userId} />
         </TabsContent>
-
+        <TabsContent value="prizes" className="mt-6">
+          <PrizesAnalyticsView poolId={pool.id} userId={userId} />
+        </TabsContent>
         <TabsContent value="stats" className="mt-6">
           <StatsWidget 
             seasonId={pool.seasonId}
             competitionName={pool.season.competition.name}
             locale={locale}
+            leagueId={externalMap?.externalId}
+            season={pool.season.year.toString()}
           />
         </TabsContent>
+
       </Tabs>
     </div>
   );

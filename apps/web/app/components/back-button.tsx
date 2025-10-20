@@ -21,6 +21,8 @@ export function BackButton({ fallbackHref, label }: BackButtonProps) {
       router.back();
     } else if (fallbackHref) {
       router.push(fallbackHref);
+    } else {
+      router.push("/");
     }
   };
 
@@ -30,7 +32,7 @@ export function BackButton({ fallbackHref, label }: BackButtonProps) {
       size="sm" 
       onClick={handleBack}
       StartIcon={ArrowLeft}
-      className="hover:bg-accent"
+      className="hidden md:flex hover:bg-accent [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
     >
       {label || t("back")}
     </Button>

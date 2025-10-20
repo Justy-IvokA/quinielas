@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { extractTenantFromSubdomain, resolveTenantAndBrandFromHost, getBrandCanonicalUrl, buildPoolUrl } from "./host-tenant";
+import { extractTenantFromSubdomain, buildAuthCallbackUrl, buildInvitationUrl, getBrandCanonicalUrl, buildPoolUrl } from "./host-tenant";
 import type { Tenant, Brand } from "@qp/db";
 
 // Mock prisma
@@ -65,7 +65,7 @@ describe("getBrandCanonicalUrl", () => {
       },
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
-    expect(getBrandCanonicalUrl(brand)).toBe("http://demo-brand.localhost:3000");
+    expect(getBrandCanonicalUrl(brand)).toBe("http://demo.localhost:3000");
   });
 
   it("should handle localhost domains correctly", () => {
@@ -106,7 +106,7 @@ describe("buildPoolUrl", () => {
       },
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
-    expect(buildPoolUrl(brand, "test-pool", "en-US")).toBe("http://demo-brand.localhost:3000/en-US/pools/test-pool");
+    expect(buildPoolUrl(brand, "test-pool", "en-US")).toBe("http://demo.localhost:3000/en-US/pools/test-pool");
   });
 });
 
@@ -122,7 +122,7 @@ describe("buildInvitationUrl", () => {
     } as Partial<Brand> & { tenant: Partial<Tenant> } as Brand & { tenant: Tenant };
 
     expect(buildInvitationUrl(brand, "mundial-2026", "abc123token")).toBe(
-      "http://cocacola.localhost/es-MX/pools/mundial-2026/join?token=abc123token"
+      "http://cocacola.localhost/es-MX/auth/register/mundial-2026?token=abc123token"
     );
   });
 });

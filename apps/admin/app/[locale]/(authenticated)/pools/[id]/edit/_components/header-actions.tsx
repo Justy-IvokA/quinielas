@@ -38,13 +38,13 @@ export function HeaderActions({ poolId }: HeaderActionsProps) {
   return (
     <div className="flex items-center gap-2">
       <Button
-        variant="secondary"
+        variant="default"
         size="sm"
         StartIcon={copied ? CheckCircle : Copy}
         onClick={handleCopyUrl}
         disabled={!pool?.brand?.domains?.[0] || !pool.slug}
       >
-        {t("actions.copyUrl")}
+        {pool?.accessPolicy?.accessType === "PUBLIC" ? t("actions.copyPublicUrl") : pool?.accessPolicy?.accessType === "CODE" ? t("actions.copyUrl") : t("actions.copyUrl")}
       </Button>
     </div>
   );

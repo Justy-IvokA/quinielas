@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Search, Loader2, Trophy, Calendar } from "lucide-react";
-import { Input, Button, Label, RadioGroup, RadioGroupItem, toastError } from "@qp/ui";
+import { useState } from "react";
+import { Search, Trophy, Calendar } from "lucide-react";
+import { InlineLoader, SportsLoader } from "@qp/ui";
+import { Input, Button, Label, RadioGroup, RadioGroupItem } from "@qp/ui";
 import { trpc } from "@admin/trpc";
 
 interface StepCompetitionSeasonProps {
@@ -100,7 +101,7 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
 
         {loadingCompetitions && (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+            <SportsLoader size="sm" text="Buscando competencias" />
           </div>
         )}
 
@@ -151,7 +152,7 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
 
           {loadingSeasons && (
             <div className="flex items-center justify-center py-4">
-              <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+              <SportsLoader size="sm" text="Buscando temporadas" />
             </div>
           )}
 

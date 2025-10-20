@@ -48,7 +48,15 @@
       "healthIssue": "Services experiencing issues",
       "healthChecking": "Checking status…",
       "multiTenantBadge": "Multi-tenant",
-      "realTimeBadge": "Real-time"
+      "realTimeBadge": "Real-time",
+      "howItWorks": {
+        "title": "How it works?",
+        "step1": "Sign up with your email",
+        "step2": "Make your predictions before each match",
+        "step3": "Earn points for correct results",
+        "step4": "Compete for prizes",
+        "footer": "⚡ It's free and takes only 1 minute"
+      }
     },
     "features": {
       "multiTenant": {
@@ -144,6 +152,24 @@
       "providerNotConfigured": "This provider is not configured",
       "invalidCallbackUrl": "Invalid redirect URL",
       "signInFailed": "Sign in failed. Please try again"
+    },
+    "registration": {
+      "code": {
+        "description": "Enter the code you received to join this pool",
+        "formTitle": "Invitation Code",
+        "validated": "{remaining, plural, =0 {Valid code (last use)} =1 {Valid code (1 use remaining)} other {Valid code (# uses remaining)}}",
+        "returningUser": "No need to enter your personal information, just click Register to add the pool to your account."
+      },
+      "invite": {
+        "description": "You have been invited to join this pool",
+        "emailLocked": "Email is linked to your invitation",
+        "validating": "Validating invitation...",
+        "resend": "Resend invitation",
+        "returningUser": "We'll use your previous registration information"
+      },
+      "public": {
+        "returningUser": "We'll use your previous registration information"
+      }
     }
   },
   "pool": {

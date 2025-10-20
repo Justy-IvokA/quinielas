@@ -5,6 +5,7 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { parseAuthEnv } from "./env";
 import { createTransport } from "nodemailer";
+import { emailTemplates, createEmailBrandInfo, parseEmailLocale, type EmailLocale } from "@qp/utils/email";
 
 export interface AuthConfigOptions {
   prisma: PrismaClient;
@@ -49,68 +50,114 @@ export function createAuthConfig(options: AuthConfigOptions): NextAuthConfig {
           }
         },
         from: env.EMAIL_FROM,
-        // Custom sendVerificationRequest to preserve subdomain in magic link
+        // Custom sendVerificationRequest with branding support
         async sendVerificationRequest(params) {
           const { identifier: email, url, provider } = params;
           const { host } = new URL(url);
           
-          // Log for debugging
           console.log('[auth] sendVerificationRequest called');
           console.log('[auth] Email:', email);
           console.log('[auth] Generated URL:', url);
           console.log('[auth] Host from URL:', host);
           
+          // Try to resolve brand from hostname
+          let brandInfo;
+          let locale: EmailLocale = "es-MX";
+          
+          try {
+            // Extract tenant slug from subdomain (e.g., "ivoka" from "ivoka.localhost")
+            const parts = host.split('.');
+            let tenantSlug: string | null = null;
+            
+            if (parts.length >= 2 && parts[0] !== 'localhost' && parts[0] !== 'www') {
+              tenantSlug = parts[0];
+            }
+            
+            if (tenantSlug) {
+              // Find tenant and its default brand
+              const tenant = await prisma.tenant.findUnique({
+                where: { slug: tenantSlug }
+              });
+              
+              if (tenant) {
+                const brand = await prisma.brand.findFirst({
+                  where: { tenantId: tenant.id },
+                  orderBy: { createdAt: 'asc' } // Get first brand (usually default)
+                });
+                
+                if (brand) {
+                  console.log('[auth] Found brand:', brand.name);
+                  
+                  // Get user's locale if exists
+                  const user = await prisma.user.findUnique({
+                    where: { email },
+                    select: { metadata: true }
+                  });
+                  
+                  locale = parseEmailLocale(
+                    (user?.metadata as any)?.locale || 
+                    (await prisma.setting.findFirst({
+                      where: { tenantId: tenant.id, key: "defaultLocale" }
+                    }))?.value as string || 
+                    "es-MX"
+                  );
+                  
+                  // Create brand info for email template
+                  brandInfo = createEmailBrandInfo({
+                    name: brand.name,
+                    logoUrl: brand.logoUrl,
+                    colors: {
+                      primary: (brand.theme as any)?.colors?.primary || "#0ea5e9",
+                      primaryForeground: (brand.theme as any)?.colors?.primaryForeground || "#ffffff",
+                      background: (brand.theme as any)?.colors?.background || "#ffffff",
+                      foreground: (brand.theme as any)?.colors?.foreground || "#0f172a",
+                      muted: (brand.theme as any)?.colors?.muted || "#f1f5f9",
+                      border: (brand.theme as any)?.colors?.border || "#e2e8f0"
+                    },
+                    themeLogoUrl: (brand.theme as any)?.logo?.url || null
+                  });
+                }
+              }
+            }
+          } catch (error) {
+            console.error('[auth] Error resolving brand:', error);
+          }
+          
+          // Fallback to default brand if not found
+          if (!brandInfo) {
+            console.log('[auth] Using default brand info');
+            brandInfo = {
+              name: "Quinielas",
+              colors: {
+                primary: "#0ea5e9",
+                primaryForeground: "#ffffff",
+                background: "#ffffff",
+                foreground: "#0f172a",
+                muted: "#f1f5f9",
+                border: "#e2e8f0"
+              }
+            };
+          }
+          
           // Create transport
           const transport = createTransport(provider.server);
           
-          // Determine protocol based on hostname
-          const protocol = host.includes('localhost') ? 'http' : 'https';
+          // Use new email template with branding
+          const emailContent = emailTemplates.magicLink({
+            brand: brandInfo,
+            locale,
+            url,
+            email
+          });
           
-          // Build email HTML
-          const html = `
-            <!DOCTYPE html>
-            <html>
-              <head>
-                <meta charset="utf-8">
-                <style>
-                  body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                  .header { background: #0ea5e9; color: white; padding: 20px; text-align: center; }
-                  .content { padding: 20px; background: #f9fafb; }
-                  .button { display: inline-block; padding: 12px 24px; background: #0ea5e9; color: white; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-                  .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
-                </style>
-              </head>
-              <body>
-                <div class="container">
-                  <div class="header">
-                    <h1>Sign in to Quinielas</h1>
-                  </div>
-                  <div class="content">
-                    <p>Click the button below to sign in to your account:</p>
-                    <p style="text-align: center;">
-                      <a href="${url}" class="button">Sign In</a>
-                    </p>
-                    <p><small>This link will expire in 24 hours.</small></p>
-                    <p><small>If you didn't request this email, you can safely ignore it.</small></p>
-                    <p><small>If the button doesn't work, copy and paste this link into your browser:<br>${url}</small></p>
-                  </div>
-                  <div class="footer">
-                    <p>Quinielas WL - Sports Prediction Platform</p>
-                  </div>
-                </div>
-              </body>
-            </html>
-          `;
-          
-          const text = `Sign in to Quinielas\n\nClick this link to sign in: ${url}\n\nThis link will expire in 24 hours.\nIf you didn't request this email, you can safely ignore it.`;
+          console.log('[auth] Sending magic link email with branding');
           
           await transport.sendMail({
             to: email,
             from: provider.from,
-            subject: `Sign in to Quinielas`,
-            text,
-            html,
+            subject: emailContent.subject,
+            text: emailContent.text,
+            html: emailContent.html,
           });
         }
       })

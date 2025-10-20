@@ -21,7 +21,6 @@ interface WizardData {
   pool?: {
     title: string;
     slug: string;
-    brandId?: string;
     description?: string;
   };
   access?: {
@@ -189,12 +188,16 @@ export function CreatePoolWizard() {
         <StepPrizes
           onSubmit={(data) => {
             updateWizardData({ prizes: data });
-            nav.onNext();
           }}
           initialData={wizardData.prizes}
         />
       ),
-      isEnabled: true
+      isEnabled: !!(
+        wizardData.prizes && 
+        wizardData.prizes.length > 0 && 
+        wizardData.prizes[0]?.title && 
+        wizardData.prizes[0]?.rankFrom === 1
+      )
     },
     {
       title: "Revisar y Crear",

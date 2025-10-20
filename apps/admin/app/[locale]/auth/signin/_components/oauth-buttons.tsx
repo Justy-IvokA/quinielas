@@ -78,8 +78,8 @@ export function OAuthButtons({ callbackUrl, providers }: OAuthButtonsProps) {
           onClick={() => handleOAuthSignIn("google")}
           disabled={loadingProvider !== null}
           aria-busy={loadingProvider === "google"}
+          StartIcon={GoogleIcon}
         >
-          <GoogleIcon />
           <span className="ml-2">{t("googleSignin")}</span>
         </Button>
       )}
@@ -92,8 +92,8 @@ export function OAuthButtons({ callbackUrl, providers }: OAuthButtonsProps) {
           onClick={() => handleOAuthSignIn("azure-ad")}
           disabled={loadingProvider !== null}
           aria-busy={loadingProvider === "azure-ad"}
+          StartIcon={MicrosoftIcon}
         >
-          <MicrosoftIcon />
           <span className="ml-2">{t("microsoftSignin")}</span>
         </Button>
       )}

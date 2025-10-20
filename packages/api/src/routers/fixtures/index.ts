@@ -166,7 +166,7 @@ export const fixturesRouter = router({
     const competitionMap = await prisma.externalMap.findFirst({
       where: {
         sourceId: externalSource.id,
-        entityType: "competition",
+        entityType: "COMPETITION",
         entityId: season.competitionId
       }
     });
@@ -234,13 +234,13 @@ export const fixturesRouter = router({
         where: {
           sourceId_entityType_externalId: {
             sourceId: externalSource.id,
-            entityType: "team",
+            entityType: "TEAM",
             externalId: teamDTO.externalId
           }
         },
         create: {
           sourceId: externalSource.id,
-          entityType: "team",
+          entityType: "TEAM",
           entityId: team.id,
           externalId: teamDTO.externalId
         },
@@ -316,13 +316,13 @@ export const fixturesRouter = router({
         where: {
           sourceId_entityType_externalId: {
             sourceId: externalSource.id,
-            entityType: "match",
+            entityType: "MATCH",
             externalId: matchDTO.externalId
           }
         },
         create: {
           sourceId: externalSource.id,
-          entityType: "match",
+          entityType: "MATCH",
           entityId: match.id,
           externalId: matchDTO.externalId
         },

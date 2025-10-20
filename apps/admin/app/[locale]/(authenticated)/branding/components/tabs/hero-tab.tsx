@@ -6,7 +6,7 @@ import { Label } from "@qp/ui";
 import { Input } from "@qp/ui";
 import { Switch } from "@qp/ui";
 import { RadioGroup, RadioGroupItem } from "@qp/ui";
-import { Loader2 } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { toast } from "sonner";
 import { trpc as api } from "@admin/trpc";
 import type { HeroAssetsPartial } from "@qp/branding";
@@ -161,9 +161,7 @@ export function HeroTab({ heroAssets, onChange }: HeroTabProps) {
                 disabled={uploading === "asset"}
                 className="flex-1"
               />
-              {uploading === "asset" && (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-              )}
+              {uploading === "asset" && <SportsLoader size="sm" />}
             </div>
           </div>
 
@@ -209,9 +207,7 @@ export function HeroTab({ heroAssets, onChange }: HeroTabProps) {
                 disabled={uploading === "asset"}
                 className="flex-1"
               />
-              {uploading === "asset" && (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-              )}
+              {uploading === "asset" && <SportsLoader size="sm" />}
             </div>
             <p className="text-xs text-muted-foreground">{t("videoHint")}</p>
           </div>
@@ -242,9 +238,7 @@ export function HeroTab({ heroAssets, onChange }: HeroTabProps) {
                 disabled={uploading === "poster"}
                 className="flex-1"
               />
-              {uploading === "poster" && (
-                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-              )}
+              {uploading === "poster" && <SportsLoader size="sm" />}
             </div>
           </div>
 

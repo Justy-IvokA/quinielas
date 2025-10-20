@@ -5,14 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Wand2 } from "lucide-react";
-import { Input, Label, Textarea, Button, FormField } from "@qp/ui";
+import { Input, Label, Textarea, Button } from "@qp/ui";
 import { generatePoolTitle, generatePoolSlug } from "@qp/utils";
-import { trpc } from "@admin/trpc";
 
 const detailsSchema = z.object({
   title: z.string().min(3, "Mínimo 3 caracteres").max(100, "Máximo 100 caracteres"),
   slug: z.string().min(3).max(100).regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
-  brandId: z.string().cuid().optional(),
   description: z.string().max(500).optional()
 });
 
@@ -50,21 +48,17 @@ export function StepDetails({
     }
   });
 
-  // Query brands for dropdown
-  const { data: brandsData } = trpc.tenant.listBrands.useQuery();
-
   // Watch all form values and update wizard data in real-time
   const title = watch("title");
   const slug = watch("slug");
-  const brandId = watch("brandId");
   const description = watch("description");
   
   useEffect(() => {
     // Only update if form is valid and has required fields
     if (isValid && title && slug) {
-      onSubmit({ title, slug, brandId, description });
+      onSubmit({ title, slug, description });
     }
-  }, [title, slug, brandId, description, isValid, onSubmit]);
+  }, [title, slug, description, isValid, onSubmit]);
 
   const handleAutoFill = () => {
     const title = generatePoolTitle({ competitionName, seasonYear, stageLabel, roundLabel });
@@ -82,7 +76,11 @@ export function StepDetails({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="wizard-step-4" className="flex flex-col gap-6">
-      <FormField label="Título de la quiniela" htmlFor="title" required error={errors.title?.message}>
+      <div className="space-y-2">
+        <Label htmlFor="title">
+          Título de la quiniela
+          <span className="text-destructive ml-1">*</span>
+        </Label>
         <div className="flex gap-2">
           <Input
             id="title"
@@ -95,43 +93,37 @@ export function StepDetails({
             <Wand2 className="h-4 w-4" />
           </Button>
         </div>
-      </FormField>
+        {errors.title?.message && (
+          <p className="text-sm text-destructive">{errors.title.message}</p>
+        )}
+      </div>
 
-      <FormField
-        label="Slug (URL)"
-        htmlFor="slug"
-        required
-        error={errors.slug?.message}
-        description="Se usará en la URL de la quiniela. Solo minúsculas, números y guiones."
-      >
+      <div className="space-y-2">
+        <Label htmlFor="slug">
+          Slug (URL)
+          <span className="text-destructive ml-1">*</span>
+        </Label>
         <Input id="slug" placeholder="mundial-u20-semifinales-2026" {...register("slug")} />
-      </FormField>
+        {!errors.slug?.message && (
+          <p className="text-sm text-muted-foreground">OjO: Se usará en la URL de la quiniela. Solo minúsculas, números y guiones.</p>
+        )}
+        {errors.slug?.message && (
+          <p className="text-sm text-destructive">{errors.slug.message}</p>
+        )}
+      </div>
 
-      {brandsData && brandsData.length > 0 && (
-        <FormField label="Marca (opcional)" htmlFor="brandId" description="Asocia esta quiniela a una marca específica.">
-          <select
-            id="brandId"
-            {...register("brandId")}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <option value="">Sin marca específica</option>
-            {brandsData.map((brand) => (
-              <option key={brand.id} value={brand.id}>
-                {brand.name}
-              </option>
-            ))}
-          </select>
-        </FormField>
-      )}
-
-      <FormField label="Descripción (opcional)" htmlFor="description" error={errors.description?.message}>
+      <div className="space-y-2">
+        <Label htmlFor="description">Descripción (opcional)</Label>
         <Textarea
           id="description"
           placeholder="Participa en la quiniela de las semifinales del Mundial Sub-20..."
           rows={4}
           {...register("description")}
         />
-      </FormField>
+        {errors.description?.message && (
+          <p className="text-sm text-destructive">{errors.description.message}</p>
+        )}
+      </div>
 
       <div className="rounded-lg border bg-muted/50 p-4">
         <h4 className="font-medium mb-2">Información del torneo</h4>

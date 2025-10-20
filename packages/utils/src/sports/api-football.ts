@@ -205,6 +205,116 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
     };
   }
 
+  async fetchSeasonRound(params: { 
+    competitionExternalId: string; 
+    year: number;
+    stageLabel?: string;
+    roundLabel?: string;
+  }): Promise<SeasonDTO> {
+    console.log(`[API-Football] Fetching season round for league ${params.competitionExternalId}, year ${params.year}, stage=${params.stageLabel}, round=${params.roundLabel}`);
+
+    // Fetch league info
+    const leagueResponse = await this.request<any[]>("/leagues", {
+      id: params.competitionExternalId,
+      season: params.year.toString()
+    });
+
+    if (!leagueResponse.response || leagueResponse.response.length === 0) {
+      throw new Error(`League ${params.competitionExternalId} not found for season ${params.year}`);
+    }
+
+    const league = leagueResponse.response[0];
+    const seasonName = `${league.league.name} ${params.year}`;
+
+    // Build round filter for API
+    // API-Football expects format like "Regular Season - 16" or "Apertura - 16"
+    let roundFilter: string | undefined;
+    if (params.stageLabel && params.roundLabel) {
+      roundFilter = `${params.stageLabel} - ${params.roundLabel}`;
+    } else if (params.roundLabel) {
+      // Try common patterns
+      roundFilter = `Regular Season - ${params.roundLabel}`;
+    }
+
+    // Fetch fixtures with round filter
+    const fixturesParams: Record<string, string> = {
+      league: params.competitionExternalId,
+      season: params.year.toString()
+    };
+    
+    if (roundFilter) {
+      fixturesParams.round = roundFilter;
+      console.log(`[API-Football] Filtering by round: "${roundFilter}"`);
+    }
+
+    const fixturesResponse = await this.request<any[]>("/fixtures", fixturesParams);
+
+    if (!fixturesResponse.response || fixturesResponse.response.length === 0) {
+      console.warn(`[API-Football] No fixtures found for round filter: "${roundFilter}"`);
+    }
+
+    const matches: MatchDTO[] = fixturesResponse.response.map((item: any) => {
+      const fixture = item.fixture;
+      const teams = item.teams;
+      const goals = item.goals;
+
+      return {
+        externalId: fixture.id.toString(),
+        round: this.parseRound(item.league.round),
+        matchday: this.parseMatchday(item.league.round),
+        kickoffTime: new Date(fixture.date),
+        homeTeamExternalId: teams.home.id.toString(),
+        awayTeamExternalId: teams.away.id.toString(),
+        venue: fixture.venue?.name,
+        status: mapStatus(fixture.status.short),
+        homeScore: goals.home,
+        awayScore: goals.away,
+        finishedAt: fixture.status.short === "FT" ? new Date(fixture.date) : undefined
+      };
+    });
+
+    // Get unique team IDs from matches
+    const teamExternalIds = new Set<string>();
+    for (const match of matches) {
+      teamExternalIds.add(match.homeTeamExternalId);
+      teamExternalIds.add(match.awayTeamExternalId);
+    }
+
+    // Fetch only teams that participate in these matches
+    const teams: TeamDTO[] = [];
+    
+    if (teamExternalIds.size > 0) {
+      // API-Football doesn't support filtering teams by ID list, so we fetch all and filter
+      const teamsResponse = await this.request<any[]>("/teams", {
+        league: params.competitionExternalId,
+        season: params.year.toString()
+      });
+
+      const filteredTeams = teamsResponse.response
+        .filter((item: any) => teamExternalIds.has(item.team.id.toString()))
+        .map((item: any) => ({
+          externalId: item.team.id.toString(),
+          name: item.team.name,
+          shortName: item.team.code || item.team.name.substring(0, 3).toUpperCase(),
+          logoUrl: item.team.logo,
+          countryCode: item.team.country
+        }));
+      
+      teams.push(...filteredTeams);
+      console.log(`[API-Football] Fetched ${teams.length} teams for ${matches.length} matches`);
+    }
+
+    return {
+      externalId: params.competitionExternalId,
+      name: seasonName,
+      year: params.year,
+      startsAt: league.seasons?.[0]?.start ? new Date(league.seasons[0].start) : undefined,
+      endsAt: league.seasons?.[0]?.end ? new Date(league.seasons[0].end) : undefined,
+      teams,
+      matches
+    };
+  }
+
   private parseRound(roundString: string): number {
     // Extract number from strings like "Regular Season - 1", "Group A - 1", etc.
     const match = roundString.match(/\d+/);
@@ -445,10 +555,26 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
       stage: params.stageLabel
     }));
 
+    // Calculate date range
+    let dateRange: { start: Date; end: Date } | undefined;
+    if (filteredFixtures.length > 0) {
+      const dates = filteredFixtures
+        .map((item: any) => new Date(item.fixture.date))
+        .filter((date: Date) => !isNaN(date.getTime()));
+      
+      if (dates.length > 0) {
+        dateRange = {
+          start: new Date(Math.min(...dates.map(d => d.getTime()))),
+          end: new Date(Math.max(...dates.map(d => d.getTime())))
+        };
+      }
+    }
+
     return {
       teamsCount: teamsSet.size,
       matchesCount: filteredFixtures.length,
-      sampleMatches
+      sampleMatches,
+      dateRange
     };
   }
 }

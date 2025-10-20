@@ -105,8 +105,8 @@ export function CodeBatchDetailsModal({
               variant="outline"
               onClick={handleDownloadCsv}
               disabled={!batchData}
+              StartIcon={Download}
             >
-              <Download className="h-4 w-4 mr-2" />
               {t("exportCsv")}
             </Button>
           </div>

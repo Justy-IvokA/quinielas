@@ -9,8 +9,8 @@ const phoneSchema = z
 export const registerPublicSchema = z.object({
   poolId: z.string().cuid(),
   userId: z.string().cuid(),
-  displayName: z.string().min(2).max(50),
-  email: z.string().email(),
+  displayName: z.string().min(2).max(50).optional(),
+  email: z.string().email().optional(),
   phone: phoneSchema,
   captchaToken: z.string().optional()
 });
@@ -18,30 +18,30 @@ export const registerPublicSchema = z.object({
 export const registerWithCodeSchema = z.object({
   poolId: z.string().cuid(),
   userId: z.string().cuid(),
-  displayName: z.string().min(2).max(50),
-  email: z.string().email(),
+  displayName: z.string().min(2).max(50).optional(),
+  email: z.string().email().optional(),
   phone: phoneSchema,
-  inviteCode: z.string().length(8).regex(/^[A-Z0-9]+$/),
+  inviteCode: z.string().min(8).max(20).regex(/^[A-Za-z0-9._-]+$/),
   captchaToken: z.string().optional()
 });
 
 export const registerWithEmailInviteSchema = z.object({
   poolId: z.string().cuid(),
   userId: z.string().cuid(),
-  displayName: z.string().min(2).max(50),
-  email: z.string().email(),
+  displayName: z.string().min(2).max(50).optional(),
+  email: z.string().email().optional(),
   phone: phoneSchema,
-  inviteToken: z.string().length(64).regex(/^[a-f0-9]+$/)
+  inviteToken: z.string().min(32).max(64).regex(/^[a-f0-9]+$/)
 });
 
 export const validateInviteCodeSchema = z.object({
   poolId: z.string().cuid(),
-  code: z.string().length(8).regex(/^[A-Z0-9]+$/)
+  code: z.string().min(8).max(20).regex(/^[A-Za-z0-9._-]+$/)
 });
 
 export const validateInviteTokenSchema = z.object({
   poolId: z.string().cuid(),
-  token: z.string().length(64).regex(/^[a-f0-9]+$/)
+  token: z.string().min(32).max(64).regex(/^[a-f0-9]+$/)
 });
 
 export const checkRegistrationSchema = z.object({

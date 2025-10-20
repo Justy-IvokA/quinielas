@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@qp/ui";
 import { AlertTriangle, Palette } from "lucide-react";
 import type { BrandColorsPartial } from "@qp/branding";
 import { checkContrast } from "@qp/branding";
-import { hexToHsl } from "@qp/branding";
+import { hexToHsl, hslToHex } from "@qp/branding";
 
 interface ColorsTabProps {
   colors?: BrandColorsPartial;
@@ -165,7 +165,11 @@ interface ColorInputProps {
 
 function ColorInput({ label, value, onChange, optional }: ColorInputProps) {
   // Convert HSL to hex for color picker
-  const hexValue = value.startsWith("#") ? value : "#3b82f6"; // Default blue
+  const hexValue = value.startsWith("#") 
+    ? value 
+    : value 
+      ? hslToHex(value) 
+      : "#3b82f6"; // Default blue if empty
 
   return (
     <div className="space-y-2">

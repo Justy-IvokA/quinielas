@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Lock, Mail, Key, Globe, Info } from "lucide-react";
-import { Input, Label, Switch, FormField, RadioGroup, RadioGroupItem, Alert, AlertTitle, AlertDescription } from "@qp/ui";
+import { Input, Label, Switch, RadioGroup, RadioGroupItem, Alert, AlertTitle, AlertDescription } from "@qp/ui";
 
 const accessSchema = z.object({
   accessType: z.enum(["PUBLIC", "CODE", "EMAIL_INVITE"]),
@@ -71,9 +71,13 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} id="wizard-step-5" className="flex flex-col gap-6">
       {/* Access Type */}
-      <FormField label="Tipo de acceso" required>
+      <div className="space-y-2">
+        <Label>
+          Tipo de acceso
+          <span className="text-destructive ml-1">*</span>
+        </Label>
         <RadioGroup value={accessType} onValueChange={(val) => setValue("accessType", val as any)}>
-          <div className="grid gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
             <div
               className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
                 accessType === "PUBLIC" ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
@@ -126,7 +130,7 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
             </div>
           </div>
         </RadioGroup>
-      </FormField>
+      </div>
 
       {/* Helper Messages for CODE and EMAIL_INVITE */}
       {accessType === "CODE" && (
@@ -158,32 +162,35 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
           Opciones de seguridad
         </h3>
 
-        <div className="flex items-center justify-between rounded-lg border p-4">
-          <div className="flex-1">
-            <Label htmlFor="requireCaptcha">Requerir CAPTCHA</Label>
-            <p className="text-sm text-muted-foreground">
-              Protege contra registros automatizados
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="flex-1">
+              <Label htmlFor="requireCaptcha">Requerir CAPTCHA</Label>
+              <p className="text-sm text-muted-foreground">
+                Protege contra registros automatizados
+              </p>
+            </div>
+            <Switch
+              id="requireCaptcha"
+              checked={requireCaptcha}
+              onCheckedChange={(checked) => setValue("requireCaptcha", checked)}
+            />
           </div>
-          <Switch
-            id="requireCaptcha"
-            checked={requireCaptcha}
-            onCheckedChange={(checked) => setValue("requireCaptcha", checked)}
-          />
-        </div>
+          
 
-        <div className="flex items-center justify-between rounded-lg border p-4">
-          <div className="flex-1">
-            <Label htmlFor="requireEmailVerification">Verificar email</Label>
-            <p className="text-sm text-muted-foreground">
-              Los usuarios deben verificar su correo electrónico
-            </p>
+          <div className="flex items-center justify-between rounded-lg border p-4">
+            <div className="flex-1">
+              <Label htmlFor="requireEmailVerification">Verificar email</Label>
+              <p className="text-sm text-muted-foreground">
+                Los usuarios deben verificar su correo electrónico
+              </p>
+            </div>
+            <Switch
+              id="requireEmailVerification"
+              checked={requireEmailVerification}
+              onCheckedChange={(checked) => setValue("requireEmailVerification", checked)}
+            />
           </div>
-          <Switch
-            id="requireEmailVerification"
-            checked={requireEmailVerification}
-            onCheckedChange={(checked) => setValue("requireEmailVerification", checked)}
-          />
         </div>
       </div>
 
@@ -191,19 +198,18 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
       <div className="flex flex-col gap-4 pt-4 border-t">
         <h3 className="font-semibold">Opciones avanzadas (opcional)</h3>
 
-        <FormField
-          label="Dominios de email permitidos"
-          htmlFor="emailDomains"
-          description="Separados por comas (ej: empresa.com, partner.com)"
-        >
+        <div className="space-y-2">
+          <Label htmlFor="emailDomains">Dominios de email permitidos</Label>
           <Input
             id="emailDomains"
             placeholder="empresa.com, partner.com"
             {...register("emailDomains")}
           />
-        </FormField>
+          <p className="text-sm text-muted-foreground">Separados por comas (ej: empresa.com, partner.com)</p>
+        </div>
 
-        <FormField label="Límite de usuarios" htmlFor="maxUsers" description="Número máximo de participantes">
+        <div className="space-y-2">
+          <Label htmlFor="maxUsers">Límite de usuarios</Label>
           <Input
             id="maxUsers"
             type="number"
@@ -211,16 +217,19 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
             placeholder="Sin límite"
             {...register("maxUsers", { valueAsNumber: true })}
           />
-        </FormField>
+          <p className="text-sm text-muted-foreground">Número máximo de participantes</p>
+        </div>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <FormField label="Inicio de registro" htmlFor="startAt">
+          <div className="space-y-2">
+            <Label htmlFor="startAt">Inicio de registro</Label>
             <Input id="startAt" type="datetime-local" {...register("startAt")} />
-          </FormField>
+          </div>
 
-          <FormField label="Fin de registro" htmlFor="endAt">
+          <div className="space-y-2">
+            <Label htmlFor="endAt">Fin de registro</Label>
             <Input id="endAt" type="datetime-local" {...register("endAt")} />
-          </FormField>
+          </div>
         </div>
       </div>
     </form>

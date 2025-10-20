@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@qp/ui";
 import { Button } from "@qp/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@qp/ui";
-import { Loader2, Save, RotateCcw, Copy, Check } from "lucide-react";
+import { Save, RotateCcw, Copy, Check } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { toast } from "sonner";
 import type { BrandThemeInput, BrandThemeInputPartial } from "@qp/branding";
 import { ColorsTab } from "./tabs/colors-tab";
@@ -13,6 +14,7 @@ import { LogoTab } from "./tabs/logo-tab";
 import { HeroTab } from "./tabs/hero-tab";
 import { MainCardTab } from "./tabs/main-card-tab";
 import { TypographyTab } from "./tabs/typography-tab";
+import { TextTab } from "./tabs/text-tab";
 
 interface BrandingFormProps {
   initialTheme: BrandThemeInputPartial;
@@ -57,19 +59,20 @@ export function BrandingForm({
   };
 
   return (
-    <Card>
+    <Card className="bg-background/80 backdrop-blur-xl border-border/50 shadow-2xl">
       <CardHeader>
         <CardTitle>{t("formTitle")}</CardTitle>
         <CardDescription>{t("formDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <Tabs defaultValue="colors" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="colors">{t("tabs.colors")}</TabsTrigger>
             <TabsTrigger value="logo">{t("tabs.logo")}</TabsTrigger>
             <TabsTrigger value="hero">{t("tabs.hero")}</TabsTrigger>
             <TabsTrigger value="mainCard">{t("tabs.mainCard")}</TabsTrigger>
             <TabsTrigger value="typography">{t("tabs.typography")}</TabsTrigger>
+            <TabsTrigger value="text">{t("tabs.text")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="colors" className="space-y-4 pt-4">
@@ -107,23 +110,30 @@ export function BrandingForm({
               onChange={(typography) => setTheme({ ...theme, typography })}
             />
           </TabsContent>
+
+          <TabsContent value="text" className="space-y-4 pt-4">
+            <TextTab
+              text={theme.text}
+              onChange={(text) => setTheme({ ...theme, text })}
+            />
+          </TabsContent>
         </Tabs>
 
         {/* Actions */}
         <div className="flex flex-wrap gap-2 border-t pt-4">
           <Button
+            size="sm"
             onClick={handleSave}
             disabled={isSaving || isResetting}
-            className="flex-1"
+            StartIcon={isSaving ? undefined : Save}
           >
             {isSaving ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <SportsLoader size="sm" className="mr-2 inline-block" />
                 {t("saving")}
               </>
             ) : (
               <>
-                <Save className="mr-2 h-4 w-4" />
                 {t("save")}
               </>
             )}
@@ -133,15 +143,16 @@ export function BrandingForm({
             variant="outline"
             onClick={onReset}
             disabled={isSaving || isResetting}
+            StartIcon={isResetting ? undefined : RotateCcw}
+            size="sm"
           >
             {isResetting ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <SportsLoader size="sm" className="mr-2 inline-block" />
                 {t("resetting")}
               </>
             ) : (
               <>
-                <RotateCcw className="mr-2 h-4 w-4" />
                 {t("reset")}
               </>
             )}
@@ -151,15 +162,15 @@ export function BrandingForm({
             variant="ghost"
             onClick={handleCopyJson}
             disabled={isSaving || isResetting}
+            StartIcon={copied ? Check : Copy}
+            size="sm"
           >
             {copied ? (
               <>
-                <Check className="mr-2 h-4 w-4" />
                 {t("copied")}
               </>
             ) : (
               <>
-                <Copy className="mr-2 h-4 w-4" />
                 {t("copyJson")}
               </>
             )}

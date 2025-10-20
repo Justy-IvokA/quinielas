@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
-import { LogOut, User, Settings, Shield } from "lucide-react";
+import { LogOut, User, Settings, Shield, Crown, Users, FileText, Globe } from "lucide-react";
 import { ThemeToggle, Avatar, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@qp/ui";
 
 import { Link } from "@admin/navigation";
@@ -52,6 +52,12 @@ export function AdminHeader({ brandName = "Quinielas Admin", logoUrl }: AdminHea
             <Link href="/branding" className="transition-colors hover:text-foreground">
               Personalización
             </Link>
+            {mounted && session?.user?.highestRole === "SUPERADMIN" && (
+              <Link href="/superadmin/tenants" className="transition-colors hover:text-foreground flex items-center gap-1">
+                <Crown className="h-4 w-4" />
+                <span>Superadmin</span>
+              </Link>
+            )}
           </nav>
           <LocaleSwitcher />
           <ThemeToggle />
@@ -106,6 +112,32 @@ export function AdminHeader({ brandName = "Quinielas Admin", logoUrl }: AdminHea
                     <span>Configuración</span>
                   </Link>
                 </DropdownMenuItem>
+                {session.user.highestRole === "SUPERADMIN" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel className="text-xs text-muted-foreground">
+                      SUPERADMIN
+                    </DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link href="/superadmin/tenants" className="cursor-pointer">
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>Gestión de Clientes</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/superadmin/templates" className="cursor-pointer">
+                        <FileText className="mr-2 h-4 w-4" />
+                        <span>Plantillas Quinielas</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/superadmin/tenants" className="cursor-pointer">
+                        <Globe className="mr-2 h-4 w-4" />
+                        <span>Gestión de Dominios</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="cursor-pointer text-destructive focus:text-destructive"

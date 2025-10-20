@@ -105,3 +105,4 @@
 - For public APIs, generate typed clients and narrow the surface in `packages/api` routers.
 - If schema changes, include corresponding migration and `seed` updates.
 - Optimize later; first ensure correctness, locking behavior, and auditability.
+- Ask or confirm whether the user wants to create .md file documentation for an implementation, if you think it's important.

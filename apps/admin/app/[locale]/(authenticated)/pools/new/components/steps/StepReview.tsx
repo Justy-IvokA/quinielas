@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Loader2, AlertCircle, ExternalLink, Settings } from "lucide-react";
+import { CheckCircle2, AlertCircle, ExternalLink, Settings } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { Button, Alert, AlertDescription, toastSuccess, toastError } from "@qp/ui";
 import { trpc } from "@admin/trpc";
-import type { CreateAndImportInput } from "@qp/api/src/routers/pool-wizard/schema";
+import type { CreateAndImportInput } from "@qp/api";
 
 interface StepReviewProps {
   wizardData: {
@@ -17,7 +18,6 @@ interface StepReviewProps {
     pool: {
       title: string;
       slug: string;
-      brandId?: string;
       description?: string;
     };
     access: {
@@ -78,7 +78,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
         },
         prizes: wizardData.prizes
       };
-
+      
       setProgress("Importando equipos...");
       
       const response = await createMutation.mutateAsync(input);
@@ -109,6 +109,18 @@ export function StepReview({ wizardData }: StepReviewProps) {
   };
 
   if (result) {
+    // Determine the configuration URL based on access type
+    const getConfigUrl = () => {
+      if (wizardData.access.accessType === "CODE") {
+        return `/pools/${result.poolId}/codes`;
+      } else if (wizardData.access.accessType === "EMAIL_INVITE") {
+        return `/pools/${result.poolId}/invitations`;
+      }
+      return null; // PUBLIC doesn't need configuration
+    };
+
+    const configUrl = getConfigUrl();
+
     return (
       <div className="flex flex-col gap-6">
         <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
@@ -123,18 +135,21 @@ export function StepReview({ wizardData }: StepReviewProps) {
         </Alert>
 
         <div className="flex flex-col gap-3">
-          <Button onClick={() => router.push(`/pools/${result.poolId}`)} className="w-full">
-            <ExternalLink className="h-4 w-4 mr-2" />
+          <Button onClick={() => router.push(`/pools/${result.poolId}`)} className="w-full" StartIcon={ExternalLink}>
             Ver quiniela
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/pools/${result.poolId}/invitations`)}
-            className="w-full"
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            Configurar invitaciones y códigos
-          </Button>
+          {configUrl && (
+            <Button
+              variant="outline"
+              onClick={() => router.push(configUrl)}
+              className="w-full"
+              StartIcon={Settings}
+            >
+              {wizardData.access.accessType === "CODE" 
+                ? "Configurar códigos de invitación"
+                : "Configurar invitaciones por email"}
+            </Button>
+          )}
         </div>
       </div>
     );
@@ -253,7 +268,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
       <div className="pt-4 border-t">
         {isCreating ? (
           <div className="flex flex-col items-center gap-4 py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <SportsLoader size="md" text="Creando pool" />
             <p className="text-sm text-muted-foreground">{progress}</p>
           </div>
         ) : (

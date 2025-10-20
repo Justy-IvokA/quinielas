@@ -21,7 +21,7 @@ export function extractTenantFromSubdomain(hostname: string): string | null {
   }
 
   const parts = hostname.split(".");
-  
+
   // Need at least 3 parts for subdomain (e.g., tenant.quinielas.mx)
   if (parts.length < 3) {
     return null;
@@ -29,7 +29,7 @@ export function extractTenantFromSubdomain(hostname: string): string | null {
 
   // First part is the tenant slug
   const tenantSlug = parts[0];
-  
+
   // Validate it's not www or common subdomains
   if (["www", "api", "admin", "cdn", "static"].includes(tenantSlug)) {
     return null;
@@ -51,6 +51,44 @@ export async function resolveTenantAndBrandFromHost(
   pathname?: string
 ): Promise<TenantBrandResolution> {
   try {
+    // Strategy 0: Development fallback
+    // In development, try to extract tenant from hostname even with 2 parts (e.g., ivoka.localhost)
+    if (process.env.NODE_ENV === "development") {
+      const parts = hostname.split(".");
+      
+      // Try to get tenant slug from first part of hostname
+      let tenantSlug: string | null = null;
+      
+      if (parts.length >= 2 && parts[0] !== "localhost") {
+        // Has subdomain like "ivoka.localhost"
+        tenantSlug = parts[0];
+      } else if (parts.length === 1 && parts[0] === "localhost") {
+        // Plain "localhost" - use default fallback tenant
+        tenantSlug = "innotecnia";
+      }
+      
+      if (tenantSlug && !["www", "api", "admin", "cdn", "static"].includes(tenantSlug)) {
+        const devTenant = await prisma.tenant.findUnique({
+          where: { slug: tenantSlug }
+        });
+
+        if (devTenant) {
+          const devBrand = await prisma.brand.findFirst({
+            where: {
+              tenantId: devTenant.id,
+              slug: devTenant.slug
+            }
+          });
+
+          return {
+            tenant: devTenant,
+            brand: devBrand,
+            source: "fallback"
+          };
+        }
+      }
+    }
+
     // Strategy 1: Try custom domain lookup
     const brandByDomain = await prisma.brand.findFirst({
       where: {
@@ -127,27 +165,7 @@ export async function resolveTenantAndBrandFromHost(
       }
     }
 
-    // Strategy 4: Development fallback
-    if (process.env.NODE_ENV === "development") {
-      const demoTenant = await prisma.tenant.findUnique({
-        where: { slug: "ivoka" }
-      });
-
-      if (demoTenant) {
-        const demoBrand = await prisma.brand.findFirst({
-          where: {
-            tenantId: demoTenant.id,
-            slug: "ivoka"
-          }
-        });
-
-        return {
-          tenant: demoTenant,
-          brand: demoBrand,
-          source: "fallback"
-        };
-      }
-    }
+    
   } catch (error) {
     console.error("[host-tenant] Error resolving tenant/brand:", error);
   }
@@ -166,19 +184,29 @@ export async function resolveTenantAndBrandFromHost(
  */
 export function getBrandCanonicalUrl(brand: Brand & { tenant: Tenant }): string {
   // Prefer custom domain
-  if (brand.domains && brand.domains.length > 0) {
+  if (Array.isArray(brand.domains) && brand.domains.length > 0) {
     const domain = brand.domains[0];
     // Check if domain includes localhost (development)
     const protocol = domain.includes('localhost') ? 'http' : 'https';
     return `${protocol}://${domain}`;
   }
 
-  // Fallback to subdomain pattern
+  // Fallback to subdomain pattern using tenant slug
   const baseDomain = process.env.NEXT_PUBLIC_BASE_DOMAIN || "localhost:3000";
   const protocol = baseDomain.includes('localhost') ? 'http' : 'https';
   
-  // Use brand slug as subdomain
-  return `${protocol}://${brand.slug}.${baseDomain}`;
+  // Validate tenant exists
+  if (!brand.tenant || !brand.tenant.slug) {
+    console.error("[host-tenant] ERROR: Brand has no tenant or tenant.slug!", {
+      brandId: brand.id,
+      tenant: brand.tenant
+    });
+    // Fallback to localhost without subdomain
+    return `${protocol}://${baseDomain}`;
+  }
+  
+  // Use tenant slug as subdomain (not brand slug)
+  return `${protocol}://${brand.tenant.slug}.${baseDomain}`;
 }
 
 /**
@@ -204,7 +232,7 @@ export function buildInvitationUrl(
   locale: string = 'es-MX'
 ): string {
   const baseUrl = getBrandCanonicalUrl(brand);
-  return `${baseUrl}/${locale}/pools/${poolSlug}/join?token=${token}`;
+  return `${baseUrl}/${locale}/auth/register/${poolSlug}?token=${token}`;
 }
 
 /**

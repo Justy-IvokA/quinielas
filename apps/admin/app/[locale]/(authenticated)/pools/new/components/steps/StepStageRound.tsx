@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, Target, Info } from "lucide-react";
+import { Info, Target } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { Label, RadioGroup, RadioGroupItem, Alert, AlertDescription } from "@qp/ui";
 import { trpc } from "@admin/trpc";
 
@@ -63,7 +64,7 @@ export function StepStageRound({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <SportsLoader size="sm" text="Cargando etapas" />
       </div>
     );
   }
@@ -127,22 +128,35 @@ export function StepStageRound({
           <h3 className="font-semibold">Ronda específica (opcional)</h3>
 
           <RadioGroup value={selectedRound || ""} onValueChange={handleRoundSelect}>
-            <div className="grid gap-2">
-              {selectedStageData.rounds.map((round) => (
-                <div
-                  key={round}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    selectedRound === round
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <RadioGroupItem value={round} id={`round-${round}`} />
-                  <Label htmlFor={`round-${round}`} className="flex-1 cursor-pointer">
-                    {round}
-                  </Label>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {[...selectedStageData.rounds]
+                .sort((a, b) => {
+                  // Try to parse as numbers first
+                  const numA = parseInt(a, 10);
+                  const numB = parseInt(b, 10);
+                  
+                  if (!isNaN(numA) && !isNaN(numB)) {
+                    return numA - numB;
+                  }
+                  
+                  // Fallback to string comparison
+                  return a.localeCompare(b, 'es-MX', { numeric: true, sensitivity: 'base' });
+                })
+                .map((round) => (
+                  <div
+                    key={round}
+                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                      selectedRound === round
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <RadioGroupItem value={round} id={`round-${round}`} />
+                    <Label htmlFor={`round-${round}`} className="flex-1 cursor-pointer">
+                      {round}
+                    </Label>
+                  </div>
+                ))}
             </div>
           </RadioGroup>
         </div>

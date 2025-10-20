@@ -74,16 +74,11 @@ async function SignInContent({ params, searchParams }: SignInPageProps) {
   const requireCaptcha = false;
 
   return (
-    <>
-      {/* Animated background gradients - uses brand primary color */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute inset-x-0 top-0 h-[600px] bg-[radial-gradient(ellipse_at_top,_hsl(var(--primary))/20%,_transparent_50%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-[600px] bg-[radial-gradient(ellipse_at_bottom,_hsl(var(--accent))/15%,_transparent_50%)]" />
-        <div className="absolute right-0 top-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--primary))/15%,_transparent_70%)] blur-3xl" />
-        <div className="absolute left-0 bottom-1/4 h-96 w-96 bg-[radial-gradient(circle,_hsl(var(--accent))/15%,_transparent_70%)] blur-3xl" />
-      </div>
-
-      <div className="flex min-h-screen items-center justify-center px-4 py-12">
+      <div className="h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
+        <div className="absolute inset-0" style={{
+          backgroundSize: 'cover',
+          backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fadmin_bg.jpg?alt=media&token=1333e2d9-c3dd-4e21-a969-99da814f9c94')`
+        }} />
         <Card variant="glass" className="w-full max-w-md">
           <CardHeader className="space-y-1 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
@@ -135,7 +130,6 @@ async function SignInContent({ params, searchParams }: SignInPageProps) {
         </CardContent>
       </Card>
     </div>
-    </>
   );
 }
 

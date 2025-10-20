@@ -6,7 +6,8 @@ import { Label } from "@qp/ui";
 import { Input } from "@qp/ui";
 import { Button } from "@qp/ui";
 import { Alert, AlertDescription } from "@qp/ui";
-import { Upload, Loader2, Image as ImageIcon, AlertCircle } from "lucide-react";
+import { Upload, Image as ImageIcon, AlertCircle } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import { toast } from "sonner";
 import { trpc as api } from "@admin/trpc";
 import type { LogoPartial, LogotypePartial } from "@qp/branding";
@@ -122,9 +123,7 @@ export function LogoTab({ logo, logotype, onChange }: LogoTabProps) {
               disabled={uploading === "logo"}
               className="flex-1"
             />
-            {uploading === "logo" && (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            )}
+            {uploading === "logo" && <SportsLoader size="sm" />}
           </div>
           <p className="text-xs text-muted-foreground">
             {t("uploadHint")}
@@ -191,9 +190,7 @@ export function LogoTab({ logo, logotype, onChange }: LogoTabProps) {
               disabled={uploading === "logotype"}
               className="flex-1"
             />
-            {uploading === "logotype" && (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
-            )}
+            {uploading === "logotype" && <SportsLoader size="sm" />}
           </div>
         </div>
 

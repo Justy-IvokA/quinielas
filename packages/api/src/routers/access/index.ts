@@ -1,8 +1,14 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { createTransport } from "nodemailer";
 
 import { prisma } from "@qp/db";
 import { buildInvitationUrl } from "../../lib/host-tenant";
+import { 
+  emailTemplates,
+  createEmailBrandInfo,
+  parseEmailLocale
+} from "@qp/utils/email";
 
 import { publicProcedure, router } from "../../trpc";
 import {
@@ -264,7 +270,7 @@ export const accessRouter = router({
         });
       }
 
-      // Get brand info
+      // Get brand info with theme
       const brand = await prisma.brand.findUnique({
         where: { id: input.brandId },
         include: { tenant: true }
@@ -277,11 +283,78 @@ export const accessRouter = router({
         });
       }
 
-      // Build invitation URL
-      const invitationUrl = buildInvitationUrl(brand as any, invitation.pool.slug, invitation.token);
+      // Determine locale - check tenant settings or default to es-MX
+      const tenantSettings = await prisma.setting.findFirst({
+        where: { 
+          tenantId: brand.tenantId,
+          key: "defaultLocale"
+        }
+      });
+      const locale = parseEmailLocale(typeof tenantSettings?.value === "string" ? tenantSettings.value : "es-MX");
 
-      // TODO: Send email with invitationUrl
-      console.log(`[access] Resending invitation to ${invitation.email}: ${invitationUrl}`);
+      // Build invitation URL
+      const invitationUrl = buildInvitationUrl(brand as any, invitation.pool.slug, invitation.token, locale);
+
+      // Create brand info for email template
+      const brandInfo = createEmailBrandInfo({
+        name: brand.name,
+        logoUrl: brand.logoUrl,
+        colors: {
+          primary: (brand.theme as any)?.colors?.primary || "#0ea5e9",
+          primaryForeground: (brand.theme as any)?.colors?.primaryForeground || "#ffffff",
+          background: (brand.theme as any)?.colors?.background || "#ffffff",
+          foreground: (brand.theme as any)?.colors?.foreground || "#0f172a",
+          muted: (brand.theme as any)?.colors?.muted || "#f1f5f9",
+          border: (brand.theme as any)?.colors?.border || "#e2e8f0"
+        },
+        themeLogoUrl: (brand.theme as any)?.logo?.url || null
+      });
+
+      // Send invitation email
+      const emailConfig = {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER,
+          pass: process.env.EMAIL_SERVER_PASSWORD
+        }
+      };
+
+      const emailFrom = process.env.EMAIL_FROM || "noreply@quinielas.app";
+
+      if (!emailConfig.host || !emailConfig.auth.user || !emailConfig.auth.pass) {
+        console.warn("[access] Email server not configured. Skipping email send.");
+        console.log(`[access] Invitation URL for ${invitation.email}: ${invitationUrl}`);
+      } else {
+        try {
+          const transport = createTransport(emailConfig);
+
+          // Use new email template with branding
+          const email = emailTemplates.invitation({
+            brand: brandInfo,
+            locale,
+            poolName: invitation.pool.name,
+            inviteUrl: invitationUrl,
+            expiresAt: invitation.expiresAt || new Date(Date.now() + 72 * 60 * 60 * 1000)
+          });
+
+          await transport.sendMail({
+            to: invitation.email,
+            from: emailFrom,
+            subject: email.subject,
+            text: email.text,
+            html: email.html
+          });
+
+          console.log(`[access] ✓ Invitation resent to ${invitation.email}`);
+        } catch (error) {
+          console.error(`[access] ✗ Failed to resend invitation to ${invitation.email}:`, error);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to send email"
+          });
+        }
+      }
 
       // Update sent count and timestamp
       return prisma.invitation.update({
@@ -418,10 +491,33 @@ export const accessRouter = router({
       });
     }
 
+    // Determine locale - check tenant settings or default to es-MX
+    const tenantSettings = await prisma.setting.findFirst({
+      where: { 
+        tenantId,
+        key: "defaultLocale"
+      }
+    });
+    const locale = parseEmailLocale(typeof tenantSettings?.value === "string" ? tenantSettings.value : "es-MX");
+
+    // Create brand info for email template
+    const brandInfo = createEmailBrandInfo({
+      name: brand.name,
+      logoUrl: brand.logoUrl,
+      colors: {
+        primary: (brand.theme as any)?.colors?.primary || "#0ea5e9",
+        primaryForeground: (brand.theme as any)?.colors?.primaryForeground || "#ffffff",
+        background: (brand.theme as any)?.colors?.background || "#ffffff",
+        foreground: (brand.theme as any)?.colors?.foreground || "#0f172a",
+        muted: (brand.theme as any)?.colors?.muted || "#f1f5f9",
+        border: (brand.theme as any)?.colors?.border || "#e2e8f0"
+      }
+    });
+
     // Build invitation URLs for each invitation
     const invitationsWithUrls = invitations.map((inv: { id: string; email: string; token: string }) => ({
       ...inv,
-      url: buildInvitationUrl(brand as any, pool.slug, inv.token)
+      url: buildInvitationUrl(brand as any, pool.slug, inv.token, locale)
     }));
 
     // Update sent count and timestamp
@@ -433,20 +529,53 @@ export const accessRouter = router({
       }
     });
 
-    // TODO: Integrate with email service (EmailAdapter)
-    // Send emails with correct subdomain URLs
-    invitationsWithUrls.forEach((inv) => {
-      console.log(`[access] Sending invitation to ${inv.email}: ${inv.url}`);
-      // emailAdapter.send({
-      //   to: inv.email,
-      //   ...emailTemplates.invitation({
-      //     poolName: pool.name,
-      //     inviteUrl: inv.url,
-      //     expiresAt: ...,
-      //     brandName: brand.name
-      //   })
-      // });
-    });
+    // Send invitation emails
+    const emailConfig = {
+      host: process.env.EMAIL_SERVER_HOST,
+      port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+      auth: {
+        user: process.env.EMAIL_SERVER_USER,
+        pass: process.env.EMAIL_SERVER_PASSWORD
+      }
+    };
+
+    const emailFrom = process.env.EMAIL_FROM || "noreply@quinielas.app";
+
+    if (!emailConfig.host || !emailConfig.auth.user || !emailConfig.auth.pass) {
+      console.warn("[access] Email server not configured. Skipping email send.");
+      console.log("[access] Invitations created but emails not sent:");
+      invitationsWithUrls.forEach((inv) => {
+        console.log(`  - ${inv.email}: ${inv.url}`);
+      });
+    } else {
+      const transport = createTransport(emailConfig);
+
+      for (const inv of invitationsWithUrls) {
+        try {
+          // Use new email template with branding
+          const email = emailTemplates.invitation({
+            brand: brandInfo,
+            locale,
+            poolName: pool.name,
+            inviteUrl: inv.url,
+            expiresAt: new Date(Date.now() + 72 * 60 * 60 * 1000)
+          });
+
+          await transport.sendMail({
+            to: inv.email,
+            from: emailFrom,
+            subject: email.subject,
+            text: email.text,
+            html: email.html
+          });
+
+          console.log(`[access] ✓ Invitation sent to ${inv.email}`);
+        } catch (error) {
+          console.error(`[access] ✗ Failed to send invitation to ${inv.email}:`, error);
+          // Continue sending to other recipients even if one fails
+        }
+      }
+    }
 
     return {
       sent: invitations.length,
@@ -614,5 +743,6 @@ function generateInviteCode(): string {
 }
 
 function generateInviteToken(): string {
-  return Array.from({ length: 32 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
+  // Generate 64 hex characters (32 bytes) for security
+  return Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
 }

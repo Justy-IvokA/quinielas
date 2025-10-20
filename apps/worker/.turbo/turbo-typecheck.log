@@ -2,5 +2,11 @@
 > @qp/worker@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\apps\worker
 > tsc --noEmit
 
-src/jobs/auto-sync-fixtures.ts(70,9): error TS2783: 'seasonId' is specified more than once, so this usage will be overwritten.
+../../packages/api/src/services/templateProvision.service.ts(144,9): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+../../packages/api/src/services/templateProvision.service.ts(145,9): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+../../packages/utils/src/sports/index.ts(31,7): error TS2741: Property 'fetchSeasonRound' is missing in type 'MockSportsProvider' but required in type 'SportsProvider'.
+../../packages/utils/src/sports/mock.ts(7,14): error TS2420: Class 'MockSportsProvider' incorrectly implements interface 'SportsProvider'.
+  Property 'fetchSeasonRound' is missing in type 'MockSportsProvider' but required in type 'SportsProvider'.
  ELIFECYCLE  Command failed with exit code 2.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Loader2, AlertCircle, Trophy, TrendingUp, Target } from "lucide-react";
+import { AlertCircle, Trophy, TrendingUp } from "lucide-react";
 import { Alert, AlertDescription, Badge, Skeleton, cn } from "@qp/ui";
 import { trpc } from "@web/trpc";
 
@@ -136,7 +136,7 @@ export function LiveLeaderboard({ poolId, userId }: LiveLeaderboardProps) {
                   {/* Exact */}
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-white">
-                      <Target className="w-4 h-4 text-green-400" />
+                      <Trophy className="w-4 h-4 text-green-400" />
                       <span className="font-bold">{entry.exactCount || 0}</span>
                     </div>
                   </div>

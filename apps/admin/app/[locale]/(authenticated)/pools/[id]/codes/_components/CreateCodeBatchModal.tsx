@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -18,6 +18,7 @@ import {
   Input,
   Textarea,
   FormField,
+  DateTimePicker,
   toastSuccess,
   toastError
 } from "@qp/ui";
@@ -28,11 +29,11 @@ const createBatchSchema = z.object({
   name: z.string().optional(),
   prefix: z.string().max(10, "Máximo 10 caracteres").optional(),
   quantity: z.number().int().min(1, "Mínimo 1").max(1000, "Máximo 1,000"),
-  usesPerCode: z.number().int().min(1, "Mínimo 1").default(1),
+  usesPerCode: z.number().int().min(1, "Mínimo 1"),
   description: z.string().optional(),
-  validFrom: z.string().optional(),
-  validTo: z.string().optional(),
-  expiresAt: z.string().optional()
+  validFrom: z.date().optional(),
+  validTo: z.date().optional(),
+  expiresAt: z.date().optional()
 });
 
 type CreateBatchFormData = z.infer<typeof createBatchSchema>;
@@ -60,6 +61,7 @@ export function CreateCodeBatchModal({
     handleSubmit,
     watch,
     reset,
+    control,
     formState: { errors }
   } = useForm<CreateBatchFormData>({
     resolver: zodResolver(createBatchSchema),
@@ -95,7 +97,7 @@ export function CreateCodeBatchModal({
     }
   };
 
-  const onSubmit = async (data: CreateBatchFormData) => {
+  const onSubmit: SubmitHandler<CreateBatchFormData> = async (data) => {
     const payload = {
       accessPolicyId,
       tenantId,
@@ -104,9 +106,9 @@ export function CreateCodeBatchModal({
       quantity: data.quantity,
       usesPerCode: data.usesPerCode,
       description: data.description,
-      validFrom: data.validFrom ? new Date(data.validFrom) : undefined,
-      validTo: data.validTo ? new Date(data.validTo) : undefined,
-      expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined
+      validFrom: data.validFrom,
+      validTo: data.validTo,
+      expiresAt: data.expiresAt
     };
 
     await createBatchMutation.mutateAsync(payload);
@@ -270,26 +272,45 @@ export function CreateCodeBatchModal({
 
             <div className="grid grid-cols-3 gap-4">
               <FormField label={t("validFromLabel")} htmlFor="validFrom">
-                <Input
-                  id="validFrom"
-                  type="datetime-local"
-                  {...register("validFrom")}
+                <Controller
+                  name="validFrom"
+                  control={control}
+                  render={({ field }) => (
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Desde"
+                    />
+                  )}
                 />
               </FormField>
 
               <FormField label={t("validToLabel")} htmlFor="validTo">
-                <Input
-                  id="validTo"
-                  type="datetime-local"
-                  {...register("validTo")}
+                <Controller
+                  name="validTo"
+                  control={control}
+                  render={({ field }) => (
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Hasta"
+                      minDate={watch("validFrom")}
+                    />
+                  )}
                 />
               </FormField>
 
               <FormField label={t("expiresAtLabel")} htmlFor="expiresAt">
-                <Input
-                  id="expiresAt"
-                  type="datetime-local"
-                  {...register("expiresAt")}
+                <Controller
+                  name="expiresAt"
+                  control={control}
+                  render={({ field }) => (
+                    <DateTimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Expira"
+                    />
+                  )}
                 />
               </FormField>
             </div>

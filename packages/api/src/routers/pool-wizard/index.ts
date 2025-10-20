@@ -158,7 +158,7 @@ export const poolWizardRouter = router({
         where: {
           tenantId,
           slug: input.pool.slug,
-          brandId: input.pool.brandId || null
+          brandId: ctx.brand?.id || null
         }
       });
 
@@ -205,11 +205,24 @@ export const poolWizardRouter = router({
 
       try {
         // Fetch competition data by external ID
-        // We need to fetch the season data which includes competition info
-        const seasonData = await provider.fetchSeason({
-          competitionExternalId: input.competitionExternalId,
-          year: input.seasonYear
-        });
+        // Use fetchSeasonRound if filters are specified, otherwise fetchSeason
+        let seasonData: Awaited<ReturnType<typeof provider.fetchSeason>>;
+        
+        if (input.stageLabel || input.roundLabel) {
+          console.log(`[Pool Wizard] Fetching filtered season data: stage=${input.stageLabel}, round=${input.roundLabel}`);
+          seasonData = await provider.fetchSeasonRound({
+            competitionExternalId: input.competitionExternalId,
+            year: input.seasonYear,
+            stageLabel: input.stageLabel,
+            roundLabel: input.roundLabel
+          });
+        } else {
+          console.log(`[Pool Wizard] Fetching full season data`);
+          seasonData = await provider.fetchSeason({
+            competitionExternalId: input.competitionExternalId,
+            year: input.seasonYear
+          });
+        }
 
         if (!seasonData) {
           throw new TRPCError({
@@ -217,6 +230,8 @@ export const poolWizardRouter = router({
             message: "Season data not found"
           });
         }
+        
+        console.log(`[Pool Wizard] Fetched ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`);
 
         // Extract competition data from season
         const competitionData = {
@@ -249,7 +264,7 @@ export const poolWizardRouter = router({
           await prisma.externalMap.create({
             data: {
               sourceId: externalSource.id,
-              entityType: "competition",
+              entityType: "COMPETITION",
               entityId: competition.id,
               externalId: input.competitionExternalId
             }
@@ -274,41 +289,10 @@ export const poolWizardRouter = router({
           });
         }
 
-        // Filter matches by scope (seasonData was already fetched above)
-        let filteredMatches = seasonData.matches;
-        
-        if (input.roundLabel) {
-          // Filter by specific round number
-          const targetRound = parseInt(input.roundLabel, 10);
-          if (!isNaN(targetRound)) {
-            filteredMatches = filteredMatches.filter(match => match.round === targetRound);
-            console.log(`[Pool Wizard] Filtered to round ${targetRound}: ${filteredMatches.length} matches`);
-          }
-        }
-        
-        // Note: stageLabel filtering would require additional metadata from the API
-        // For now, we only filter by round number
-        if (filteredMatches.length === 0 && (input.stageLabel || input.roundLabel)) {
-          console.warn(`[Pool Wizard] No matches found for filters: stage=${input.stageLabel}, round=${input.roundLabel}`);
-        }
-
-        // Import only teams that participate in filtered matches
+        // seasonData already contains filtered matches and teams from fetchSeasonRound
         const teamIdMap = new Map<string, string>();
-        
-        // Get unique team IDs from filtered matches
-        const teamExternalIds = new Set<string>();
-        for (const match of filteredMatches) {
-          teamExternalIds.add(match.homeTeamExternalId);
-          teamExternalIds.add(match.awayTeamExternalId);
-        }
-        
-        const filteredTeams = seasonData.teams.filter(team => 
-          teamExternalIds.has(team.externalId)
-        );
-        
-        console.log(`[Pool Wizard] Importing ${filteredTeams.length} teams (from ${seasonData.teams.length} total)`);
 
-        for (const teamDTO of filteredTeams) {
+        for (const teamDTO of seasonData.teams) {
           let team = await prisma.team.findFirst({
             where: {
               sportId: sport.id,
@@ -334,13 +318,13 @@ export const poolWizardRouter = router({
             where: {
               sourceId_entityType_externalId: {
                 sourceId: externalSource.id,
-                entityType: "team",
+                entityType: "TEAM",
                 externalId: teamDTO.externalId
               }
             },
             create: {
               sourceId: externalSource.id,
-              entityType: "team",
+              entityType: "TEAM",
               entityId: team.id,
               externalId: teamDTO.externalId
             },
@@ -370,7 +354,7 @@ export const poolWizardRouter = router({
         // Import matches
         let importedMatches = 0;
 
-        for (const matchDTO of filteredMatches) {
+        for (const matchDTO of seasonData.matches) {
           const homeTeamId = teamIdMap.get(matchDTO.homeTeamExternalId);
           const awayTeamId = teamIdMap.get(matchDTO.awayTeamExternalId);
 
@@ -415,13 +399,13 @@ export const poolWizardRouter = router({
             where: {
               sourceId_entityType_externalId: {
                 sourceId: externalSource.id,
-                entityType: "match",
+                entityType: "MATCH",
                 externalId: matchDTO.externalId
               }
             },
             create: {
               sourceId: externalSource.id,
-              entityType: "match",
+              entityType: "MATCH",
               entityId: match.id,
               externalId: matchDTO.externalId
             },
@@ -437,7 +421,7 @@ export const poolWizardRouter = router({
         const pool = await prisma.pool.create({
           data: {
             tenantId,
-            brandId: input.pool.brandId,
+            brandId: ctx.brand?.id, // Auto-assign from tenant's brand resolved from subdomain
             seasonId: season.id,
             name: input.pool.title,
             slug: input.pool.slug,
@@ -454,6 +438,10 @@ export const poolWizardRouter = router({
         });
 
         // Create Access Policy
+        console.log(`[PoolWizard] Creating AccessPolicy with dates:`, {
+          startAt: input.access.startAt,
+          endAt: input.access.endAt
+        });
         await prisma.accessPolicy.create({
           data: {
             poolId: pool.id,
@@ -463,13 +451,16 @@ export const poolWizardRouter = router({
             requireEmailVerification: input.access.requireEmailVerification ?? false,
             domainAllowList: input.access.emailDomains ?? [],
             maxRegistrations: input.access.maxUsers,
-            windowStart: input.access.startAt,
-            windowEnd: input.access.endAt
+            registrationStartDate: input.access.startAt,
+            registrationEndDate: input.access.endAt,
+            windowStart: input.access.startAt, // Keep for backwards compatibility
+            windowEnd: input.access.endAt // Keep for backwards compatibility
           }
         });
 
         // Create Prizes
         if (input.prizes && input.prizes.length > 0) {
+          console.log(`[PoolWizard] Creating ${input.prizes.length} prizes for pool ${pool.id}`);
           await prisma.prize.createMany({
             data: input.prizes.map((prize, index) => ({
               poolId: pool.id,
@@ -479,11 +470,14 @@ export const poolWizardRouter = router({
               rankTo: prize.rankTo,
               type: prize.type,
               title: prize.title,
-              description: prize.description,
-              value: prize.value,
-              imageUrl: prize.imageUrl
+              description: prize.description || undefined,
+              value: prize.value || undefined,
+              imageUrl: prize.imageUrl && prize.imageUrl !== "" ? prize.imageUrl : undefined
             }))
           });
+          console.log(`[PoolWizard] Successfully created ${input.prizes.length} prizes`);
+        } else {
+          console.log(`[PoolWizard] No prizes to create for pool ${pool.id}`);
         }
 
         return {

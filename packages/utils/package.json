@@ -19,7 +19,7 @@
     "format": "prettier --check ."
   },
   "dependencies": {
-    "nodemailer": "^7.0.9",
+    "nodemailer": "^6.10.1",
     "cloudinary": "^2.0.1",
     "@aws-sdk/client-s3": "^3.515.0",
     "@aws-sdk/s3-request-presigner": "^3.515.0",

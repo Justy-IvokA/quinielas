@@ -26,9 +26,10 @@ export default async function HomePage() {
   const { brand } = await resolveTenantAndBrandFromHost(host);
   
   const brandName = brand?.name || webEnv.NEXT_PUBLIC_APP_NAME;
+  const brandTheme = brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any) : null;
   const t = await getTranslations("home");
-  const tCommon = await getTranslations("common");
-  const appName = webEnv.NEXT_PUBLIC_APP_NAME;
+  // const tCommon = await getTranslations("common");
+  // const appName = webEnv.NEXT_PUBLIC_APP_NAME;
 
   // Use brand primary color for gradients
   const featureHighlights = [
@@ -61,17 +62,19 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="relative isolate overflow-hidden min-h-screen">
+    <div className="relative isolate overflow-hidden">
 
-      {/* Hero Section - Full viewport height */}
-      <div className="flex items-center justify-center min-h-screen w-full px-6 py-16 md:px-10 md:py-24">
+      {/* Hero Section */}
+      <div className="w-full px-6 py-16 md:px-10 md:py-24 flex items-center justify-center h-screen">
         <div className="mx-auto w-full max-w-6xl">
           <HomeHero
             brandName={brandName}
-            tagline={t("hero.tagline")}
+            host={host}
+            tagline={host !== "localhost" ? t("hero.tagline") : t("hero.tagline0")}
             ctaLabel={t("hero.cta")}
-            logo={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).logo.url : null}
-            mainCard={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).mainCard : null}
+            logo={brandTheme?.logo?.url}
+            mainCard={brandTheme?.mainCard}
+            brandTheme={brandTheme}
           />
         </div>
       </div>
@@ -130,7 +133,7 @@ export default async function HomePage() {
         </section>
 
         {/* Dev Info Card */}
-        <section className="relative group">
+        {/* <section className="relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-accent rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500" />
           <div className="relative rounded-2xl backdrop-blur-2xl bg-white/60 dark:bg-white/5 border border-white/10 p-8 shadow-lg">
             <div className="flex items-start gap-4">
@@ -157,7 +160,7 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Footer spacer */}
         <div className="h-8" />

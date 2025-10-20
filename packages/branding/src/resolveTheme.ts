@@ -170,26 +170,35 @@ export function resolveTheme(brandTheme?: Partial<BrandTheme>): BrandTheme {
     ? normalizeTokenColors(brandTheme.darkTokens.colors)
     : {};
 
-  const mergedDarkTokens: BrandThemeTokens = {
+  const mergedDarkTokens: BrandThemeDarkTokens = {
     colors: {
-      ...defaultTokens.colors, // Start with all required light theme colors
       ...defaultDarkTokens.colors, // Apply dark theme defaults
       ...normalizedDarkColors // Apply brand-specific dark overrides
     },
     radius: brandTheme?.darkTokens?.radius ?? mergedTokens.radius
   };
 
+  // Create complete dark tokens for CSS variable generation
+  const completeDarkTokens: BrandThemeTokens = {
+    colors: {
+      ...defaultTokens.colors,
+      ...defaultDarkTokens.colors,
+      ...normalizedDarkColors
+    },
+    radius: mergedDarkTokens.radius ?? mergedTokens.radius
+  };
+
   return {
     name: brandTheme?.name ?? "Default Theme",
     slug: brandTheme?.slug ?? "default",
     tokens: mergedTokens,
-    darkTokens: brandTheme?.darkTokens,
+    darkTokens: mergedDarkTokens,
     typography: brandTheme?.typography ?? {
       sans: "Inter, system-ui, sans-serif",
       heading: "Inter, system-ui, sans-serif"
     },
     cssVariables: tokensToCssVariables(mergedTokens),
-    darkCssVariables: tokensToCssVariables(mergedDarkTokens),
+    darkCssVariables: tokensToCssVariables(completeDarkTokens),
     heroAssets: brandTheme?.heroAssets
   };
 }

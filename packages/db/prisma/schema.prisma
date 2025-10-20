@@ -52,6 +52,12 @@ enum InvitationStatus {
   EXPIRED
 }
 
+enum TemplateStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 enum SettingScope {
   GLOBAL
   TENANT
@@ -89,6 +95,7 @@ model Tenant {
   policyDocuments       PolicyDocument[]
   consentRecords        ConsentRecord[]
   dataRetentionPolicies DataRetentionPolicy[]
+  templateAssignments   TenantTemplateAssignment[]
 
   @@index([slug])
 }
@@ -160,20 +167,22 @@ model Sport {
 
   competitions Competition[]
   teams        Team[]
+  templates    PoolTemplate[]
 }
 
 model Competition {
-  id        String   @id @default(cuid())
-  sportId   String
-  slug      String
-  name      String
-  logoUrl   String?
-  metadata  Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  sportId     String
+  slug        String
+  name        String
+  countryCode String?
+  logoUrl     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  sport   Sport   @relation(fields: [sportId], references: [id], onDelete: Cascade)
-  seasons Season[]
+  sport     Sport                    @relation(fields: [sportId], references: [id], onDelete: Cascade)
+  seasons   Season[]
+  standings CompetitionStandings[]
 
   @@unique([sportId, slug])
 }
@@ -226,6 +235,25 @@ model TeamSeason {
   season Season @relation(fields: [seasonId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, seasonId])
+}
+
+/// Cached standings data from external sports API
+model CompetitionStandings {
+  id                    String   @id @default(cuid())
+  competitionId         String
+  seasonYear            Int
+  standingsData         Json     // Full standings response from API
+  lastFetchedAt         DateTime @default(now())
+  lastManualRefreshAt   DateTime? // Track manual refresh for rate limiting
+  lastUpdatedAt         DateTime @updatedAt
+  fetchedBy             String?  // User/worker that triggered the fetch
+  createdAt             DateTime @default(now())
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, seasonYear])
+  @@index([lastFetchedAt])
+  @@index([seasonYear])
 }
 
 model Match {
@@ -650,6 +678,60 @@ model DataRetentionPolicy {
   @@unique([tenantId, poolId])
   @@index([tenantId])
   @@index([poolId])
+}
+
+// ========================================
+// POOL TEMPLATES & PROVISIONING
+// ========================================
+
+model PoolTemplate {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  status      TemplateStatus @default(DRAFT)
+  
+  // Sport scope (for SPORT providers)
+  sportId     String?
+  sport       Sport?    @relation(fields: [sportId], references: [id], onDelete: SetNull)
+  
+  // External provider scope
+  competitionExternalId String?   // Provider competition ID (e.g., api-football)
+  seasonYear  Int?
+  stageLabel  String?
+  roundLabel  String?
+  
+  // Default configuration
+  rules       Json?     // Default scoring rules and tie-breakers
+  accessDefaults Json?  // { accessType, captchaMode, requireEmailVerification, emailDomain[], maxUsers, startAt, endAt }
+  prizesDefaults Json?  // [{ rankFrom, rankTo, type, title, value, metadata }]
+  brandHints  Json?     // Suggested themes/media (optional)
+  meta        Json?
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  assignments TenantTemplateAssignment[]
+  
+  @@index([status])
+  @@index([sportId])
+}
+
+model TenantTemplateAssignment {
+  id        String   @id @default(cuid())
+  tenantId  String
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  templateId String
+  template  PoolTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  
+  status    String   @default("QUEUED") // QUEUED|RUNNING|DONE|FAILED
+  result    Json?    // { poolId, poolSlug, imported: { teams, matches }, error? }
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId, templateId])
+  @@index([status])
 }
 
 // ========================================

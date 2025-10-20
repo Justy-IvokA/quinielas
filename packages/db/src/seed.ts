@@ -200,11 +200,11 @@ async function main() {
 
   const ivokaTheme = {
     colors: {
-      primary: "217 100% 50%", // #0062FF
-      secondary: "20 99% 60%", // #FE7734
-      background: "60 100% 99%", // #FFFEF7
-      foreground: "80 7% 11%", // #1E1F1C
-      accent: "249 85% 67%", // #7964F2
+      primary: "217 100% 50%",
+      secondary: "20 99% 60%",
+      background: "53 100% 98%",
+      foreground: "90 8% 11%",
+      accent: "248 84% 67%",
       card: "60 100% 99%",
       muted: "60 10% 95%",
       border: "60 10% 90%",
@@ -221,8 +221,15 @@ async function main() {
       popoverForeground: "80 7% 11%"
     },
     logo: {
-      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2FIvoka-Black%402x.png?alt=media&token=ca95321d-fd20-4c45-8702-6eae8c59ca39",
-      alt: "Ivoka Logo"
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/ivoka/logo/1760809403916-h3pd7f-ivoka-black-2x.png",
+      alt: "Logo Color"
+    },
+    text: {
+      title: "¡Únete Ahora!",
+      slogan: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
+      paragraph: "Imagina un lugar donde la tecnología más avanzada del mundo no es una amenaza, sino tu mejor aliada para el crecimiento. Un espacio donde no solo aprendes a manejar herramientas de inteligencia artificial, sino que, en el proceso, redescubres el poder de tu propia voz, pones en orden tus finanzas y te conviertes en una versión más plena y auténtica de ti mismo.",
+      description: "¡ Únete a esta quiniela exclusiva con código, solo nuestros mejores clientes participan, registra tus pronósticos y participa para ganar fabulosos premios !",
+      link: "ivoka.ai/eventosespeciales"
     },
     heroAssets: {
       kind: "image",
@@ -235,11 +242,11 @@ async function main() {
       autoplay: true
     },
     mainCard: {
-      kind: "none",
-      url: null,
+      kind: "video",
+      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_video_loop.mp4?alt=media&token=4b8c5e3d-9f2a-4b3e-8f3d-5e3d9f2a4b3e",
       loop: true,
       muted: true,
-      autoplay: false
+      autoplay: true
     },
     typography: {
       fontFamily: "Manrope, ui-sans-serif, system-ui",
@@ -254,7 +261,7 @@ async function main() {
     update: {
       name: "Ivoka",
       description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
-      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Ftenant01.jpg?alt=media&token=cccc06a7-6ba2-4d27-9926-ce92c387dbd5",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_color_256x256.png?alt=media&token=73d1a20d-b3bb-4373-966d-a14c2ffbb4fa",
       theme: ivokaTheme,
       domains: ["localhost", "ivoka.localhost"]
     },
@@ -263,7 +270,7 @@ async function main() {
       slug: "ivoka",
       name: "Ivoka",
       description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
-      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Ftenant01.jpg?alt=media&token=cccc06a7-6ba2-4d27-9926-ce92c387dbd5",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_color_256x256.png?alt=media&token=73d1a20d-b3bb-4373-966d-a14c2ffbb4fa",
       theme: ivokaTheme,
       domains: ["localhost", "ivoka.localhost"]
     }
@@ -277,8 +284,8 @@ async function main() {
   // Coca-Cola Brand
   const cocaColaTheme = {
     colors: {
-      primary: "0 100% 50%", // Coca-Cola Red
-      secondary: "0 0% 13%", // Dark Gray
+      primary: "0 100% 50%",
+      secondary: "0 0% 13%",
       background: "0 0% 100%",
       foreground: "0 0% 13%",
       accent: "0 100% 90%",
@@ -298,12 +305,12 @@ async function main() {
       popoverForeground: "0 0% 13%"
     },
     logo: {
-      url: "https://via.placeholder.com/256x256/FF0000/FFFFFF?text=Coca-Cola",
+      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fcocacola_color.png?alt=media&token=86999e5c-ec3e-4b27-ad81-87cea9c18c7c",
       alt: "Coca-Cola Logo"
     },
     heroAssets: {
       kind: "image",
-      url: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=1920&h=1080&fit=crop",
+      url: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&fm=jpg&q=60&w=3000",
       alt: "Coca-Cola Background",
       overlay: true,
       loop: true,
@@ -311,11 +318,11 @@ async function main() {
       autoplay: true
     },
     mainCard: {
-      kind: "none",
-      url: null,
+      kind: "video",
+      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2FIvokaWEB.mp4?alt=media&token=c6d52eda-2fd4-4fbf-9505-ccc76d4bc4eb",
       loop: true,
       muted: true,
-      autoplay: false
+      autoplay: true
     },
     typography: {
       fontFamily: "Inter, ui-sans-serif, system-ui",
@@ -330,6 +337,7 @@ async function main() {
     update: {
       name: "Coca-Cola",
       description: "The Coca-Cola Company - Refreshing the World",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_coca.webp?alt=media&token=34e02f78-84ef-4ebc-bc66-0dc1d314def8",
       theme: cocaColaTheme,
       domains: ["cocacola.localhost"]
     },
@@ -338,6 +346,7 @@ async function main() {
       slug: "cocacola",
       name: "Coca-Cola",
       description: "The Coca-Cola Company - Refreshing the World",
+      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_coca.webp?alt=media&token=34e02f78-84ef-4ebc-bc66-0dc1d314def8",
       theme: cocaColaTheme,
       domains: ["cocacola.localhost"]
     }
@@ -487,170 +496,8 @@ async function main() {
     redbull: "redbull.localhost:3000"
   });
 
-  const sport = await prisma.sport.upsert({
-    where: { slug: "football" },
-    update: { name: "Football" },
-    create: { slug: "football", name: "Football" }
-  });
-
-  const competition = await prisma.competition.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "liga-mx" } },
-    update: {
-      name: "Liga MX",
-      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2FligaMX-logo.png?alt=media&token=f380f212-c5e0-4f74-9577-f05c7c6a8e8f",
-      metadata: { organizer: "Federación Mexicana de Futbol (FMF)" }
-    },
-    create: {
-      sportId: sport.id,
-      slug: "liga-mx",
-      name: "Liga MX",
-      logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2FligaMX-logo.png?alt=media&token=f380f212-c5e0-4f74-9577-f05c7c6a8e8f",
-      metadata: { organizer: "Federación Mexicana de Futbol (FMF)" }
-    }
-  });
-
-  const season = await prisma.season.upsert({
-    where: { competitionId_year: { competitionId: competition.id, year: 2025 } },
-    update: {
-      name: "Liga MX 2025"
-    },
-    create: {
-      competitionId: competition.id,
-      name: "Liga MX 2025",
-      year: 2025,
-      startsAt: new Date("2025-10-17T00:00:00.000Z"),
-      endsAt: new Date("2025-10-19T23:59:59.000Z")
-    }
-  });
-
-  const pool = await prisma.pool.upsert({
-    where: { tenantId_slug: { tenantId: tenant.id, slug: "liga-mx-13" } },
-    update: {
-      name: "Liga MX 2025 Quiniela | Jornada 13",
-      prizeSummary: "¡Los que tengan más aciertos ganarán!",
-      ruleSet: {
-        exactScore: 5,
-        correctSign: 3,
-        goalDiffBonus: 1
-      }
-    },
-    create: {
-      tenantId: tenant.id,
-      brandId: brand.id,
-      seasonId: season.id,
-      slug: "liga-mx-13",
-      name: "Liga MX 2025 Quiniela | Jornada 13",
-      description: "Quiniela para la jornada 13 de la Liga MX 2025",
-      prizeSummary: "¡Los que tengan más aciertos ganarán!",
-      ruleSet: {
-        exactScore: 5,
-        correctSign: 3,
-        goalDiffBonus: 1
-      }
-    }
-  });
-
-  await prisma.accessPolicy.upsert({
-    where: { poolId: pool.id },
-    update: {
-      accessType: AccessType.PUBLIC,
-      domainAllowList: ["localhost"],
-      requireCaptcha: false,
-      requireEmailVerification: false
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      accessType: AccessType.PUBLIC,
-      domainAllowList: ["localhost"],
-      requireCaptcha: false,
-      requireEmailVerification: false
-    }
-  });
-
   // ========================================
-  // 3. EXTERNAL SOURCE & MAPPINGS
-  // ========================================
-  console.log("🔗 Creating external source and mappings...");
-
-  const externalSource = await prisma.externalSource.upsert({
-    where: { slug: "api-football" },
-    update: {
-      name: "API-Football"
-    },
-    create: {
-      slug: "api-football",
-      name: "API-Football"
-    }
-  });
-
-  // Map Competition to API-Football
-  // Liga MX = League ID 262 in API-Football
-  await prisma.externalMap.upsert({
-    where: {
-      sourceId_entityType_externalId: {
-        sourceId: externalSource.id,
-        entityType: "competition",
-        externalId: "262" // API-Football Liga MX ID
-      }
-    },
-    update: {
-      entityId: competition.id,
-      metadata: {
-        name: "Liga MX",
-        type: "League",
-        country: "Mexico"
-      }
-    },
-    create: {
-      sourceId: externalSource.id,
-      entityType: "competition",
-      entityId: competition.id,
-      externalId: "262",
-      metadata: {
-        name: "Liga MX",
-        type: "League",
-        country: "Mexico"
-      }
-    }
-  });
-
-  // Map Season to API-Football
-  await prisma.externalMap.upsert({
-    where: {
-      sourceId_entityType_externalId: {
-        sourceId: externalSource.id,
-        entityType: "season",
-        externalId: "2025" // API-Football season year
-      }
-    },
-    update: {
-      entityId: season.id,
-      metadata: {
-        year: 2025,
-        current: true
-      }
-    },
-    create: {
-      sourceId: externalSource.id,
-      entityType: "season",
-      entityId: season.id,
-      externalId: "2025",
-      metadata: {
-        year: 2025,
-        current: true
-      }
-    }
-  });
-
-  console.log("✅ External mappings created:", {
-    source: externalSource.slug,
-    competition: "Liga MX → ID 262",
-    season: "2025 → ID 2025"
-  });
-
-  // ========================================
-  // 4. IVOKA USERS
+  // 3. IVOKA USERS
   // ========================================
   console.log("👥 Creating Ivoka users...");
 
@@ -703,7 +550,7 @@ async function main() {
   });
 
   // ========================================
-  // 5. TENANT MEMBERSHIPS
+  // 4. TENANT MEMBERSHIPS
   // ========================================
   console.log("🔐 Creating tenant memberships...");
 
@@ -734,874 +581,6 @@ async function main() {
   });
 
   // ========================================
-  // 6. LIGA MX TEAMS
-  // ========================================
-  console.log("⚽ Creating Liga MX teams...");
-
-  const teamGuadalajara = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "guadalajara-chivas" } },
-    update: {
-      name: "Guadalajara Chivas",
-      shortName: "GUA",
-      logoUrl: "https://media.api-sports.io/football/teams/2278.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "guadalajara-chivas",
-      name: "Guadalajara Chivas",
-      shortName: "GUA",
-      logoUrl: "https://media.api-sports.io/football/teams/2278.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamTigres = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "tigres-uanl" } },
-    update: {
-      name: "Tigres UANL",
-      shortName: "UAN",
-      logoUrl: "https://media.api-sports.io/football/teams/2279.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "tigres-uanl",
-      name: "Tigres UANL",
-      shortName: "UAN",
-      logoUrl: "https://media.api-sports.io/football/teams/2279.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamTijuana = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "club-tijuana" } },
-    update: {
-      name: "Club Tijuana",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2280.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "club-tijuana",
-      name: "Club Tijuana",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2280.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamToluca = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "toluca" } },
-    update: {
-      name: "Toluca",
-      shortName: "TOL",
-      logoUrl: "https://media.api-sports.io/football/teams/2281.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "toluca",
-      name: "Toluca",
-      shortName: "TOL",
-      logoUrl: "https://media.api-sports.io/football/teams/2281.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamMonterrey = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "monterrey" } },
-    update: {
-      name: "Monterrey",
-      shortName: "MON",
-      logoUrl: "https://media.api-sports.io/football/teams/2282.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "monterrey",
-      name: "Monterrey",
-      shortName: "MON",
-      logoUrl: "https://media.api-sports.io/football/teams/2282.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamAtlas = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "atlas" } },
-    update: {
-      name: "Atlas",
-      shortName: "ATL",
-      logoUrl: "https://media.api-sports.io/football/teams/2283.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "atlas",
-      name: "Atlas",
-      shortName: "ATL",
-      logoUrl: "https://media.api-sports.io/football/teams/2283.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamSantos = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "santos-laguna" } },
-    update: {
-      name: "Santos Laguna",
-      shortName: "SAN",
-      logoUrl: "https://media.api-sports.io/football/teams/2285.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "santos-laguna",
-      name: "Santos Laguna",
-      shortName: "SAN",
-      logoUrl: "https://media.api-sports.io/football/teams/2285.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamPumas = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "u.n.a.m.---pumas" } },
-    update: {
-      name: "U.N.A.M. - Pumas",
-      shortName: "UNA",
-      logoUrl: "https://media.api-sports.io/football/teams/2286.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "u.n.a.m.---pumas",
-      name: "U.N.A.M. - Pumas",
-      shortName: "UNA",
-      logoUrl: "https://media.api-sports.io/football/teams/2286.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamAmerica = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "club-america" } },
-    update: {
-      name: "Club America",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2287.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "club-america",
-      name: "Club America",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2287.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamNecaxa = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "necaxa" } },
-    update: {
-      name: "Necaxa",
-      shortName: "NEC",
-      logoUrl: "https://media.api-sports.io/football/teams/2288.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "necaxa",
-      name: "Necaxa",
-      shortName: "NEC",
-      logoUrl: "https://media.api-sports.io/football/teams/2288.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamLeon = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "leon" } },
-    update: {
-      name: "Leon",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2289.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "leon",
-      name: "Leon",
-      shortName: "CLU",
-      logoUrl: "https://media.api-sports.io/football/teams/2289.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamQueretaro = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "club-queretaro" } },
-    update: {
-      name: "Club Queretaro",
-      shortName: "QUE",
-      logoUrl: "https://media.api-sports.io/football/teams/2290.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "club-queretaro",
-      name: "Club Queretaro",
-      shortName: "QUE",
-      logoUrl: "https://media.api-sports.io/football/teams/2290.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamPuebla = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "puebla" } },
-    update: {
-      name: "Puebla",
-      shortName: "PUE",
-      logoUrl: "https://media.api-sports.io/football/teams/2291.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "puebla",
-      name: "Puebla",
-      shortName: "PUE",
-      logoUrl: "https://media.api-sports.io/football/teams/2291.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamPachuca = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "pachuca" } },
-    update: {
-      name: "Pachuca",
-      shortName: "PAC",
-      logoUrl: "https://media.api-sports.io/football/teams/2292.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "pachuca",
-      name: "Pachuca",
-      shortName: "PAC",
-      logoUrl: "https://media.api-sports.io/football/teams/2292.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamCruzAzul = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "cruz-azul" } },
-    update: {
-      name: "Cruz Azul",
-      shortName: "CRU",
-      logoUrl: "https://media.api-sports.io/football/teams/2295.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "cruz-azul",
-      name: "Cruz Azul",
-      shortName: "CRU",
-      logoUrl: "https://media.api-sports.io/football/teams/2295.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamJuarez = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "fc-juarez" } },
-    update: {
-      name: "FC Juarez",
-      shortName: "FC ",
-      logoUrl: "https://media.api-sports.io/football/teams/2298.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "fc-juarez",
-      name: "FC Juarez",
-      shortName: "FC ",
-      logoUrl: "https://media.api-sports.io/football/teams/2298.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamSanLuis = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "atletico-san-luis" } },
-    update: {
-      name: "Atletico San Luis",
-      shortName: "ASL",
-      logoUrl: "https://media.api-sports.io/football/teams/2314.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "atletico-san-luis",
-      name: "Atletico San Luis",
-      shortName: "ASL",
-      logoUrl: "https://media.api-sports.io/football/teams/2314.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  const teamMazatlan = await prisma.team.upsert({
-    where: { sportId_slug: { sportId: sport.id, slug: "mazatlán" } },
-    update: {
-      name: "Mazatlán",
-      shortName: "MAZ",
-      logoUrl: "https://media.api-sports.io/football/teams/14002.png",
-      countryCode: "Mexico"
-    },
-    create: {
-      sportId: sport.id,
-      slug: "mazatlán",
-      name: "Mazatlán",
-      shortName: "MAZ",
-      logoUrl: "https://media.api-sports.io/football/teams/14002.png",
-      countryCode: "Mexico"
-    }
-  });
-
-  // ========================================
-  // 7. LINK TEAMS TO SEASON
-  // ========================================
-  console.log("🔗 Linking teams to season...");
-
-  const ligaMxTeams = [
-    teamGuadalajara, teamTigres, teamTijuana, teamToluca, teamMonterrey,
-    teamAtlas, teamSantos, teamPumas, teamAmerica, teamNecaxa,
-    teamLeon, teamQueretaro, teamPuebla, teamPachuca, teamCruzAzul,
-    teamJuarez, teamSanLuis, teamMazatlan
-  ];
-
-  for (const team of ligaMxTeams) {
-    await prisma.teamSeason.upsert({
-      where: { teamId_seasonId: { teamId: team.id, seasonId: season.id } },
-      update: {},
-      create: { teamId: team.id, seasonId: season.id }
-    });
-  }
-
-  // ========================================
-  // 8. LIGA MX JORNADA 13 MATCHES
-  // ========================================
-  console.log("🏟️  Creating Liga MX Jornada 13 matches...");
-
-  const match1 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamPuebla.id,
-        awayTeamId: teamTijuana.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T01:00:00.000Z"),
-      venue: "Estadio Cuauhtémoc",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamPuebla.id,
-      awayTeamId: teamTijuana.id,
-      kickoffTime: new Date("2025-10-18T01:00:00.000Z"),
-      venue: "Estadio Cuauhtémoc",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match2 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamTigres.id,
-        awayTeamId: teamNecaxa.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T03:00:00.000Z"),
-      venue: "Estadio Universitario",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamTigres.id,
-      awayTeamId: teamNecaxa.id,
-      kickoffTime: new Date("2025-10-18T03:00:00.000Z"),
-      venue: "Estadio Universitario",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match3 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamSanLuis.id,
-        awayTeamId: teamAtlas.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T03:00:00.000Z"),
-      venue: "Estadio Alfonso Lastras Ramírez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamSanLuis.id,
-      awayTeamId: teamAtlas.id,
-      kickoffTime: new Date("2025-10-18T03:00:00.000Z"),
-      venue: "Estadio Alfonso Lastras Ramírez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match4 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamToluca.id,
-        awayTeamId: teamQueretaro.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Nemesio Díez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamToluca.id,
-      awayTeamId: teamQueretaro.id,
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Nemesio Díez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match5 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamSantos.id,
-        awayTeamId: teamLeon.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Corona",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamSantos.id,
-      awayTeamId: teamLeon.id,
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Corona",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match6 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamJuarez.id,
-        awayTeamId: teamPachuca.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Olímpico Benito Juárez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamJuarez.id,
-      awayTeamId: teamPachuca.id,
-      kickoffTime: new Date("2025-10-18T23:00:00.000Z"),
-      venue: "Estadio Olímpico Benito Juárez",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match7 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamMonterrey.id,
-        awayTeamId: teamPumas.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-19T01:00:00.000Z"),
-      venue: "Estadio BBVA",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamMonterrey.id,
-      awayTeamId: teamPumas.id,
-      kickoffTime: new Date("2025-10-19T01:00:00.000Z"),
-      venue: "Estadio BBVA",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match8 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamGuadalajara.id,
-        awayTeamId: teamMazatlan.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-19T01:07:00.000Z"),
-      venue: "Estadio AKRON",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamGuadalajara.id,
-      awayTeamId: teamMazatlan.id,
-      kickoffTime: new Date("2025-10-19T01:07:00.000Z"),
-      venue: "Estadio AKRON",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  const match9 = await prisma.match.upsert({
-    where: {
-      seasonId_round_homeTeamId_awayTeamId: {
-        seasonId: season.id,
-        round: 13,
-        homeTeamId: teamCruzAzul.id,
-        awayTeamId: teamAmerica.id
-      }
-    },
-    update: {
-      kickoffTime: new Date("2025-10-19T03:05:00.000Z"),
-      venue: "Estadio Olímpico Universitario",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    },
-    create: {
-      seasonId: season.id,
-      round: 13,
-      matchday: null,
-      homeTeamId: teamCruzAzul.id,
-      awayTeamId: teamAmerica.id,
-      kickoffTime: new Date("2025-10-19T03:05:00.000Z"),
-      venue: "Estadio Olímpico Universitario",
-      status: MatchStatus.SCHEDULED,
-      locked: false
-    }
-  });
-
-  // ========================================
-  // 9. PRIZES
-  // ========================================
-  console.log("🏆 Creating prizes...");
-
-  // First Place - Rank 1
-  await prisma.prize.upsert({
-    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 1, rankTo: 1 } },
-    update: {
-      type: PrizeType.CASH,
-      title: "Primer Lugar",
-      description: "Ganador del pool Mundial 2026",
-      value: "$10,000 MXN",
-      imageUrl: "/prizes/gold-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 10000,
-        paymentMethod: "transfer"
-      }
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      rankFrom: 1,
-      rankTo: 1,
-      type: PrizeType.CASH,
-      title: "Primer Lugar",
-      description: "Ganador del pool Mundial 2026",
-      value: "$10,000 MXN",
-      imageUrl: "/prizes/gold-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 10000,
-        paymentMethod: "transfer"
-      }
-    }
-  });
-
-  // Second Place - Rank 2
-  await prisma.prize.upsert({
-    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 2, rankTo: 2 } },
-    update: {
-      type: PrizeType.CASH,
-      title: "Segundo Lugar",
-      description: "Subcampeón del pool",
-      value: "$5,000 MXN",
-      imageUrl: "/prizes/silver-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 5000,
-        paymentMethod: "transfer"
-      }
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      rankFrom: 2,
-      rankTo: 2,
-      type: PrizeType.CASH,
-      title: "Segundo Lugar",
-      description: "Subcampeón del pool",
-      value: "$5,000 MXN",
-      imageUrl: "/prizes/silver-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 5000,
-        paymentMethod: "transfer"
-      }
-    }
-  });
-
-  // Third Place - Rank 3
-  await prisma.prize.upsert({
-    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 3, rankTo: 3 } },
-    update: {
-      type: PrizeType.CASH,
-      title: "Tercer Lugar",
-      description: "Tercer mejor predictor",
-      value: "$2,500 MXN",
-      imageUrl: "/prizes/bronze-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 2500,
-        paymentMethod: "transfer"
-      }
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      rankFrom: 3,
-      rankTo: 3,
-      type: PrizeType.CASH,
-      title: "Tercer Lugar",
-      description: "Tercer mejor predictor",
-      value: "$2,500 MXN",
-      imageUrl: "/prizes/bronze-trophy.png",
-      metadata: {
-        currency: "MXN",
-        amount: 2500,
-        paymentMethod: "transfer"
-      }
-    }
-  });
-
-  // Top 10 - Ranks 4-10 (Range prize example)
-  await prisma.prize.upsert({
-    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 4, rankTo: 10 } },
-    update: {
-      type: PrizeType.DISCOUNT,
-      title: "Top 10",
-      description: "Descuento especial para próxima quiniela",
-      value: "50% OFF",
-      metadata: {
-        discountPercent: 50,
-        validFor: "next-pool",
-        expiresInDays: 90
-      }
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      rankFrom: 4,
-      rankTo: 10,
-      type: PrizeType.DISCOUNT,
-      title: "Top 10",
-      description: "Descuento especial para próxima quiniela",
-      value: "50% OFF",
-      metadata: {
-        discountPercent: 50,
-        validFor: "next-pool",
-        expiresInDays: 90
-      }
-    }
-  });
-
-  // Participation Prize - Ranks 11-50 (Experience prize example)
-  await prisma.prize.upsert({
-    where: { poolId_rankFrom_rankTo: { poolId: pool.id, rankFrom: 11, rankTo: 50 } },
-    update: {
-      type: PrizeType.EXPERIENCE,
-      title: "Reconocimiento Participación",
-      description: "Acceso exclusivo a evento de cierre",
-      value: "Evento Virtual",
-      metadata: {
-        eventType: "virtual",
-        eventDate: "2026-07-22",
-        includesRecording: true
-      }
-    },
-    create: {
-      poolId: pool.id,
-      tenantId: tenant.id,
-      rankFrom: 11,
-      rankTo: 50,
-      type: PrizeType.EXPERIENCE,
-      title: "Reconocimiento Participación",
-      description: "Acceso exclusivo a evento de cierre",
-      value: "Evento Virtual",
-      metadata: {
-        eventType: "virtual",
-        eventDate: "2026-07-22",
-        includesRecording: true
-      }
-    }
-  });
-
-  // ========================================
-  // 10. REGISTRATIONS
-  // ========================================
-  console.log("📝 Creating registrations...");
-
-  await prisma.registration.upsert({
-    where: { userId_poolId: { userId: demoUser1.id, poolId: pool.id } },
-    update: {
-      displayName: "Angelica Osorio",
-      email: demoUser1.email,
-      emailVerified: true,
-      phone: "+522225102025",
-      phoneVerified: true
-    },
-    create: {
-      userId: demoUser1.id,
-      poolId: pool.id,
-      tenantId: tenant.id,
-      displayName: "Angelica Osorio",
-      email: demoUser1.email,
-      emailVerified: true,
-      phone: "+522225102025",
-      phoneVerified: true
-    }
-  });
-
-  await prisma.registration.upsert({
-    where: { userId_poolId: { userId: demoUser2.id, poolId: pool.id } },
-    update: {
-      displayName: "Sergio Sánchez",
-      email: demoUser2.email,
-      emailVerified: true,
-      phone: "+522227690231",
-      phoneVerified: true
-    },
-    create: {
-      userId: demoUser2.id,
-      poolId: pool.id,
-      tenantId: tenant.id,
-      displayName: "Sergio Sánchez",
-      email: demoUser2.email,
-      emailVerified: true,
-      phone: "+522227690231",
-      phoneVerified: true
-    }
-  });
-
-  // ========================================
-  // 11. PREDICTIONS
-  // ========================================
-  console.log("🎯 Creating sample predictions...");
-
-  await prisma.prediction.upsert({
-    where: {
-      matchId_poolId_userId: {
-        matchId: match1.id,
-        poolId: pool.id,
-        userId: demoUser1.id
-      }
-    },
-    update: {
-      homeScore: 2,
-      awayScore: 1
-    },
-    create: {
-      matchId: match1.id,
-      poolId: pool.id,
-      userId: demoUser1.id,
-      tenantId: tenant.id,
-      homeScore: 2,
-      awayScore: 1
-    }
-  });
-
-  await prisma.prediction.upsert({
-    where: {
-      matchId_poolId_userId: {
-        matchId: match1.id,
-        poolId: pool.id,
-        userId: demoUser2.id
-      }
-    },
-    update: {
-      homeScore: 1,
-      awayScore: 1
-    },
-    create: {
-      matchId: match1.id,
-      poolId: pool.id,
-      userId: demoUser2.id,
-      tenantId: tenant.id,
-      homeScore: 1,
-      awayScore: 1
-    }
-  });
-
-  // ========================================
   // SUMMARY
   // ========================================
   console.log("\n" + "=".repeat(60));
@@ -1623,24 +602,15 @@ async function main() {
   console.log("\n📦 Ivoka Tenant:");
   console.log(`   Tenant: ${tenant.slug}`);
   console.log(`   Brand: ${brand.slug}`);
-  console.log(`   Pool: ${pool.slug}`);
-  console.log(`   Season: ${competition.slug}-${season.year}`);
   console.log("\n👥 Users:");
   console.log(`   - vemancera@ivoka.ai (TENANT_ADMIN in ivoka tenant)`);
   console.log(`   - chronos.devs@gmail.com (PLAYER - Angelica Osorio)`);
   console.log(`   - sergio.sanchez@ivoka.ai (PLAYER - Sergio Sánchez)`);
-  console.log("\n⚽ Data:");
-  console.log(`   Competition: Liga MX`);
-  console.log(`   Season: Liga MX 2025`);
-  console.log(`   Teams: 18 (All Liga MX teams)`);
-  console.log(`   Matches: 9 (Jornada 13)`);
-  console.log(`   Prizes: 4 (Rank 1, 2, 3, 4-10, 11-50)`);
-  console.log(`   Registrations: 2`);
-  console.log(`   Predictions: 2`);
-  console.log("\n🔗 External Mappings:");
-  console.log(`   Source: ${externalSource.slug}`);
-  console.log(`   Competition: Liga MX → API-Football ID 262`);
-  console.log(`   Season: 2025 → API-Football ID 2025`);
+  console.log("\n🎨 Demo Brands:");
+  console.log(`   - Ivoka: ivoka.localhost:3000 or localhost:3000`);
+  console.log(`   - Coca-Cola: cocacola.localhost:3000`);
+  console.log(`   - Pepsi: pepsi.localhost:3000`);
+  console.log(`   - Red Bull: redbull.localhost:3000`);
 
   // ========================================
   // GLOBAL SETTINGS (COMPLIANCE)
@@ -1709,7 +679,8 @@ async function main() {
   console.log(`   2. Set AUTH_SECRET in .env (min 32 chars)`);
   console.log(`   3. Configure email provider or OAuth in .env`);
   console.log(`   4. Start admin app and sign in as SUPERADMIN`);
-  console.log(`   5. Access pool at: http://localhost:3000/ivoka/liga-mx-13`);
+  console.log(`   5. Create pools using the Pool Wizard in admin panel`);
+  console.log(`   6. Pools will automatically fetch data from API-Sports`);
   console.log("\n" + "=".repeat(60) + "\n");
 }
 

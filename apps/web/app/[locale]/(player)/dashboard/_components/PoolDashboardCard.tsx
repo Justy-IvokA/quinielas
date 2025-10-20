@@ -47,7 +47,7 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
             />
           )}
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-bold truncate">{pool.title}</h3>
+            <h3 className="text-primary font-bold truncate">{pool.title}</h3>
             <p className="text-white/60 text-sm truncate">{pool.seasonLabel}</p>
           </div>
         </div>
@@ -60,7 +60,7 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
           <div className="flex items-center gap-2 text-white/80">
             <Calendar className="w-4 h-4 text-primary" />
             <div className="flex-1">
-              <p className="text-xs text-white/60">{t("card.nextMatch")}</p>
+              <p className="text-xs text-primary">{t("card.nextMatch")}</p>
               <p className="text-sm font-medium">
                 {format(nextKickoffDate, "d MMM, HH:mm", { locale: es })}
               </p>

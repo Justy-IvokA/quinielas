@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Loader2, AlertCircle, Trophy, Calendar, TrendingUp } from "lucide-react";
+import { Trophy, Calendar, AlertCircle, TrendingUp } from "lucide-react";
+import { SportsLoader } from "@qp/ui";
 import type { Tenant, Brand } from "@qp/db";
 import { Button, Alert, AlertDescription } from "@qp/ui";
 import { trpc } from "@web/trpc";
@@ -71,10 +72,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
         </div>
 
         <div className="flex items-center justify-center py-20">
-          <div className="text-center">
-            <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-white/70">{tCommon("loading")}</p>
-          </div>
+          <SportsLoader size="lg" text={tCommon("loading")} />
         </div>
       </div>
     );
@@ -83,7 +81,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
   // Error state
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">{t("title")}</h1>
           <p className="text-white/70">{t("subtitle")}</p>
@@ -113,7 +111,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
 
   if (hasNoPools) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
         <div className="mb-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
           <h1 className="text-primary/80 text-4xl font-bold mb-2">{t("title")}</h1>
           <p className="text-primary/70">{t("subtitle")}</p>
@@ -137,9 +135,9 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       {/* Header aqui */}
-      <header className="mb-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+      <header className="mb-8">
         <div className="flex items-center gap-1">
           <BackButton />
           <div className="flex flex-col gap-0">
@@ -188,7 +186,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
           <div className="flex items-center gap-3">
             <Trophy className="w-8 h-8 text-primary" />
             <div>
-              <p className="text-white/70 text-sm">{t("stats.activePools")}</p>
+              <p className="text-primary text-sm">{t("stats.activePools")}</p>
               <p className="text-2xl font-bold text-white">{activePools.length}</p>
             </div>
           </div>
@@ -198,7 +196,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
           <div className="flex items-center gap-3">
             <Calendar className="w-8 h-8 text-primary" />
             <div>
-              <p className="text-white/70 text-sm">{t("stats.upcomingMatches")}</p>
+              <p className="text-primary text-sm">{t("stats.upcomingMatches")}</p>
               <p className="text-2xl font-bold text-white">
                 {activePools.filter((p) => p.nextKickoff).length}
               </p>
@@ -210,7 +208,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
           <div className="flex items-center gap-3">
             <TrendingUp className="w-8 h-8 text-primary" />
             <div>
-              <p className="text-white/70 text-sm">{t("stats.totalParticipants")}</p>
+              <p className="text-primary text-sm">{t("stats.totalParticipants")}</p>
               <p className="text-2xl font-bold text-white">
                 {activePools.reduce((sum, p) => sum + p.participantCount, 0)}
               </p>

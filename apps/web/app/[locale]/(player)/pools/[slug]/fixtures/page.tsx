@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import { redirect, notFound } from "next/navigation";
 import { headers } from "next/headers";
@@ -7,6 +8,7 @@ import { authConfig } from "@qp/api/context";
 import { resolveTenantAndBrandFromHost } from "@qp/api/lib/host-tenant";
 import { getServerAuthSession } from "@qp/auth";
 import { prisma } from "@qp/db";
+import { SportsLoader } from "@qp/ui";
 
 import { FixturesView } from "./_components/FixturesView";
 
@@ -71,6 +73,7 @@ export default async function FixturesPage({ params, searchParams }: FixturesPag
           year: true,
           competition: {
             select: {
+              id: true,
               name: true,
               logoUrl: true
             }
@@ -107,11 +110,21 @@ export default async function FixturesPage({ params, searchParams }: FixturesPag
   const filter = (search.filter?.toUpperCase() as "ALL" | "PENDING" | "LIVE" | "FINISHED") || "ALL";
 
   return (
-    <FixturesView
-      locale={locale}
-      pool={pool}
-      userId={session.user.id}
-      initialFilter={filter}
-    />
+    <Suspense
+      fallback={
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-center py-20">
+            <SportsLoader size="lg" text="Cargando partidos..." />
+          </div>
+        </div>
+      }
+    >
+      <FixturesView
+        locale={locale}
+        pool={pool}
+        userId={session.user.id}
+        initialFilter={filter}
+      />
+    </Suspense>
   );
 }

@@ -75,8 +75,8 @@ export function SyncDashboard() {
           onClick={() => refetchStats()}
           variant="outline"
           size="sm"
+          StartIcon={RefreshCw}
         >
-          <RefreshCw className="mr-2 h-4 w-4" />
           Actualizar
         </Button>
       </div>
@@ -193,8 +193,8 @@ export function SyncDashboard() {
                         size="sm"
                         onClick={() => handleClearCache()}
                         disabled={clearCacheMutation.isPending}
+                        StartIcon={Trash2}
                       >
-                        <Trash2 className="mr-2 h-3 w-3" />
                         Limpiar
                       </Button>
                     </div>
@@ -338,8 +338,8 @@ export function SyncDashboard() {
                             size="sm"
                             onClick={() => handleClearCache(source.slug)}
                             disabled={clearCacheMutation.isPending}
+                            StartIcon={Trash2}
                           >
-                            <Trash2 className="mr-2 h-3 w-3" />
                             Limpiar caché
                           </Button>
                         </TableCell>

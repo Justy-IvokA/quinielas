@@ -36,6 +36,10 @@ export interface FixturePreviewDTO {
     round?: string;
     stage?: string;
   }>;
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
 }
 
 /**

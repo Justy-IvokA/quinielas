@@ -22,6 +22,9 @@ import { consentRouter } from "./consent";
 import { auditRouter } from "./audit";
 import { brandingRouter } from "./branding";
 import { userPoolsRouter } from "./userPools";
+import { externalMapsRouter } from "./external-maps";
+import { superadminRouter } from "./superadmin";
+import { standingsRouter } from "./standings";
 
 export const appRouter = router({
   health: healthProcedure,
@@ -47,9 +50,25 @@ export const appRouter = router({
   audit: auditRouter,
   branding: brandingRouter,
   userPools: userPoolsRouter,
+  externalMaps: externalMapsRouter,
+  superadmin: superadminRouter,
+  standings: standingsRouter,
 });
 
 export type AppRouter = typeof appRouter;
 
 // Export for server-side usage
 export { createContext } from "../context";
+
+// Export pool wizard types
+export type {
+  ListCompetitionsInput,
+  ListSeasonsInput,
+  ListStagesInput,
+  PreviewFixturesInput,
+  PoolDetailsInput,
+  AccessPolicyInput,
+  PrizeInput,
+  CreateAndImportInput,
+  WizardState
+} from "./pool-wizard/schema";

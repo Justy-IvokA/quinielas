@@ -14,7 +14,7 @@ export function BrandThemeInjector({ brandTheme }: BrandThemeInjectorProps) {
       return;
     }
 
-    console.log("[BrandThemeInjector] Applying brand theme:", brandTheme);
+    // console.log("[BrandThemeInjector] Applying brand theme:", brandTheme);
 
     // Check if style tag already exists
     let styleTag = document.getElementById("brand-theme-dynamic");
@@ -71,8 +71,8 @@ export function BrandThemeInjector({ brandTheme }: BrandThemeInjectorProps) {
     const css = applyBrandTheme(resolvedTheme);
     styleTag.textContent = css;
     
-    console.log("[BrandThemeInjector] Theme CSS applied successfully");
-    console.log("[BrandThemeInjector] Resolved theme:", resolvedTheme);
+    // console.log("[BrandThemeInjector] Theme CSS applied successfully");
+    // console.log("[BrandThemeInjector] Resolved theme:", resolvedTheme);
   }, [brandTheme]);
 
   return null; // This component doesn't render anything

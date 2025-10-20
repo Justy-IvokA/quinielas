@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Loader2, Save } from "lucide-react";
+import { Save, Lock, Unlock } from "lucide-react";
+import { InlineLoader } from "@qp/ui";
 import { Button, Input, Label } from "@qp/ui";
 import { trpc } from "@web/trpc";
 import { toast } from "sonner";
@@ -136,7 +137,7 @@ export function PredictionForm({
           type="submit"
           disabled={!isDirty || saveMutation.isPending}
           className="flex-1 bg-primary hover:bg-primary/90"
-          StartIcon={saveMutation.isPending ? Loader2 : Save}
+          StartIcon={saveMutation.isPending ? InlineLoader : Save}
         >
           {saveMutation.isPending ? (
             <>

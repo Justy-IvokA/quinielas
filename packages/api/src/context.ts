@@ -55,7 +55,12 @@ async function resolveTenantAndBrand(req?: Request): Promise<{
     const url = new URL(req.url);
     const { resolveTenantAndBrandFromHost } = await import("./lib/host-tenant");
     
-    const result = await resolveTenantAndBrandFromHost(url.hostname, url.pathname);
+    // Use Host header if available (more reliable than URL hostname in Next.js)
+    const hostHeader = req.headers.get('host') || req.headers.get('x-forwarded-host');
+    // Remove port from hostname if present (e.g., "ivoka.localhost:3001" -> "ivoka.localhost")
+    const hostname = hostHeader ? hostHeader.split(':')[0] : url.hostname;
+    
+    const result = await resolveTenantAndBrandFromHost(hostname, url.pathname);
     
     return {
       tenant: result.tenant,

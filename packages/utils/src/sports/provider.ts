@@ -50,6 +50,17 @@ export interface SportsProvider {
   fetchSeason(params: { competitionExternalId: string; year: number }): Promise<SeasonDTO>;
 
   /**
+   * Fetch season data filtered by stage and/or round
+   * More efficient than fetchSeason + client-side filtering
+   */
+  fetchSeasonRound(params: { 
+    competitionExternalId: string; 
+    year: number;
+    stageLabel?: string;
+    roundLabel?: string;
+  }): Promise<SeasonDTO>;
+
+  /**
    * Fetch results for specific matches
    */
   fetchResults(params: { matchExternalIds: string[] }): Promise<ResultDTO[]>;

@@ -37,10 +37,11 @@ export function createEmailBrandInfo(params: {
     muted: string;
     border: string;
   };
+  themeLogoUrl?: string | null;
 }): EmailBrandInfo {
   return {
     name: params.name,
-    logoUrl: params.logoUrl ?? undefined,
+    logoUrl: params.themeLogoUrl ?? params.logoUrl ?? undefined,
     colors: brandThemeToEmailColors(params.colors),
   };
 }

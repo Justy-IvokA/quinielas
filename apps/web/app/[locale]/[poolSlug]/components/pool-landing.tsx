@@ -52,7 +52,7 @@ export function PoolLanding({ pool, isExpired, tenant, brand }: PoolLandingProps
     if (isExpired) {
       return (
         <div className="flex flex-col gap-4">
-          <Link href={`/pool/${pool.slug}/participants`}>
+          <Link href={`/pools/${pool.slug}/participants`}>
             <Button size="lg" className="w-full bg-white/90 hover:bg-white text-black">
               {t("actions.viewFinalLeaderboard")}
             </Button>
@@ -73,12 +73,12 @@ export function PoolLanding({ pool, isExpired, tenant, brand }: PoolLandingProps
       return (
         <div className="flex flex-col gap-4">
           <div className="flex gap-3">
-            <Link href={`/pool/${pool.slug}/predict`} className="flex-1">
+            <Link href={`/pools/${pool.slug}/fixtures`} className="flex-1">
               <Button size="lg" className="w-full hover:bg-primary/60 hover:text-black">
                 {t("actions.makePredictions")}
               </Button>
             </Link>
-            <Link href={`/pool/${pool.slug}/participants`} className="flex-1">
+            <Link href={`/pools/${pool.slug}/participants`} className="flex-1">
               <Button size="lg" className="w-full bg-secondary hover:bg-secondary/60 hover:text-black border-secondary">
                 {t("actions.viewLeaderboard")}
               </Button>
@@ -91,9 +91,14 @@ export function PoolLanding({ pool, isExpired, tenant, brand }: PoolLandingProps
     // Not registered or not logged in
     const accessType = pool.accessPolicy?.accessType || "PUBLIC";
     
+    // If logged in, go to registration page; otherwise go to signin
+    const registrationUrl = session 
+      ? `/auth/register/${pool.slug}`
+      : `/auth/signin?callbackUrl=${encodeURIComponent(`/auth/register/${pool.slug}`)}`;
+    
     return (
       <div className="flex flex-col gap-4">
-        <Link href={`/auth/signin?callbackUrl=${encodeURIComponent(`/pools/${pool.slug}`)}`}>
+        <Link href={registrationUrl}>
           <Button size="lg" className="w-full bg-white/90 hover:bg-white text-black">
             {accessType === "PUBLIC" 
               ? t("actions.joinNow")

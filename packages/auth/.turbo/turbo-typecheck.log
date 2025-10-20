@@ -2,6 +2,8 @@
 > @qp/auth@0.0.1 typecheck C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth
 > tsc --noEmit
 
-src/config.ts(5,15): error TS2614: Module '"next-auth/providers/email"' has no exported member 'SendVerificationRequestParams'. Did you mean to use 'import SendVerificationRequestParams from "next-auth/providers/email"' instead?
-src/config.ts(8,33): error TS2307: Cannot find module 'nodemailer' or its corresponding type declarations.
+src/config.ts(8,26): error TS2305: Module '"@qp/utils/email"' has no exported member 'createEmailBrandInfo'.
+src/config.ts(8,48): error TS2305: Module '"@qp/utils/email"' has no exported member 'parseEmailLocale'.
+src/config.ts(8,71): error TS2305: Module '"@qp/utils/email"' has no exported member 'EmailLocale'.
+src/config.ts(146,47): error TS2339: Property 'magicLink' does not exist on type '{ invitation: (params: { poolName: string; inviteUrl: string; expiresAt: Date; }) => { subject: string; html: string; text: string; }; inviteCode: (params: { poolName: string; code: string; poolUrl: string; }) => { ...; }; }'.
  ELIFECYCLE  Command failed with exit code 2.

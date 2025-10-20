@@ -150,9 +150,8 @@ export default async function LocaleLayout({
           prerenderPathsOnHover={[
             "/pools",
             "/pools/new",
-            "/brands",
+            "/branding",
             "/access",
-            "/fixtures",
             "/analytics",
           ]}
         />

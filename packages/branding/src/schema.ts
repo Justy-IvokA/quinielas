@@ -120,6 +120,17 @@ export const typographySchema = z.object({
 });
 
 /**
+ * Brand text content schema
+ */
+export const brandTextSchema = z.object({
+  title: z.string().max(30, "El título no puede exceder 30 caracteres").optional(),
+  description: z.string().max(255, "La descripción no puede exceder 255 caracteres").optional(),
+  link: z.string().max(50, "El enlace no puede exceder 50 caracteres").optional(),
+  slogan: z.string().max(75, "El eslogan no puede exceder 75 caracteres").optional(),
+  paragraph: z.string().max(375, "El párrafo no puede exceder 375 caracteres").optional()
+});
+
+/**
  * Complete brand theme schema
  */
 export const brandThemeSchema = z.object({
@@ -128,7 +139,8 @@ export const brandThemeSchema = z.object({
   logotype: logotypeSchema.optional(),
   heroAssets: heroAssetsSchema,
   mainCard: mainCardSchema,
-  typography: typographySchema
+  typography: typographySchema,
+  text: brandTextSchema.optional()
 });
 
 /**
@@ -149,7 +161,8 @@ export const brandThemeDeepUpdateSchema = z.object({
   logotype: logotypeSchema.partial().optional(),
   heroAssets: heroAssetsSchema.partial().optional(),
   mainCard: mainCardSchema.partial().optional(),
-  typography: typographySchema.partial().optional()
+  typography: typographySchema.partial().optional(),
+  text: brandTextSchema.partial().optional()
 }).refine(
   (data) => Object.keys(data).length > 0,
   { message: "At least one field must be provided for update" }
@@ -181,6 +194,7 @@ export type Logotype = z.infer<typeof logotypeSchema>;
 export type HeroAssets = z.infer<typeof heroAssetsSchema>;
 export type MainCard = z.infer<typeof mainCardSchema>;
 export type Typography = z.infer<typeof typographySchema>;
+export type BrandText = z.infer<typeof brandTextSchema>;
 export type BrandThemeInput = z.infer<typeof brandThemeSchema>;
 export type BrandThemeUpdate = z.infer<typeof brandThemeUpdateSchema>;
 export type MediaUpload = z.infer<typeof mediaUploadSchema>;
@@ -202,6 +216,7 @@ export type LogotypePartial = DeepPartial<Logotype>;
 export type HeroAssetsPartial = DeepPartial<HeroAssets>;
 export type MainCardPartial = DeepPartial<MainCard>;
 export type TypographyPartial = DeepPartial<Typography>;
+export type BrandTextPartial = DeepPartial<BrandText>;
 
 /**
  * Brand theme with deep partial support for editing
@@ -257,5 +272,12 @@ export const defaultBrandTheme: BrandThemeInput = {
     headingsFamily: "Inter, system-ui, sans-serif",
     baseSize: "16px",
     lineHeight: "1.5"
+  },
+  text: {
+    title: "¡Únete Ahora!",
+    description: "Completa tu registro para participar en esta quiniela exclusiva.",
+    link: "",
+    slogan: "Tu plataforma de quinielas deportivas",
+    paragraph: "Participa, predice y gana. Únete a nuestra comunidad de apasionados del deporte."
   }
 };

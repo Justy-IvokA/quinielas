@@ -29,7 +29,6 @@ export const previewFixturesSchema = z.object({
 export const poolDetailsSchema = z.object({
   title: z.string().min(3).max(100),
   slug: z.string().min(3).max(100).regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers, and hyphens"),
-  brandId: z.string().cuid().optional(),
   description: z.string().max(500).optional()
 });
 
@@ -52,7 +51,7 @@ export const prizeSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().max(500).optional(),
   value: z.string().max(100).optional(),
-  imageUrl: z.string().url().optional()
+  imageUrl: z.string().url().optional().or(z.literal(""))
 }).refine(data => data.rankTo >= data.rankFrom, {
   message: "rankTo must be greater than or equal to rankFrom"
 });

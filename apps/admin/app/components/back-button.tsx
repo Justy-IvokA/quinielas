@@ -30,7 +30,7 @@ export function BackButton({ fallbackHref, label }: BackButtonProps) {
       size="sm" 
       onClick={handleBack}
       StartIcon={ArrowLeft}
-      className="hover:bg-accent"
+      className="hover:bg-accent [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
     >
       {label || t("back")}
     </Button>

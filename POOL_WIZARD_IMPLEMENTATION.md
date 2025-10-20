@@ -58,7 +58,7 @@ Location: `apps/admin/app/[locale]/(authenticated)/pools/new/components/CreatePo
 1. **StepSport** - Pre-select Football (future: multi-sport)
 2. **StepCompetitionSeason** - Search competitions, select season
 3. **StepStageRound** - Filter by stage/round with preview
-4. **StepDetails** - Pool title, slug (auto-generated), brand, description
+4. **StepDetails** - Pool title, slug (auto-generated), description (brand auto-assigned from tenant)
 5. **StepAccess** - Access policy (PUBLIC/CODE/EMAIL_INVITE), captcha, verification
 6. **StepPrizes** - Dynamic prize list with validation
 7. **StepReview** - Summary + create & import action
@@ -119,6 +119,7 @@ When user clicks "Crear quiniela e importar eventos":
 
 ### Tenant Scoping
 - All operations scoped to `ctx.tenant.id`
+- Brand auto-assigned from `ctx.brand.id` (resolved from subdomain)
 - Slug uniqueness per tenant/brand
 - RBAC enforced on all mutations
 
@@ -166,10 +167,10 @@ The wizard auto-creates an `ExternalSource` record for `api-football` if missing
 
 1. Navigate to `/pools/new`
 2. Follow 7-step wizard
-3. Search "World Cup U20"
+3. Search "Liga MX"
 4. Select season "2025"
-5. Choose stage "Final Stages" → round "Semi-finals"
-6. Review auto-filled title: "World Cup U20 — Semi-finals 2025"
+5. Choose stage "Apertura" → round "14"
+6. Review auto-filled title: "Liga MX - Jornada 14"
 7. Configure access (e.g., PUBLIC with CAPTCHA)
 8. Add prizes (optional)
 9. Click "Crear quiniela e importar eventos"

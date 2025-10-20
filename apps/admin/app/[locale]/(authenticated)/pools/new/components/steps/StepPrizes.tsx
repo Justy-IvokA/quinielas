@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Plus, Trash2, Trophy } from "lucide-react";
-import { Input, Label, Button, FormField, Alert, AlertDescription } from "@qp/ui";
+import { Input, Label, Button, Alert, AlertDescription } from "@qp/ui";
 
 const prizeSchema = z.object({
   rankFrom: z.number().int().min(1),
@@ -32,13 +32,22 @@ interface StepPrizesProps {
 }
 
 export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
+  const onSubmitRef = useRef(onSubmit);
+  
+  // Keep ref updated
+  useEffect(() => {
+    onSubmitRef.current = onSubmit;
+  }, [onSubmit]);
+
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors }
+    watch,
+    formState: { errors, isValid }
   } = useForm<PrizesFormData>({
     resolver: zodResolver(prizesSchema),
+    mode: "onChange",
     defaultValues: {
       prizes: initialData && initialData.length > 0
         ? initialData
@@ -50,6 +59,16 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
     control,
     name: "prizes"
   });
+
+  const formValues = watch();
+
+  // Update wizard data in real-time (including on mount with default values)
+  useEffect(() => {
+    const prizes = formValues.prizes;
+    if (prizes && prizes.length > 0) {
+      onSubmitRef.current(prizes);
+    }
+  }, [formValues]);
 
   const handleFormSubmit = (data: PrizesFormData) => {
     onSubmit(data.prizes);
@@ -72,7 +91,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
       <Alert>
         <Trophy className="h-4 w-4" />
         <AlertDescription>
-          Define los premios para los mejores participantes. Puedes agregar múltiples premios o dejarlo vacío.
+          Debes configurar al menos el premio para el <strong>1er lugar</strong>. Puedes agregar más premios para otras posiciones si lo deseas.
         </AlertDescription>
       </Alert>
 
@@ -81,7 +100,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
           <div key={field.id} className="rounded-lg border p-4 space-y-4">
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Premio #{index + 1}</h4>
-              {fields.length > 1 && (
+              {fields.length > 1 && field.rankFrom !== 1 && (
                 <Button
                   type="button"
                   variant="ghost"
@@ -94,39 +113,41 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                label="Posición desde"
-                htmlFor={`prizes.${index}.rankFrom`}
-                required
-                error={errors.prizes?.[index]?.rankFrom?.message}
-              >
+              <div className="space-y-2">
+                <Label htmlFor={`prizes.${index}.rankFrom`}>
+                  Posición desde
+                  <span className="text-destructive ml-1">*</span>
+                </Label>
                 <Input
                   id={`prizes.${index}.rankFrom`}
                   type="number"
                   min={1}
                   {...register(`prizes.${index}.rankFrom`, { valueAsNumber: true })}
                 />
-              </FormField>
+                {errors.prizes?.[index]?.rankFrom?.message && (
+                  <p className="text-sm text-destructive">{errors.prizes[index]?.rankFrom?.message}</p>
+                )}
+              </div>
 
-              <FormField
-                label="Posición hasta"
-                htmlFor={`prizes.${index}.rankTo`}
-                required
-                error={errors.prizes?.[index]?.rankTo?.message}
-              >
+              <div className="space-y-2">
+                <Label htmlFor={`prizes.${index}.rankTo`}>
+                  Posición hasta
+                  <span className="text-destructive ml-1">*</span>
+                </Label>
                 <Input
                   id={`prizes.${index}.rankTo`}
                   type="number"
                   min={1}
                   {...register(`prizes.${index}.rankTo`, { valueAsNumber: true })}
                 />
-              </FormField>
+                {errors.prizes?.[index]?.rankTo?.message && (
+                  <p className="text-sm text-destructive">{errors.prizes[index]?.rankTo?.message}</p>
+                )}
+              </div>
             </div>
 
-            <FormField
-              label="Tipo de premio"
-              htmlFor={`prizes.${index}.type`}
-            >
+            <div className="space-y-2">
+              <Label htmlFor={`prizes.${index}.type`}>Tipo de premio</Label>
               <select
                 id={`prizes.${index}.type`}
                 {...register(`prizes.${index}.type`)}
@@ -139,57 +160,57 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
                 <option value="EXPERIENCE">Experiencia</option>
                 <option value="OTHER">Otro</option>
               </select>
-            </FormField>
+            </div>
 
-            <FormField
-              label="Título del premio"
-              htmlFor={`prizes.${index}.title`}
-              required
-              error={errors.prizes?.[index]?.title?.message}
-            >
+            <div className="space-y-2">
+              <Label htmlFor={`prizes.${index}.title`}>
+                Título del premio
+                <span className="text-destructive ml-1">*</span>
+              </Label>
               <Input
                 id={`prizes.${index}.title`}
                 placeholder="$1,000 MXN"
                 {...register(`prizes.${index}.title`)}
               />
-            </FormField>
+              {errors.prizes?.[index]?.title?.message && (
+                <p className="text-sm text-destructive">{errors.prizes[index]?.title?.message}</p>
+              )}
+            </div>
 
-            <FormField
-              label="Descripción (opcional)"
-              htmlFor={`prizes.${index}.description`}
-              error={errors.prizes?.[index]?.description?.message}
-            >
+            <div className="space-y-2">
+              <Label htmlFor={`prizes.${index}.description`}>Descripción (opcional)</Label>
               <Input
                 id={`prizes.${index}.description`}
                 placeholder="Premio en efectivo para el ganador"
                 {...register(`prizes.${index}.description`)}
               />
-            </FormField>
+              {errors.prizes?.[index]?.description?.message && (
+                <p className="text-sm text-destructive">{errors.prizes[index]?.description?.message}</p>
+              )}
+            </div>
 
-            <FormField
-              label="Valor (opcional)"
-              htmlFor={`prizes.${index}.value`}
-              description="Valor monetario o equivalente"
-            >
+            <div className="space-y-2">
+              <Label htmlFor={`prizes.${index}.value`}>Valor (opcional)</Label>
               <Input
                 id={`prizes.${index}.value`}
                 placeholder="$1,000"
                 {...register(`prizes.${index}.value`)}
               />
-            </FormField>
+              <p className="text-sm text-muted-foreground">Valor monetario o equivalente</p>
+            </div>
 
-            <FormField
-              label="URL de imagen (opcional)"
-              htmlFor={`prizes.${index}.imageUrl`}
-              error={errors.prizes?.[index]?.imageUrl?.message}
-            >
+            <div className="space-y-2">
+              <Label htmlFor={`prizes.${index}.imageUrl`}>URL de imagen (opcional)</Label>
               <Input
                 id={`prizes.${index}.imageUrl`}
                 type="url"
                 placeholder="https://..."
                 {...register(`prizes.${index}.imageUrl`)}
               />
-            </FormField>
+              {errors.prizes?.[index]?.imageUrl?.message && (
+                <p className="text-sm text-destructive">{errors.prizes[index]?.imageUrl?.message}</p>
+              )}
+            </div>
           </div>
         ))}
       </div>

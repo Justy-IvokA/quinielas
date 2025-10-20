@@ -125,23 +125,29 @@ export { ThemeToggle } from "./components/theme-toggle";
 export { FormSubmit } from "./components/form-submit";
 export type { FormSubmitProps } from "./components/form-submit";
 
+export { SportsLoader, FullPageLoader, InlineLoader } from "./components/sports-loader";
+
 // Form components
 export {
   ColorPicker,
   DatePicker,
   Form,
   FormField,
+  LegacyFormField,
   SelectField,
   Slider
 } from "./components/form";
 export type {
   ColorPickerProps,
   DatePickerProps,
-  FormProps,
-  FormFieldProps,
+  LegacyFormProps,
+  LegacyFormFieldProps,
   SelectFieldProps,
   SelectFieldOption
 } from "./components/form";
+
+// Date Time Picker
+export { DateTimePicker } from "./components/date-time-picker";
 // Steps components
 export { Steps, Stepper, FormStep } from "./components/form/step";
 // Wizard components

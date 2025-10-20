@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Calendar, Trophy, Users, Target } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle, Skeleton } from "@qp/ui";
+import { Card, CardContent, CardHeader, CardTitle, SportsLoader } from "@qp/ui";
 import { trpc } from "@admin/trpc";
 
 export function DashboardAnalytics() {
@@ -42,19 +42,8 @@ export function DashboardAnalytics() {
 
   if (isLoadingPools) {
     return (
-      <div className="grid gap-4 md:grid-cols-3">
-        {[...Array(3)].map((_, i) => (
-          <Card key={i}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-4 rounded-full" />
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-8 w-16 mb-2" />
-              <Skeleton className="h-3 w-32" />
-            </CardContent>
-          </Card>
-        ))}
+      <div className="flex items-center justify-center py-8">
+        <SportsLoader size="sm" text={t("loading")} />
       </div>
     );
   }
@@ -64,7 +53,7 @@ export function DashboardAnalytics() {
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title}>
+          <Card key={stat.title} className="border-border/70 bg-card/60 backdrop-blur">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {stat.title}

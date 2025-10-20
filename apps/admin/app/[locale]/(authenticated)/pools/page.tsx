@@ -30,12 +30,12 @@ export default function PoolsPage() {
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <BackButton fallbackHref="/" />
-          <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold">{t("title")}</h1>
-            <p className="text-muted-foreground">{t("description")}</p>
+          <div className="flex flex-col gap-2 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+            <h1 className="text-primary text-3xl font-bold">{t("title")}</h1>
+            <p className="text-default">{t("description")}</p>
           </div>
         </div>
-        <Button asChild StartIcon={Plus}>
+        <Button StartIcon={Plus}>
           <Link href="/pools/new">{t("create")}</Link>
         </Button>
       </header>

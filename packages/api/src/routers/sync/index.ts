@@ -41,7 +41,7 @@ export const syncRouter = router({
         }
       }),
       prisma.match.count(),
-      prisma.externalMap.count({ where: { entityType: "match" } }),
+      prisma.externalMap.count({ where: { entityType: "MATCH" } }),
       prisma.team.count(),
       prisma.externalSource.findMany({
         include: {
@@ -180,7 +180,7 @@ export const syncRouter = router({
     const competitionIds = seasons.map((s: any) => s.competition.id);
     const externalMaps = await prisma.externalMap.findMany({
       where: {
-        entityType: "competition",
+        entityType: "COMPETITION",
         entityId: { in: competitionIds }
       },
       include: {
@@ -244,7 +244,7 @@ export const syncRouter = router({
       // Buscar ExternalMap manualmente
       const competitionMap = await prisma.externalMap.findFirst({
         where: {
-          entityType: "competition",
+          entityType: "COMPETITION",
           entityId: season.competition.id
         },
         include: {

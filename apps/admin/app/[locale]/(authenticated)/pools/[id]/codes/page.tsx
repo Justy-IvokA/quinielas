@@ -47,6 +47,8 @@ export default function PoolCodesPage() {
     { enabled: !!pool?.tenantId }
   );
 
+  const utils = trpc.useUtils();
+
   const handleBatchCreated = (batchId: string) => {
     refetch();
     setShowCreateModal(false);
@@ -56,7 +58,7 @@ export default function PoolCodesPage() {
     if (!pool?.tenantId) return;
 
     try {
-      const data = await trpc.access.downloadCodes.useQuery({
+      const data = await utils.access.downloadCodes.fetch({
         batchId,
         tenantId: pool.tenantId
       });
@@ -119,8 +121,7 @@ export default function PoolCodesPage() {
             {t("subtitle")} - {pool.name}
           </p>
         </div>
-        <Button onClick={() => setShowCreateModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button onClick={() => setShowCreateModal(true)} StartIcon={Plus}>
           {t("createBatch")}
         </Button>
       </div>
@@ -198,8 +199,7 @@ export default function PoolCodesPage() {
             <div className="text-center py-12">
               <Key className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground mb-4">{t("noBatches")}</p>
-              <Button onClick={() => setShowCreateModal(true)}>
-                <Plus className="h-4 w-4 mr-2" />
+              <Button onClick={() => setShowCreateModal(true)} StartIcon={Plus}>
                 {t("createFirst")}
               </Button>
             </div>
@@ -255,16 +255,16 @@ export default function PoolCodesPage() {
                         variant="outline"
                         size="sm"
                         onClick={() => setSelectedBatchId(batch.id)}
+                        StartIcon={Eye}
                       >
-                        <Eye className="h-4 w-4 mr-2" />
                         {t("actions.viewCodes")}
                       </Button>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleDownloadCsv(batch.id, batch.name || batch.id)}
+                        StartIcon={Download}
                       >
-                        <Download className="h-4 w-4 mr-2" />
                         {t("actions.downloadCsv")}
                       </Button>
                     </div>

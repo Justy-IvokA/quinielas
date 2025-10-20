@@ -24,8 +24,9 @@ export const poolsRouter = router({
           ...(input.includeInactive ? {} : { isActive: true })
         },
         include: {
-          brand: { select: { name: true, slug: true } },
+          brand: { select: { name: true, slug: true, domains: true } },
           season: { select: { name: true, year: true } },
+          accessPolicy: { select: { accessType: true } },
           _count: {
             select: {
               registrations: true,

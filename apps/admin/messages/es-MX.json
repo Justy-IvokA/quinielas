@@ -61,13 +61,14 @@
   },
   "dashboard": {
     "statusOnline": "Servicios operativos",
-    "statusCheck": "Verifica el estado del API",
+    "statusCheck": "Verificando estado API...",
     "welcome": "Bienvenido, {tenant}",
     "subtitle": "Administra tus quinielas y el branding para la marca {brand}.",
     "createPool": "Crear quiniela",
     "manageBrands": "Gestiona tu marca",
     "analytics": {
       "title": "Resumen General",
+      "loading": "Cargando estadísticas",
       "activePools": "Quinielas Activas",
       "activePoolsDesc": "Quinielas en curso",
       "totalPlayers": "Jugadores Totales",
@@ -267,6 +268,10 @@
     "title": "Quinielas",
     "description": "Administra tus quinielas activas e inactivas.",
     "create": "Crear quiniela",
+    "new": {
+      "title": "Crear Quiniela",
+      "description": "Asistente guiado para crear una quiniela con todas las configuraciones necesarias"
+    },
     "tabs": {
       "overview": "Resumen",
       "fixtures": "Partidos",
@@ -351,7 +356,8 @@
       "deleteConfirm": "¿Estás seguro de eliminar la quiniela \"{name}\"?",
       "deleteSuccess": "Quiniela eliminada exitosamente",
       "deleteError": "Error al eliminar: {message}",
-      "copyUrl": "Copiar URL pública",
+      "copyUrl": "Copiar URL",
+      "copyPublicUrl": "Copiar URL pública",
       "urlCopied": "URL copiada al portapapeles",
       "finalize": "Finalizar quiniela",
       "syncFixtures": "Sincronizar partidos"
@@ -514,9 +520,6 @@
       "description": "{description}",
       "registrations": "{count} registros",
       "prizes": "{count} premios"
-    },
-    "details": {
-      "title": "Detalles de la quiniela"
     }
   },
   "demo": {
@@ -584,6 +587,7 @@
   "branding": {
     "title": "Personalización de Marca",
     "description": "Configura los colores, logo, medios y tipografía de tu marca",
+    "loading": "Cargando personalización",
     "noBrand": "No se encontró marca para este tenant",
     "saveSuccess": "Cambios guardados exitosamente",
     "saveError": "Error al guardar cambios",
@@ -601,10 +605,11 @@
     "copiedToClipboard": "Tema copiado al portapapeles",
     "tabs": {
       "colors": "Colores",
-      "logo": "Logo",
+      "logo": "Logos",
       "hero": "Hero",
       "mainCard": "Tarjeta",
-      "typography": "Tipografía"
+      "typography": "Tipografía",
+      "text": "Textos"
     },
     "colors": {
       "presets": "Paletas Predefinidas",
@@ -693,8 +698,45 @@
       "googleFontsTitle": "Usando Google Fonts",
       "googleFontsDescription": "Para usar fuentes de Google Fonts, agrega el enlace en el <head> de tu aplicación. Ejemplo:"
     },
+    "text": {
+      "title": {
+        "label": "Título Principal",
+        "placeholder": "¡Únete Ahora!",
+        "description": "Título que aparece en la parte superior de la tarjeta de registro"
+      },
+      "description": {
+        "label": "Descripción",
+        "placeholder": "Completa tu registro para participar en esta quiniela exclusiva",
+        "description": "Descripción breve que aparece debajo del nombre del pool"
+      },
+      "slogan": {
+        "label": "Eslogan",
+        "placeholder": "Tu plataforma de quinielas deportivas",
+        "description": "Eslogan de la marca que aparece debajo del logo"
+      },
+      "paragraph": {
+        "label": "Párrafo Descriptivo",
+        "placeholder": "Participa, predice y gana. Únete a nuestra comunidad de apasionados del deporte.",
+        "description": "Texto largo descriptivo para contextos específicos"
+      },
+      "link": {
+        "label": "Enlace Externo",
+        "placeholder": "https://tudominio.com/mas-info",
+        "description": "URL para más información (opcional)"
+      }
+    },
     "preview": {
       "title": "Vista Previa en Vivo",
+      "poolName": "Nombre Quiniela",
+      "poolDescription": "Descripcion que registraste al crear la quiniela.",
+      "formTitle": "Registro",
+      "codeLabel": "Código de Invitación",
+      "validate": "Validar",
+      "nameLabel": "Nombre Completo",
+      "emailLabel": "Tu Email",
+      "termsLabel": "Acepto los términos y condiciones",
+      "submitButton": "Registrarse",
+      "learnMore": "Conoce más",
       "heroTitle": "Bienvenido a tu Quiniela",
       "heroSubtitle": "Participa y gana increíbles premios",
       "cardTitle": "Tarjeta de Ejemplo",
@@ -768,8 +810,14 @@
       "resendSuccess": "Invitación reenviada exitosamente",
       "copySuccess": "Enlace copiado al portapapeles",
       "noValidEmails": "No se encontraron emails válidos",
+      "noValidEmailsCsv": "No se encontraron emails válidos en el CSV",
       "missingData": "Faltan datos requeridos",
-      "cannotGenerateLink": "No se puede generar el enlace de invitación"
+      "missingBrandData": "Faltan datos de marca",
+      "cannotGenerateLink": "No se puede generar el enlace de invitación",
+      "uploadFailed": "Error al subir CSV",
+      "creating": "Creando...",
+      "sending": "Enviando...",
+      "cancel": "Cancelar"
     }
   },
   "codes": {
@@ -817,7 +865,7 @@
       "batchNameHelp": "Opcional - ayuda a identificar el lote",
       "prefixLabel": "Prefijo",
       "prefixPlaceholder": "ej: LAUNCH",
-      "prefixHelp": "Opcional - máximo 10 caracteres",
+      "prefixHelp": "Opcional - máximo 10 caracteres. Se agregará al código base de 8 caracteres (ej: PREFIX-ABCD1234)",
       "quantityLabel": "Cantidad de Códigos",
       "quantityPlaceholder": "100",
       "quantityHelp": "Mínimo 1, máximo 1,000",
@@ -851,6 +899,330 @@
       "unpauseSuccess": "Lote reanudado",
       "copySuccess": "Código copiado al portapapeles",
       "missingData": "Faltan datos requeridos"
+    }
+  },
+  "superadmin": {
+    "nav": {
+      "title": "Superadmin",
+      "tenants": "Clientes",
+      "templates": "Plantillas"
+    },
+    "tenants": {
+      "title": "Gestión de Clientes",
+      "description": "Gestiona clientes que puedes usar/asignar a los clientes",
+      "loading": "Cargando clientes",
+      "searchPlaceholder": "Buscar clientes...",
+      "createButton": "Crear Cliente",
+      "table": {
+        "name": "Nombre",
+        "slug": "Slug",
+        "brands": "Marcas",
+        "pools": "Quinielas",
+        "members": "Miembros",
+        "created": "Creado",
+        "actions": "Acciones"
+      },
+      "pagination": {
+        "page": "Página {page} de {totalPages} ({total} total)",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "create": {
+        "title": "Crear Nuevo Cliente",
+        "description": "Crea un nuevo cliente con su configuración inicial",
+        "form": {
+          "name": "Nombre del Cliente",
+          "namePlaceholder": "Mi Empresa",
+          "slug": "Slug (URL)",
+          "slugPlaceholder": "mi-empresa",
+          "slugHelp": "Solo minúsculas, números y guiones",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Descripción del cliente...",
+          "submit": "Crear Cliente",
+          "cancel": "Cancelar"
+        },
+        "success": "Cliente creado exitosamente",
+        "error": "Error al crear cliente: {message}"
+      },
+      "detail": {
+        "loading": "Cargando tenant...",
+        "notFound": "Cliente no encontrado",
+        "info": {
+          "title": "Información del Cliente",
+          "name": "Nombre",
+          "slug": "Slug",
+          "description": "Descripción",
+          "created": "Creado",
+          "updated": "Actualizado"
+        },
+        "brands": {
+          "title": "Marcas",
+          "count": "{count} marca(s)",
+          "empty": "Sin marcas configuradas"
+        },
+        "members": {
+          "title": "Miembros",
+          "count": "{count} miembro(s)",
+          "addButton": "Agregar Miembro",
+          "table": {
+            "user": "Usuario",
+            "email": "Email",
+            "role": "Rol",
+            "joined": "Se unió",
+            "actions": "Acciones"
+          },
+          "roles": {
+            "SUPERADMIN": "Superadmin",
+            "TENANT_ADMIN": "Admin",
+            "TENANT_EDITOR": "Editor",
+            "PLAYER": "Jugador"
+          },
+          "add": {
+            "title": "Agregar Miembro",
+            "description": "Agrega un nuevo miembro a este cliente",
+            "email": "Email del Usuario",
+            "emailPlaceholder": "usuario@ejemplo.com",
+            "role": "Rol",
+            "rolePlaceholder": "Selecciona un rol",
+            "submit": "Agregar Miembro",
+            "cancel": "Cancelar"
+          },
+          "remove": {
+            "confirm": "¿Eliminar a {email} del cliente?",
+            "success": "Miembro eliminado",
+            "error": "Error al eliminar: {message}"
+          },
+          "addSuccess": "Miembro agregado exitosamente",
+          "addError": "Error al agregar miembro: {message}"
+        },
+        "pools": {
+          "title": "Quinielas",
+          "count": "{count} quiniela(s)",
+          "empty": "Sin quinielas creadas",
+          "viewAll": "Ver todas"
+        },
+        "templates": {
+          "title": "Plantillas Asignadas",
+          "description": "Plantillas de quinielas asignadas a este cliente",
+          "count": "{count} asignación(es)",
+          "assignButton": "Asignar Plantillas",
+          "table": {
+            "template": "Plantilla",
+            "status": "Estado",
+            "assigned": "Asignado",
+            "result": "Resultado",
+            "actions": "Acciones"
+          },
+          "status": {
+            "QUEUED": "En cola",
+            "RUNNING": "Procesando",
+            "DONE": "Completado",
+            "FAILED": "Fallido"
+          },
+          "result": {
+            "pool": "Quiniela: {slug}",
+            "imported": "{teams} equipos, {matches} partidos",
+            "error": "Error: {message}"
+          },
+          "assign": {
+            "title": "Asignar Plantillas",
+            "description": "Selecciona plantillas para asignar a este cliente",
+            "selectPlaceholder": "Selecciona plantillas...",
+            "noTemplates": "No hay plantillas publicadas disponibles",
+            "selected": "{count} seleccionada(s)",
+            "submit": "Asignar Plantillas",
+            "cancel": "Cancelar"
+          },
+          "assignSuccess": "{count} plantilla(s) asignada(s) exitosamente",
+          "assignError": "Error al asignar plantillas: {message}",
+          "empty": "Sin plantillas asignadas"
+        },
+        "edit": {
+          "title": "Editar Cliente",
+          "description": "Actualiza la información del cliente",
+          "submit": "Guardar Cambios",
+          "cancel": "Cancelar",
+          "success": "Cliente actualizado exitosamente",
+          "error": "Error al actualizar: {message}"
+        },
+        "delete": {
+          "button": "Eliminar Cliente",
+          "confirm": "¿Estás seguro de eliminar el cliente \"{name}\"?",
+          "warning": "Esta acción no se puede deshacer. Se eliminarán todas las marcas y miembros asociados.",
+          "success": "Cliente eliminado exitosamente",
+          "error": "Error al eliminar: {message}"
+        }
+      }
+    },
+    "templates": {
+      "title": "Plantillas de Quinielas",
+      "description": "Gestiona plantillas de quinielas que puedes usar/asignar a los clientes",
+      "loading": "Cargando plantillas",
+      "searchPlaceholder": "Buscar plantillas...",
+      "createButton": "Crear plantilla",
+      "filterByStatus": "Filtrar por estado",
+      "filterAll": "Todos",
+      "table": {
+        "name": "Nombre",
+        "slug": "Slug",
+        "status": "Estado",
+        "sport": "Deporte",
+        "season": "Temporada",
+        "assignments": "Asignaciones",
+        "created": "Creado",
+        "actions": "Acciones"
+      },
+      "status": {
+        "DRAFT": "Borrador",
+        "PUBLISHED": "Publicado",
+        "ARCHIVED": "Archivado"
+      },
+      "pagination": {
+        "page": "Página {page} de {totalPages} ({total} total)",
+        "previous": "Anterior",
+        "next": "Siguiente"
+      },
+      "actions": {
+        "edit": "Editar",
+        "view": "Ver",
+        "delete": "Eliminar"
+      },
+      "create": {
+        "title": "Crear Plantilla",
+        "description": "Crea una nueva plantilla de quiniela",
+        "tabs": {
+          "general": "General",
+          "scope": "Alcance Deportivo",
+          "rules": "Reglas",
+          "access": "Acceso"
+        },
+        "general": {
+          "title": "Información General",
+          "slug": "Slug",
+          "slugPlaceholder": "mundial-2026",
+          "slugHelp": "Solo minúsculas, números y guiones",
+          "name": "Nombre de la Plantilla",
+          "namePlaceholder": "Copa Mundial FIFA 2026",
+          "description": "Descripción",
+          "descriptionPlaceholder": "Descripción de la plantilla...",
+          "status": "Estado",
+          "statusDraft": "Borrador",
+          "statusPublished": "Publicado",
+          "statusArchived": "Archivado"
+        },
+        "scope": {
+          "title": "Alcance Deportivo",
+          "description": "Define qué partidos se importarán",
+          "competitionId": "ID Externo de Competición",
+          "competitionIdPlaceholder": "1",
+          "competitionIdHelp": "ID de la competición en el proveedor (ej: API-Football)",
+          "seasonYear": "Año de Temporada",
+          "seasonYearPlaceholder": "2026",
+          "stageLabel": "Etiqueta de Etapa (opcional)",
+          "stageLabelPlaceholder": "Group Stage",
+          "stageLabelHelp": "Filtra por etapa específica",
+          "roundLabel": "Etiqueta de Ronda (opcional)",
+          "roundLabelPlaceholder": "Round 1",
+          "roundLabelHelp": "Filtra por ronda específica"
+        },
+        "rules": {
+          "title": "Reglas de Puntuación",
+          "description": "Define cómo se calculan los puntos",
+          "exactScore": "Puntos por Marcador Exacto",
+          "exactScorePlaceholder": "5",
+          "correctSign": "Puntos por Signo Correcto (1X2)",
+          "correctSignPlaceholder": "3",
+          "goalDiffBonus": "Bonus por Diferencia de Goles",
+          "goalDiffBonusPlaceholder": "1"
+        },
+        "access": {
+          "title": "Configuración de Acceso Predeterminada",
+          "description": "Configuración que se aplicará a las quinielas creadas",
+          "accessType": "Tipo de Acceso",
+          "accessTypePublic": "Público",
+          "accessTypeCode": "Por Código",
+          "accessTypeEmail": "Por Email",
+          "requireCaptcha": "Requerir CAPTCHA",
+          "requireEmailVerification": "Verificación de Email"
+        },
+        "submit": "Crear Plantilla",
+        "cancel": "Cancelar",
+        "success": "Plantilla creada exitosamente",
+        "error": "Error al crear plantilla: {message}"
+      },
+      "edit": {
+        "title": "Editar Plantilla",
+        "loading": "Cargando template...",
+        "notFound": "Plantilla no encontrada",
+        "backButton": "Volver a Plantillas",
+        "saveButton": "Guardar Cambios",
+        "saving": "Guardando...",
+        "tabs": {
+          "general": "General",
+          "scope": "Alcance",
+          "rules": "Reglas",
+          "access": "Acceso",
+          "assignments": "Asignaciones"
+        },
+        "actions": {
+          "preview": "Preview Import",
+          "previewButton": "Vista Previa de Importación",
+          "publish": "Publicar",
+          "publishButton": "Publicar Plantilla",
+          "archive": "Archivar",
+          "archiveButton": "Archivar Plantilla",
+          "clone": "Clonar",
+          "cloneButton": "Clonar Plantilla",
+          "delete": "Eliminar",
+          "deleteButton": "Eliminar Plantilla"
+        },
+        "preview": {
+          "title": "Vista Previa de Importación",
+          "description": "Partidos estimados que se importarán del proveedor",
+          "loading": "Cargando preview...",
+          "teams": "Equipos",
+          "matches": "Partidos",
+          "dateRange": "Rango de Fechas",
+          "noData": "No hay datos de vista previa disponibles"
+        },
+        "assignments": {
+          "title": "Asignaciones a Clientes",
+          "description": "Clientes que tienen esta plantilla asignada",
+          "count": "{count} asignación(es)",
+          "table": {
+            "tenant": "Cliente",
+            "status": "Estado",
+            "assigned": "Asignado",
+            "result": "Resultado"
+          },
+          "empty": "Esta plantilla no ha sido asignada a ningún cliente"
+        },
+        "publish": {
+          "confirm": "¿Publicar plantilla \"{name}\"?",
+          "description": "La plantilla estará disponible para asignar a clientes",
+          "success": "Plantilla publicada exitosamente",
+          "error": "Error al publicar: {message}"
+        },
+        "archive": {
+          "confirm": "¿Archivar plantilla \"{name}\"?",
+          "description": "La plantilla no estará disponible para nuevas asignaciones",
+          "success": "Plantilla archivada exitosamente",
+          "error": "Error al archivar: {message}"
+        },
+        "clone": {
+          "prompt": "Ingresa el slug para la plantilla clonada:",
+          "success": "Plantilla clonada exitosamente",
+          "error": "Error al clonar: {message}"
+        },
+        "delete": {
+          "confirm": "¿Eliminar plantilla \"{name}\"?",
+          "warning": "Solo se pueden eliminar plantillas en borrador sin asignaciones",
+          "success": "Plantilla eliminada exitosamente",
+          "error": "Error al eliminar: {message}"
+        },
+        "updateSuccess": "Plantilla actualizada exitosamente",
+        "updateError": "Error al actualizar: {message}"
+      }
     }
   }
 }

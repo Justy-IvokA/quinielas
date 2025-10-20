@@ -112,7 +112,7 @@ export function FixturesInfo({ poolId }: FixturesInfoProps) {
 
         <div className="flex gap-2">
           <Button asChild variant="secondary" className="flex-1">
-            <Link href="/fixtures" className="flex items-center gap-2">
+            <Link href="/sync" className="flex items-center gap-2">
               <ExternalLink className="h-4 w-4" />
               {t("viewFixtures")}
             </Link>

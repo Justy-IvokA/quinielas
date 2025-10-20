@@ -66,6 +66,7 @@
     "manageBrands": "Manage brands",
     "analytics": {
       "title": "Overview",
+      "loading": "Loading statistics",
       "activePools": "Active Pools",
       "activePoolsDesc": "Pools in progress",
       "totalPlayers": "Total Players",
@@ -221,6 +222,77 @@
         "resend": "Resend"
       },
       "empty": "No invitations created"
+    }
+  },
+  "invitations": {
+    "title": "Email Invitations",
+    "subtitle": "Manage email invitations for this pool",
+    "uploadCsv": "Upload CSV",
+    "uploading": "Uploading...",
+    "createInvitations": "Create Invitations",
+    "createFirst": "Create First Invitation",
+    "noInvitations": "No invitations found",
+    "loading": "Loading invitations...",
+    "searchPlaceholder": "Search by email...",
+    "sendSelected": "Send Selected",
+    "activationProgress": "Activation Progress",
+    "tableTitle": "Invitations List",
+    "wrongAccessType": "This pool does not use email invitations. Access type: {type}",
+    "stats": {
+      "total": "Total Sent",
+      "sent": "Delivered",
+      "opened": "Opened",
+      "activated": "Activated",
+      "bounced": "Bounced"
+    },
+    "filters": {
+      "all": "All Status",
+      "pending": "Pending",
+      "sent": "Sent",
+      "opened": "Opened",
+      "accepted": "Accepted",
+      "expired": "Expired",
+      "bounced": "Bounced"
+    },
+    "table": {
+      "email": "Email",
+      "status": "Status",
+      "sent": "Sent",
+      "opened": "Opened",
+      "activated": "Activated",
+      "actions": "Actions"
+    },
+    "modal": {
+      "createTitle": "Create Email Invitations",
+      "createDescription": "Enter email addresses (one per line) or upload a CSV file",
+      "emailsLabel": "Email Addresses",
+      "emailsPlaceholder": "user1@example.com\nuser2@example.com\nuser3@example.com",
+      "validEmailsCount": "{count} valid emails",
+      "sendTitle": "Send Invitations",
+      "sendDescription": "Send {count} selected invitation(s)?",
+      "sendAllDescription": "Send all pending invitations?",
+      "sendNote": "Invitation emails will be sent to the recipients with a unique registration link.",
+      "sendNoteAll": "This will send all invitations with PENDING status."
+    },
+    "actions": {
+      "resend": "Resend",
+      "copyLink": "Copy Link",
+      "delete": "Delete"
+    },
+    "messages": {
+      "createSuccess": "{count} invitations created successfully",
+      "sendSuccess": "{count} invitations sent successfully",
+      "resendSuccess": "Invitation resent successfully",
+      "copySuccess": "Link copied to clipboard",
+      "noValidEmails": "No valid emails found",
+      "noValidEmailsCsv": "No valid emails found in CSV",
+      "missingData": "Missing required data",
+      "missingBrandData": "Missing brand data",
+      "cannotGenerateLink": "Cannot generate invitation link",
+      "uploadFailed": "Failed to upload CSV",
+      "creating": "Creating...",
+      "sending": "Sending...",
+      "cancel": "Cancel"
     }
   },
   "fixtures": {
@@ -392,5 +464,494 @@
     },
     "description": "{brand} · Admin panel",
     "keywords": "admin, pools, brands, analytics"
+  },
+  "branding": {
+    "title": "Brand Customization",
+    "description": "Configure colors, logo, media and typography for your brand",
+    "loading": "Loading customization...",
+    "noBrand": "No brand found for this tenant",
+    "saveSuccess": "Changes saved successfully",
+    "saveError": "Error saving changes",
+    "resetSuccess": "Theme reset to default values",
+    "resetError": "Error resetting theme",
+    "resetConfirm": "Are you sure you want to reset the theme to default values? This action cannot be undone.",
+    "formTitle": "Brand Editor",
+    "formDescription": "Customize your brand's appearance. Changes are reflected in real-time in the preview.",
+    "saving": "Saving...",
+    "save": "Save Changes",
+    "resetting": "Resetting...",
+    "reset": "Reset",
+    "copyJson": "Copy JSON",
+    "copied": "Copied",
+    "copiedToClipboard": "Theme copied to clipboard",
+    "tabs": {
+      "colors": "Colors",
+      "logo": "Logos",
+      "hero": "Hero",
+      "mainCard": "Card",
+      "typography": "Typography",
+      "text": "Text"
+    },
+    "colors": {
+      "presets": "Preset Palettes",
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "background": "Background",
+      "foreground": "Text",
+      "accent": "Accent",
+      "card": "Card",
+      "muted": "Muted",
+      "border": "Border",
+      "helpText": "Colors can be specified in HSL format (e.g., 221 83% 53%) or HEX (e.g., #3b82f6). HSL is recommended for better compatibility."
+    },
+    "logo": {
+      "logoTitle": "Main Logo",
+      "logoDescription": "Logo that appears in the header and navigation",
+      "logotypeTitle": "Logotype (Optional)",
+      "logotypeDescription": "Text version of the logo for specific contexts",
+      "url": "URL",
+      "altText": "Alt Text",
+      "altPlaceholder": "Logo description",
+      "uploadFile": "Upload File",
+      "uploadHint": "PNG, JPG, WebP or SVG. Max 2MB. Recommended: 256x256px or larger.",
+      "preview": "Preview",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Error uploading file",
+      "invalidFileType": "Invalid file type. Only images are allowed.",
+      "fileTooLarge": "File too large. Max 2MB.",
+      "guidelines": "Recommendations: Use images with transparent background (PNG). Ensure the logo is readable on light and dark backgrounds. Minimum size: 256x256px."
+    },
+    "hero": {
+      "kindLabel": "Media Type",
+      "kindNone": "No media",
+      "kindImage": "Image",
+      "kindVideo": "Video",
+      "imageUrl": "Image URL",
+      "videoUrl": "Video URL",
+      "altText": "Alt Text",
+      "altPlaceholder": "Image description",
+      "posterUrl": "Poster URL",
+      "uploadFile": "Upload File",
+      "uploadPoster": "Upload Poster",
+      "videoHint": "MP4 or WebM. Max 20MB. Video plays automatically on mute.",
+      "overlay": "Apply Gradient Overlay",
+      "loop": "Loop Playback",
+      "muted": "Muted",
+      "autoplay": "Autoplay",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Error uploading file",
+      "invalidFileType": "Invalid file type",
+      "fileTooLarge": "File too large"
+    },
+    "mainCard": {
+      "kindLabel": "Media Type",
+      "kindNone": "No media",
+      "kindImage": "Image",
+      "kindVideo": "Video",
+      "imageUrl": "Image URL",
+      "videoUrl": "Video URL",
+      "altText": "Alt Text",
+      "altPlaceholder": "Image description",
+      "posterUrl": "Poster URL",
+      "uploadFile": "Upload File",
+      "uploadPoster": "Upload Poster",
+      "videoHint": "MP4 or WebM. Max 20MB.",
+      "loop": "Loop Playback",
+      "muted": "Muted",
+      "autoplay": "Autoplay",
+      "uploadSuccess": "File uploaded successfully",
+      "uploadError": "Error uploading file",
+      "invalidFileType": "Invalid file type",
+      "fileTooLarge": "File too large"
+    },
+    "typography": {
+      "fontFamily": "Main Font",
+      "headingsFamily": "Headings Font",
+      "optional": "(optional)",
+      "headingsFamilyHint": "If not specified, main font is used",
+      "baseSize": "Base Size",
+      "baseSizeHint": "Base font size in px, rem or em. Example: 16px",
+      "lineHeight": "Line Height",
+      "lineHeightHint": "Line height without unit. Example: 1.5",
+      "preview": "Preview",
+      "previewHeading": "Sample Heading",
+      "previewBody": "This is sample text to visualize the selected typography. You can see how the text will look in your application.",
+      "googleFontsTitle": "Using Google Fonts",
+      "googleFontsDescription": "To use Google Fonts, add the link in the <head> of your application. Example:"
+    },
+    "text": {
+      "title": {
+        "label": "Main Title",
+        "placeholder": "Join Now!",
+        "description": "Title that appears at the top of the registration card"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Complete your registration to participate in this exclusive pool",
+        "description": "Brief description that appears below the pool name"
+      },
+      "slogan": {
+        "label": "Slogan",
+        "placeholder": "Your sports prediction platform",
+        "description": "Brand slogan that appears below the logo"
+      },
+      "paragraph": {
+        "label": "Descriptive Paragraph",
+        "placeholder": "Participate, predict and win. Join our community of sports enthusiasts.",
+        "description": "Long descriptive text for specific contexts"
+      },
+      "link": {
+        "label": "External Link",
+        "placeholder": "https://yourdomain.com/more-info",
+        "description": "URL for more information (optional)"
+      }
+    },
+    "preview": {
+      "title": "Live Preview",
+      "poolName": "Pool Name",
+      "poolDescription": "Description you registered when creating the pool.",
+      "formTitle": "Registration",
+      "codeLabel": "Invitation Code",
+      "validate": "Validate",
+      "nameLabel": "Full Name",
+      "emailLabel": "Your Email",
+      "termsLabel": "I accept the terms and conditions",
+      "submitButton": "Register",
+      "learnMore": "Learn more",
+      "heroTitle": "Welcome to your Pool",
+      "heroSubtitle": "Participate and win amazing prizes",
+      "cardTitle": "Sample Card",
+      "cardDescription": "This is a sample card showing how components will look with your custom theme.",
+      "primaryButton": "Primary Action",
+      "secondaryButton": "Secondary Action",
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "accent": "Accent",
+      "muted": "Muted"
+    }
+  },
+  "superadmin": {
+    "nav": {
+      "title": "Superadmin",
+      "tenants": "Tenants",
+      "templates": "Templates"
+    },
+    "tenants": {
+      "title": "Tenant Management",
+      "description": "Manage tenants and assign pool templates",
+      "loading": "Loading tenants",
+      "searchPlaceholder": "Search tenants...",
+      "createButton": "Create Tenant",
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "brands": "Brands",
+        "pools": "Pools",
+        "members": "Members",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "pagination": {
+        "page": "Page {page} of {totalPages} ({total} total)",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "create": {
+        "title": "Create New Tenant",
+        "description": "Create a new tenant with initial configuration",
+        "form": {
+          "name": "Tenant Name",
+          "namePlaceholder": "My Company",
+          "slug": "Slug (URL)",
+          "slugPlaceholder": "my-company",
+          "slugHelp": "Lowercase, numbers and hyphens only",
+          "description": "Description",
+          "descriptionPlaceholder": "Tenant description...",
+          "submit": "Create Tenant",
+          "cancel": "Cancel"
+        },
+        "success": "Tenant created successfully",
+        "error": "Error creating tenant: {message}"
+      },
+      "detail": {
+        "loading": "Loading tenant...",
+        "notFound": "Tenant not found",
+        "info": {
+          "title": "Tenant Information",
+          "name": "Name",
+          "slug": "Slug",
+          "description": "Description",
+          "created": "Created",
+          "updated": "Updated"
+        },
+        "brands": {
+          "title": "Brands",
+          "count": "{count} brand(s)",
+          "empty": "No brands configured"
+        },
+        "members": {
+          "title": "Members",
+          "count": "{count} member(s)",
+          "addButton": "Add Member",
+          "table": {
+            "user": "User",
+            "email": "Email",
+            "role": "Role",
+            "joined": "Joined",
+            "actions": "Actions"
+          },
+          "roles": {
+            "SUPERADMIN": "Superadmin",
+            "TENANT_ADMIN": "Admin",
+            "TENANT_EDITOR": "Editor",
+            "PLAYER": "Player"
+          },
+          "add": {
+            "title": "Add Member",
+            "description": "Add a new member to this tenant",
+            "email": "User Email",
+            "emailPlaceholder": "user@example.com",
+            "role": "Role",
+            "rolePlaceholder": "Select a role",
+            "submit": "Add Member",
+            "cancel": "Cancel"
+          },
+          "remove": {
+            "confirm": "Remove {email} from tenant?",
+            "success": "Member removed",
+            "error": "Error removing member: {message}"
+          },
+          "addSuccess": "Member added successfully",
+          "addError": "Error adding member: {message}"
+        },
+        "pools": {
+          "title": "Pools",
+          "count": "{count} pool(s)",
+          "empty": "No pools created",
+          "viewAll": "View all"
+        },
+        "templates": {
+          "title": "Assigned Templates",
+          "description": "Pool templates assigned to this tenant",
+          "count": "{count} assignment(s)",
+          "assignButton": "Assign Templates",
+          "table": {
+            "template": "Template",
+            "status": "Status",
+            "assigned": "Assigned",
+            "result": "Result",
+            "actions": "Actions"
+          },
+          "status": {
+            "QUEUED": "Queued",
+            "RUNNING": "Processing",
+            "DONE": "Completed",
+            "FAILED": "Failed"
+          },
+          "result": {
+            "pool": "Pool: {slug}",
+            "imported": "{teams} teams, {matches} matches",
+            "error": "Error: {message}"
+          },
+          "assign": {
+            "title": "Assign Templates",
+            "description": "Select templates to assign to this tenant",
+            "selectPlaceholder": "Select templates...",
+            "noTemplates": "No published templates available",
+            "selected": "{count} selected",
+            "submit": "Assign Templates",
+            "cancel": "Cancel"
+          },
+          "assignSuccess": "{count} template(s) assigned successfully",
+          "assignError": "Error assigning templates: {message}",
+          "empty": "No templates assigned"
+        },
+        "edit": {
+          "title": "Edit Tenant",
+          "description": "Update tenant information",
+          "submit": "Save Changes",
+          "cancel": "Cancel",
+          "success": "Tenant updated successfully",
+          "error": "Error updating tenant: {message}"
+        },
+        "delete": {
+          "button": "Delete Tenant",
+          "confirm": "Are you sure you want to delete tenant \"{name}\"?",
+          "warning": "This action cannot be undone. All associated brands and members will be deleted.",
+          "success": "Tenant deleted successfully",
+          "error": "Error deleting tenant: {message}"
+        }
+      }
+    },
+    "templates": {
+      "title": "Pool Templates",
+      "description": "Manage pool templates that can be assigned to tenants",
+      "loading": "Loading templates",
+      "searchPlaceholder": "Search templates...",
+      "createButton": "Create Template",
+      "filterByStatus": "Filter by status",
+      "filterAll": "All",
+      "table": {
+        "name": "Name",
+        "slug": "Slug",
+        "status": "Status",
+        "sport": "Sport",
+        "season": "Season",
+        "assignments": "Assignments",
+        "created": "Created",
+        "actions": "Actions"
+      },
+      "status": {
+        "DRAFT": "Draft",
+        "PUBLISHED": "Published",
+        "ARCHIVED": "Archived"
+      },
+      "pagination": {
+        "page": "Page {page} of {totalPages} ({total} total)",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "actions": {
+        "edit": "Edit",
+        "view": "View",
+        "delete": "Delete"
+      },
+      "create": {
+        "title": "Create Template",
+        "description": "Create a new pool template",
+        "tabs": {
+          "general": "General",
+          "scope": "Sport Scope",
+          "rules": "Rules",
+          "access": "Access"
+        },
+        "general": {
+          "title": "General Information",
+          "slug": "Slug",
+          "slugPlaceholder": "world-cup-2026",
+          "slugHelp": "Lowercase, numbers and hyphens only",
+          "name": "Template Name",
+          "namePlaceholder": "World Cup 2026",
+          "description": "Description",
+          "descriptionPlaceholder": "Template description...",
+          "status": "Status",
+          "statusDraft": "Draft",
+          "statusPublished": "Published",
+          "statusArchived": "Archived"
+        },
+        "scope": {
+          "title": "Sport Scope",
+          "description": "Define which matches will be imported",
+          "competitionId": "External Competition ID",
+          "competitionIdPlaceholder": "1",
+          "competitionIdHelp": "Competition ID in the provider (e.g., API-Football)",
+          "seasonYear": "Season Year",
+          "seasonYearPlaceholder": "2026",
+          "stageLabel": "Stage Label (optional)",
+          "stageLabelPlaceholder": "Group Stage",
+          "stageLabelHelp": "Filter by specific stage",
+          "roundLabel": "Round Label (optional)",
+          "roundLabelPlaceholder": "Round 1",
+          "roundLabelHelp": "Filter by specific round"
+        },
+        "rules": {
+          "title": "Scoring Rules",
+          "description": "Define how points are calculated",
+          "exactScore": "Points for Exact Score",
+          "exactScorePlaceholder": "5",
+          "correctSign": "Points for Correct Sign (1X2)",
+          "correctSignPlaceholder": "3",
+          "goalDiffBonus": "Goal Difference Bonus",
+          "goalDiffBonusPlaceholder": "1"
+        },
+        "access": {
+          "title": "Default Access Configuration",
+          "description": "Configuration that will be applied to created pools",
+          "accessType": "Access Type",
+          "accessTypePublic": "Public",
+          "accessTypeCode": "By Code",
+          "accessTypeEmail": "By Email",
+          "requireCaptcha": "Require CAPTCHA",
+          "requireEmailVerification": "Email Verification"
+        },
+        "submit": "Create Template",
+        "cancel": "Cancel",
+        "success": "Template created successfully",
+        "error": "Error creating template: {message}"
+      },
+      "edit": {
+        "title": "Edit Template",
+        "loading": "Loading template...",
+        "notFound": "Template not found",
+        "backButton": "Back to Templates",
+        "saveButton": "Save Changes",
+        "saving": "Saving...",
+        "tabs": {
+          "general": "General",
+          "scope": "Scope",
+          "rules": "Rules",
+          "access": "Access",
+          "assignments": "Assignments"
+        },
+        "actions": {
+          "preview": "Preview Import",
+          "previewButton": "Preview Import",
+          "publish": "Publish",
+          "publishButton": "Publish Template",
+          "archive": "Archive",
+          "archiveButton": "Archive Template",
+          "clone": "Clone",
+          "cloneButton": "Clone Template",
+          "delete": "Delete",
+          "deleteButton": "Delete Template"
+        },
+        "preview": {
+          "title": "Import Preview",
+          "description": "Estimated fixtures that will be imported from the provider",
+          "loading": "Loading preview...",
+          "teams": "Teams",
+          "matches": "Matches",
+          "dateRange": "Date Range",
+          "noData": "No preview data available"
+        },
+        "assignments": {
+          "title": "Tenant Assignments",
+          "description": "Tenants that have this template assigned",
+          "count": "{count} assignment(s)",
+          "table": {
+            "tenant": "Tenant",
+            "status": "Status",
+            "assigned": "Assigned",
+            "result": "Result"
+          },
+          "empty": "This template has not been assigned to any tenant"
+        },
+        "publish": {
+          "confirm": "Publish template \"{name}\"?",
+          "description": "The template will be available to assign to tenants",
+          "success": "Template published successfully",
+          "error": "Error publishing template: {message}"
+        },
+        "archive": {
+          "confirm": "Archive template \"{name}\"?",
+          "description": "The template will not be available for new assignments",
+          "success": "Template archived successfully",
+          "error": "Error archiving template: {message}"
+        },
+        "clone": {
+          "prompt": "Enter slug for the cloned template:",
+          "success": "Template cloned successfully",
+          "error": "Error cloning template: {message}"
+        },
+        "delete": {
+          "confirm": "Delete template \"{name}\"?",
+          "warning": "Only draft templates without assignments can be deleted",
+          "success": "Template deleted successfully",
+          "error": "Error deleting template: {message}"
+        },
+        "updateSuccess": "Template updated successfully",
+        "updateError": "Error updating template: {message}"
+      }
+    }
   }
 }

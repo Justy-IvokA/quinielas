@@ -70,7 +70,8 @@ export const userPoolsRouter = router({
                   year: true,
                   competition: {
                     select: {
-                      name: true
+                      name: true,
+                      logoUrl: true
                     }
                   }
                 }
@@ -131,7 +132,8 @@ export const userPoolsRouter = router({
                   year: true,
                   competition: {
                     select: {
-                      name: true
+                      name: true,
+                      logoUrl: true
                     }
                   }
                 }
@@ -203,6 +205,10 @@ export const userPoolsRouter = router({
             name: pool.brand?.name || "Default",
             logoUrl: pool.brand?.logoUrl || null
           },
+          competition: {
+            name: pool.season.competition.name,
+            logoUrl: pool.season.competition.logoUrl || null
+          },
           seasonLabel: `${pool.season.competition.name} ${pool.season.year}`,
           status: isFinalized ? ("FINALIZED" as const) : ("ACTIVE" as const),
           accessType: pool.accessPolicy?.accessType || "PUBLIC",
@@ -229,6 +235,10 @@ export const userPoolsRouter = router({
           brand: {
             name: pool.brand?.name || "Default",
             logoUrl: pool.brand?.logoUrl || null
+          },
+          competition: {
+            name: pool.season.competition.name,
+            logoUrl: pool.season.competition.logoUrl || null
           },
           seasonLabel: `${pool.season.competition.name} ${pool.season.year}`,
           status: "ACTIVE" as const,

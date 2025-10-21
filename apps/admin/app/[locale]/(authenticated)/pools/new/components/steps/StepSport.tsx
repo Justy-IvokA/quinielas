@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import { InfoIcon } from "lucide-react";
-import { Alert, AlertDescription } from "@qp/ui";
+import { Alert, AlertDescription, SportsLoader } from "@qp/ui";
+import { trpc } from "@admin/trpc";
 
 interface StepSportProps {
   onSelect: (sportId: string) => void;
@@ -10,15 +11,36 @@ interface StepSportProps {
 }
 
 export function StepSport({ onSelect, selectedSportId }: StepSportProps) {
-  // For MVP, we only support Football
-  const sportId = "football";
+  // Query sports from database
+  const { data: sports, isLoading } = trpc.sports.list.useQuery();
+  
+  // Get Football sport ID
+  const footballSport = sports?.find(sport => sport.slug === "football");
 
-  // Auto-select on mount
+  // Auto-select Football on mount
   useEffect(() => {
-    if (!selectedSportId) {
-      onSelect(sportId);
+    if (!selectedSportId && footballSport) {
+      onSelect(footballSport.id);
     }
-  }, [selectedSportId, onSelect]);
+  }, [selectedSportId, footballSport, onSelect]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <SportsLoader size="sm" text="Cargando deportes" />
+      </div>
+    );
+  }
+
+  if (!footballSport) {
+    return (
+      <Alert variant="destructive">
+        <AlertDescription>
+          No se encontró el deporte Football en la base de datos. Por favor, ejecuta el seed: <code>pnpm db:seed</code>
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6">

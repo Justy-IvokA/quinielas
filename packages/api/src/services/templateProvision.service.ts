@@ -174,8 +174,7 @@ export async function provisionTemplateToTenant(
         data: {
           sportId: sport.id,
           slug: template.title.toLowerCase().replace(/\s+/g, "-"),
-          name: template.title,
-          metadata: {}
+          name: template.title
         }
       });
 

@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Info, Target } from "lucide-react";
+import { Info, Target, AlertCircle } from "lucide-react";
 import { SportsLoader } from "@qp/ui";
 import { Label, RadioGroup, RadioGroupItem, Alert, AlertDescription } from "@qp/ui";
 import { trpc } from "@admin/trpc";
+import { toast } from "sonner";
 
 interface StepStageRoundProps {
   competitionExternalId: string;
@@ -24,6 +25,12 @@ export function StepStageRound({
 }: StepStageRoundProps) {
   const [selectedStage, setSelectedStage] = useState<string | null>(initialData?.stageLabel || null);
   const [selectedRound, setSelectedRound] = useState<string | null>(initialData?.roundLabel || null);
+  const [stagePreviewCache, setStagePreviewCache] = useState<Record<string, any>>({});
+  const [roundsStatus, setRoundsStatus] = useState<Record<string, 'active' | 'expired' | 'unknown'>>({});
+  const [loadingRounds, setLoadingRounds] = useState(false);
+  const now = new Date();
+  
+  const utils = trpc.useUtils();
 
   // Query stages
   const { data: stagesData, isLoading } = trpc.poolWizard.listStages.useQuery({
@@ -47,14 +54,97 @@ export function StepStageRound({
   const selectedStageData = stagesData?.stages.find((s) => s.label === selectedStage);
 
   const handleStageSelect = (stage: string) => {
+    // Don't validate stage expiration here - let user select it
+    // Validation will happen at round level or when continuing without round
     setSelectedStage(stage);
     setSelectedRound(null);
   };
 
   const handleRoundSelect = (round: string) => {
+    // Only validate if the round is marked as inactive
+    if (!activeRounds.has(round)) {
+      toast.error("Ronda finalizada", {
+        description: `La ronda "${round}" ya ha finalizado. Por favor, selecciona una ronda activa o futura.`
+      });
+      return;
+    }
+
     setSelectedRound(round);
     onSelect({ stageLabel: selectedStage || undefined, roundLabel: round });
   };
+
+  // Cache preview data when it loads
+  useEffect(() => {
+    if (previewData && selectedStage) {
+      setStagePreviewCache(prev => ({
+        ...prev,
+        [selectedStage]: previewData
+      }));
+    }
+  }, [previewData, selectedStage]);
+
+  // Load preview for each round to determine if it's active or expired
+  useEffect(() => {
+    const loadRoundsStatus = async () => {
+      if (!selectedStage || !selectedStageData?.rounds || selectedStageData.rounds.length === 0) {
+        return;
+      }
+
+      setLoadingRounds(true);
+      const newStatus: Record<string, 'active' | 'expired' | 'unknown'> = {};
+      const currentTime = new Date(); // Create once inside the effect
+
+      // Load preview for each round
+      for (const round of selectedStageData.rounds) {
+        try {
+          const preview = await utils.poolWizard.previewFixtures.fetch({
+            competitionExternalId,
+            seasonYear,
+            stageLabel: selectedStage,
+            roundLabel: round
+          });
+
+          // Check if any match in this round is in the future
+          const hasFutureMatches = preview.sampleMatches?.some(
+            match => new Date(match.kickoffTime) > currentTime
+          );
+
+          newStatus[round] = hasFutureMatches ? 'active' : 'expired';
+        } catch (error) {
+          console.error(`Error loading preview for round ${round}:`, error);
+          newStatus[round] = 'unknown';
+        }
+      }
+
+      setRoundsStatus(newStatus);
+      setLoadingRounds(false);
+    };
+
+    loadRoundsStatus();
+  }, [selectedStage, selectedStageData, competitionExternalId, seasonYear, utils]);
+
+  // Determine which rounds are active based on loaded status
+  const getActiveRounds = () => {
+    if (!selectedStage || !selectedStageData?.rounds) {
+      return new Set(selectedStageData?.rounds || []);
+    }
+
+    // If still loading rounds status, show all as active temporarily
+    if (loadingRounds) {
+      return new Set(selectedStageData.rounds);
+    }
+
+    // Filter rounds based on their loaded status
+    const activeRounds = selectedStageData.rounds.filter(round => {
+      const status = roundsStatus[round];
+      // Include active rounds and unknown rounds (benefit of the doubt)
+      return status === 'active' || status === 'unknown' || !status;
+    });
+
+    return new Set(activeRounds);
+  };
+
+  const activeRounds = getActiveRounds();
 
   // Update wizard data whenever selection changes
   useEffect(() => {
@@ -107,8 +197,15 @@ export function StepStageRound({
                     : "border-border hover:border-primary/50"
                 }`}
               >
-                <RadioGroupItem value={stage.label} id={`stage-${stage.label}`} className="mt-1" />
-                <Label htmlFor={`stage-${stage.label}`} className="flex-1 cursor-pointer">
+                <RadioGroupItem 
+                  value={stage.label} 
+                  id={`stage-${stage.label}`} 
+                  className="mt-1"
+                />
+                <Label 
+                  htmlFor={`stage-${stage.label}`} 
+                  className="flex-1 cursor-pointer"
+                >
                   <div className="font-medium">{stage.label}</div>
                   {stage.rounds && stage.rounds.length > 0 && (
                     <div className="text-xs text-muted-foreground mt-1">
@@ -142,21 +239,37 @@ export function StepStageRound({
                   // Fallback to string comparison
                   return a.localeCompare(b, 'es-MX', { numeric: true, sensitivity: 'base' });
                 })
-                .map((round) => (
-                  <div
-                    key={round}
-                    className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
-                      selectedRound === round
-                        ? "border-primary bg-primary/5"
-                        : "border-border hover:border-primary/50"
-                    }`}
-                  >
-                    <RadioGroupItem value={round} id={`round-${round}`} />
-                    <Label htmlFor={`round-${round}`} className="flex-1 cursor-pointer">
-                      {round}
-                    </Label>
-                  </div>
-                ))}
+                .map((round) => {
+                  const isActive = activeRounds.has(round);
+                  
+                  return (
+                    <div
+                      key={round}
+                      className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
+                        !isActive
+                          ? "opacity-40 cursor-not-allowed border-muted"
+                          : selectedRound === round
+                          ? "border-primary bg-primary/5 cursor-pointer"
+                          : "border-border hover:border-primary/50 cursor-pointer"
+                      }`}
+                    >
+                      <RadioGroupItem 
+                        value={round} 
+                        id={`round-${round}`}
+                        disabled={!isActive}
+                      />
+                      <Label 
+                        htmlFor={`round-${round}`} 
+                        className={`flex-1 text-sm ${!isActive ? "cursor-not-allowed" : "cursor-pointer"}`}
+                      >
+                        {round}
+                        {!isActive && (
+                          <span className="ml-1 text-xs text-red-600 dark:text-red-400">✕</span>
+                        )}
+                      </Label>
+                    </div>
+                  );
+                })}
             </div>
           </RadioGroup>
         </div>

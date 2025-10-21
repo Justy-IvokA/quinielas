@@ -60,14 +60,14 @@ export function MatchCard({ match, prediction, poolId, userId, locale }: MatchCa
     );
   } else if (isLive) {
     statusBadge = (
-      <Badge variant="destructive" className="animate-pulse">
+      <Badge variant="success" className="animate-pulse">
         <Play className="w-3 h-3 mr-1" />
         {t("status.live")}
       </Badge>
     );
   } else if (isLocked) {
     statusBadge = (
-      <Badge variant="secondary">
+      <Badge variant="error">
         <Lock className="w-3 h-3 mr-1" />
         {t("status.locked")}
       </Badge>
@@ -81,11 +81,11 @@ export function MatchCard({ match, prediction, poolId, userId, locale }: MatchCa
   }
 
   return (
-    <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl overflow-hidden">
+    <div className="backdrop-blur-md bg-primary/20 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl overflow-hidden [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary/20 to-primary/10 p-3 border-b border-white/10">
         <div className="flex items-center justify-between">
-          <div className="text-white/80 text-sm">
+          <div className="text-secondary font-bold text-sm">
             {format(match.kickoffTime, "d MMM, HH:mm", { locale: es })}
           </div>
           {statusBadge}
@@ -148,7 +148,7 @@ export function MatchCard({ match, prediction, poolId, userId, locale }: MatchCa
         {!isLocked && prediction && (
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-white/70">{t("yourPrediction")}</span>
+              <span className="text-accent">{t("yourPrediction")}</span>
               <span className="text-white font-bold">
                 {prediction.homeScore} - {prediction.awayScore}
               </span>

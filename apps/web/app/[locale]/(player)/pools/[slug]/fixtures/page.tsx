@@ -124,6 +124,7 @@ export default async function FixturesPage({ params, searchParams }: FixturesPag
         pool={pool}
         userId={session.user.id}
         initialFilter={filter}
+        tenantSlug={tenant.slug}
       />
     </Suspense>
   );

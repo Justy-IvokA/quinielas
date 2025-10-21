@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Trophy, Calendar } from "lucide-react";
-import { InlineLoader, SportsLoader } from "@qp/ui";
+import { Search, Trophy, Calendar, AlertCircle } from "lucide-react";
+import { InlineLoader, SportsLoader, Alert, AlertDescription } from "@qp/ui";
 import { Input, Button, Label, RadioGroup, RadioGroupItem } from "@qp/ui";
 import { trpc } from "@admin/trpc";
+import { toast } from "sonner";
 
 interface StepCompetitionSeasonProps {
   onSelect: (data: { competitionExternalId: string; competitionName: string; seasonYear: number }) => void;
@@ -50,9 +51,24 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
     }
   );
 
-  // Filter seasons to show only current and future (exclude past seasons)
-  const currentYear = new Date().getFullYear();
-  const availableSeasons = seasonsData?.seasons.filter(season => season.year >= currentYear) || [];
+  // Filter seasons to show only current and future (exclude expired seasons)
+  const now = new Date();
+  const availableSeasons = seasonsData?.seasons.filter(season => {
+    // If season has an end date, check if it hasn't ended yet
+    if (season.endsAt) {
+      return new Date(season.endsAt) > now;
+    }
+    // Fallback: if no end date, filter by year (current year or future)
+    return season.year >= now.getFullYear();
+  }) || [];
+
+  // Separate expired seasons for warning display
+  const expiredSeasons = seasonsData?.seasons.filter(season => {
+    if (season.endsAt) {
+      return new Date(season.endsAt) <= now;
+    }
+    return season.year < now.getFullYear();
+  }) || [];
 
   const handleCompetitionSelect = (externalId: string, name: string) => {
     setSelectedCompetition({ externalId, name });
@@ -60,6 +76,17 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
   };
 
   const handleSeasonSelect = (year: number) => {
+    // Find the selected season to validate
+    const selectedSeasonData = seasonsData?.seasons.find(s => s.year === year);
+    
+    // Check if season is expired
+    if (selectedSeasonData?.endsAt && new Date(selectedSeasonData.endsAt) <= now) {
+      toast.error("Temporada finalizada", {
+        description: `La temporada ${selectedSeasonData.label || selectedSeasonData.year} ya ha finalizado. Por favor, selecciona una temporada activa o futura.`
+      });
+      return;
+    }
+
     setSelectedSeason(year);
     if (selectedCompetition) {
       onSelect({
@@ -156,6 +183,16 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
             </div>
           )}
 
+          {/* Warning if there are expired seasons */}
+          {expiredSeasons.length > 0 && (
+            <Alert variant="warning">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                {expiredSeasons.length} temporada(s) finalizada(s) oculta(s). Solo se muestran temporadas activas o futuras.
+              </AlertDescription>
+            </Alert>
+          )}
+
           {availableSeasons.length > 0 && (
             <RadioGroup value={selectedSeason?.toString()} onValueChange={(val) => handleSeasonSelect(parseInt(val))}>
               <div className="grid gap-2">
@@ -177,7 +214,7 @@ export function StepCompetitionSeason({ onSelect, initialData }: StepCompetition
                             Actual
                           </span>
                         )}
-                        {season.year > currentYear && (
+                        {season.year > now.getFullYear() && (
                           <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded">
                             Próxima
                           </span>

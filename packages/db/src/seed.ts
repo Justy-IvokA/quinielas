@@ -63,6 +63,21 @@ async function main() {
   console.log("🌱 Seeding Quinielas WL demo data...");
 
   // ========================================
+  // 0. SPORTS (Required for templates and pools)
+  // ========================================
+  console.log("📦 Creating Football sport...");
+  const football = await prisma.sport.upsert({
+    where: { slug: "football" },
+    update: {
+      name: "Futbol Soccer",
+    },
+    create: {
+      slug: "football",
+      name: "Futbol Soccer",
+    },
+  });
+
+  // ========================================
   // 1. SUPERADMIN & AGENCIA TENANT
   // ========================================
   console.log("📦 Creating Agencia tenant and SUPERADMIN...");

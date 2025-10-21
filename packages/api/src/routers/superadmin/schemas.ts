@@ -114,7 +114,7 @@ export const createTemplateSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   
   // Sport scope
-  sportId: z.string().cuid().optional(),
+  sportId: z.string().uuid().optional(), // cuid() 
   
   // External provider scope
   competitionExternalId: z.string().optional(),

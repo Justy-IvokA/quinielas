@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Award, Plus, Trash2 } from "lucide-react";
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Select,
   SelectContent,
@@ -65,12 +65,14 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
   const { data: pool } = trpc.pools.getById.useQuery({ id: poolId });
   const { data: prizes, isLoading } = trpc.pools.prizes.list.useQuery({ poolId });
 
-  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<PrizeFormData>({
+  const form = useForm<PrizeFormData>({
     resolver: zodResolver(prizeFormSchema),
     defaultValues: {
       type: "OTHER"
     }
   });
+
+  const { register, handleSubmit, reset, setValue, watch, control, formState: { errors } } = form;
 
   const createMutation = trpc.pools.prizes.create.useMutation({
     onSuccess: () => {
@@ -164,7 +166,8 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                   Define el premio para una posición del leaderboard.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+              <FormProvider {...form}>
+                <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
                 <div className="flex justify-between gap-2">
                   <FormField label="Del" htmlFor="rankFrom" required error={errors.rankFrom?.message}>
                     <Input
@@ -244,6 +247,7 @@ export function PrizesManager({ poolId }: PrizesManagerProps) {
                   Crear premio
                 </Button>
               </form>
+              </FormProvider>
             </DialogContent>
           </Dialog>
         </div>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Calendar, Trophy, AlertCircle } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 import { SportsLoader } from "@qp/ui";
 import { Button, Alert, AlertDescription, Tabs, TabsList, TabsTrigger, TabsContent } from "@qp/ui";
 import { BackButton } from "../../../../../../components/back-button";
@@ -37,9 +37,10 @@ interface FixturesViewProps {
   };
   userId: string;
   initialFilter: "ALL" | "PENDING" | "LIVE" | "FINISHED";
+  tenantSlug: string;
 }
 
-export function FixturesView({ locale, pool, userId, initialFilter }: FixturesViewProps) {
+export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }: FixturesViewProps) {
   const t = useTranslations("fixtures");
   const tCommon = useTranslations("common");
 
@@ -59,14 +60,6 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
   const { data: externalMap } = trpc.externalMaps.getByEntity.useQuery({
     entityType: "COMPETITION",
     entityId: pool.season.competition.id
-  });
-
-  // Debug: Log external map data
-  console.log("🔍 External Map Debug:", {
-    competitionId: pool.season.competition.id,
-    externalMap,
-    leagueId: externalMap?.externalId,
-    season: pool.season.year,
   });
 
   const isLoading = matchesLoading || predictionsLoading;
@@ -129,7 +122,7 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
+    <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       {/* Header */}
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-4">
@@ -151,17 +144,17 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
       {/* Tabs: Fixtures, Leaderboard, Stats & Prizes */}
       <Tabs defaultValue="fixtures" className="mb-8">
         <TabsList className="bg-white/10 border border-white/20">
-          <TabsTrigger value="fixtures" className="data-[state=active]:bg-primary">
+          <TabsTrigger value="fixtures" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
             {t("tabs.fixtures")}
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-primary">
+          <TabsTrigger value="stats" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
+            {t("tabs.stats")}
+          </TabsTrigger>
+          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
             {t("tabs.leaderboard")}
           </TabsTrigger>
-          <TabsTrigger value="prizes" className="data-[state=active]:bg-primary">
+          <TabsTrigger value="prizes" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
             {t("tabs.prizes")}
-          </TabsTrigger>
-          <TabsTrigger value="stats" className="data-[state=active]:bg-primary">
-            {t("tabs.stats")}
           </TabsTrigger>
         </TabsList>
 
@@ -207,10 +200,10 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
             <div className="space-y-8">
               {rounds.map((round) => (
                 <div key={round}>
-                  <h2 className="text-2xl font-bold text-white mb-4">
+                  <h2 className="text-2xl font-bold text-primary mb-4">
                     {t("round", { number: round })}
                   </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {matchesByRound[round].map((match) => (
                       <MatchCard
                         key={match.id}
@@ -241,6 +234,7 @@ export function FixturesView({ locale, pool, userId, initialFilter }: FixturesVi
             locale={locale}
             leagueId={externalMap?.externalId}
             season={pool.season.year.toString()}
+            tenantSlug={tenantSlug}
           />
         </TabsContent>
 

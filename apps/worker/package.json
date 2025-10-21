@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "wrangler dev",
     "build": "tsc --build",
+    "deploy": "wrangler deploy",
     "start": "node dist/index.js",
     "run": "tsx src/runner.ts",
     "lint": "eslint .",

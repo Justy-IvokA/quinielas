@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "Quinielas WL Admin",
-    "loading": "Cargando...",
+    "loading": "Cargando",
     "save": "Guardar",
     "cancel": "Cancelar",
     "edit": "Editar",
@@ -31,7 +31,7 @@
       "emailLabel": "Correo electrónico",
       "emailPlaceholder": "admin@ejemplo.com",
       "sendLink": "Enviar enlace de acceso",
-      "sendingLink": "Enviando...",
+      "sendingLink": "Enviando",
       "checkEmail": "Revisa tu correo",
       "emailSent": "Te enviamos un enlace de acceso a {email}",
       "emailSentDescription": "Haz clic en el enlace para iniciar sesión. El enlace expira en 24 horas.",
@@ -51,7 +51,7 @@
       "generic": "Algo salió mal. Por favor, intenta de nuevo",
       "insufficientPrivileges": "Este correo no tiene permisos de administrador. Solo usuarios con rol SUPERADMIN o ADMIN pueden acceder.",
       "userNotFound": "No se encontró una cuenta con este correo electrónico",
-      "checkingPermissions": "Verificando permisos..."
+      "checkingPermissions": "Verificando permisos"
     },
     "verify": {
       "title": "Verifica tu correo",
@@ -61,7 +61,7 @@
   },
   "dashboard": {
     "statusOnline": "Servicios operativos",
-    "statusCheck": "Verificando estado API...",
+    "statusCheck": "Verificando estado API",
     "welcome": "Bienvenido, {tenant}",
     "subtitle": "Administra tus quinielas y el branding para la marca {brand}.",
     "createPool": "Crear quiniela",
@@ -93,7 +93,7 @@
   "access": {
     "title": "Gestión de Acceso",
     "description": "Administra políticas de acceso, códigos de invitación y listas de correo para tus pools.",
-    "loadingPolicies": "Cargando políticas de acceso...",
+    "loadingPolicies": "Cargando políticas de acceso",
     "noPolicy": {
       "title": "Sin política de acceso",
       "description": "Este pool no tiene una política de acceso configurada. Crea una para comenzar a gestionar registros.",
@@ -165,7 +165,7 @@
       "success": "Lote de códigos creado exitosamente",
       "error": "Error al crear lote: {message}",
       "copySuccess": "Código copiado al portapapeles",
-      "loading": "Cargando lotes de códigos...",
+      "loading": "Cargando lotes de códigos",
       "batchTitle": "Lote #{id}",
       "batchSummary": "{total} códigos · {used} usados",
       "table": {
@@ -205,7 +205,7 @@
       "createError": "Error al crear invitación: {message}",
       "resendSuccess": "Invitación reenviada",
       "resendError": "Error al reenviar: {message}",
-      "loading": "Cargando invitaciones...",
+      "loading": "Cargando invitaciones",
       "table": {
         "email": "Email",
         "status": "Estado",
@@ -513,7 +513,7 @@
         "cta": "Crea tu primer premio"
       }
     },
-    "loading": "Cargando quinielas...",
+    "loading": "Cargando quinielas",
     "list": {
       "brand": "{brand}",
       "noBrand": "Sin marca",
@@ -546,7 +546,7 @@
       "successDescription": "Los cambios se han aplicado correctamente",
       "errorTitle": "No se pudo guardar",
       "errorDescription": "Ocurrió un error al guardar la configuración",
-      "loading": "Guardando configuración...",
+      "loading": "Guardando configuración",
       "success": "¡Configuración guardada exitosamente!",
       "error": "Error al guardar la configuración"
     }
@@ -596,9 +596,9 @@
     "resetConfirm": "¿Estás seguro de que deseas restablecer el tema a los valores predeterminados? Esta acción no se puede deshacer.",
     "formTitle": "Editor de Marca",
     "formDescription": "Personaliza la apariencia de tu marca. Los cambios se reflejan en tiempo real en la vista previa.",
-    "saving": "Guardando...",
+    "saving": "Guardando",
     "save": "Guardar Cambios",
-    "resetting": "Restableciendo...",
+    "resetting": "Restableciendo",
     "reset": "Restablecer",
     "copyJson": "Copiar JSON",
     "copied": "Copiado",
@@ -753,11 +753,11 @@
     "title": "Invitaciones por Email",
     "subtitle": "Gestiona las invitaciones por email para esta quiniela",
     "uploadCsv": "Subir CSV",
-    "uploading": "Subiendo...",
+    "uploading": "Subiendo",
     "createInvitations": "Crear Invitaciones",
     "createFirst": "Crear Primera Invitación",
     "noInvitations": "No se encontraron invitaciones",
-    "loading": "Cargando invitaciones...",
+    "loading": "Cargando invitaciones",
     "searchPlaceholder": "Buscar por email...",
     "sendSelected": "Enviar Seleccionados",
     "activationProgress": "Progreso de Activación",
@@ -815,8 +815,8 @@
       "missingBrandData": "Faltan datos de marca",
       "cannotGenerateLink": "No se puede generar el enlace de invitación",
       "uploadFailed": "Error al subir CSV",
-      "creating": "Creando...",
-      "sending": "Enviando...",
+      "creating": "Creando",
+      "sending": "Enviando",
       "cancel": "Cancelar"
     }
   },
@@ -826,7 +826,7 @@
     "createBatch": "Crear Lote",
     "createFirst": "Crear Primer Lote",
     "noBatches": "No hay lotes de códigos aún",
-    "loading": "Cargando lotes...",
+    "loading": "Cargando lotes",
     "wrongAccessType": "Esta quiniela no usa códigos de invitación. Tipo de acceso: {type}",
     "stats": {
       "totalCodes": "Total de Códigos",
@@ -878,7 +878,7 @@
       "expiresAtLabel": "Fecha de Expiración",
       "preview": "Vista Previa del Código",
       "previewFormat": "{prefix}-XXXX-XXXX",
-      "generating": "Generando códigos...",
+      "generating": "Generando códigos",
       "detailsTitle": "Detalles del Lote",
       "detailsDescription": "Códigos en el lote {name}",
       "searchPlaceholder": "Buscar código...",
@@ -909,7 +909,7 @@
     },
     "tenants": {
       "title": "Gestión de Clientes",
-      "description": "Gestiona clientes que puedes usar/asignar a los clientes",
+      "description": "Gestión administrativa para las cuentas de clientes",
       "loading": "Cargando clientes",
       "searchPlaceholder": "Buscar clientes...",
       "createButton": "Crear Cliente",
@@ -945,7 +945,7 @@
         "error": "Error al crear cliente: {message}"
       },
       "detail": {
-        "loading": "Cargando tenant...",
+        "loading": "Cargando tenant",
         "notFound": "Cliente no encontrado",
         "info": {
           "title": "Información del Cliente",
@@ -1074,8 +1074,8 @@
       },
       "status": {
         "DRAFT": "Borrador",
-        "PUBLISHED": "Publicado",
-        "ARCHIVED": "Archivado"
+        "PUBLISHED": "Publicada",
+        "ARCHIVED": "Archivada"
       },
       "pagination": {
         "page": "Página {page} de {totalPages} ({total} total)",
@@ -1088,6 +1088,9 @@
         "delete": "Eliminar"
       },
       "create": {
+        "pageTitle": "Crear Plantilla de Quiniela",
+        "pageDescription": "Define una configuración de quiniela reutilizable para aprovisionamiento rápido de clientes",
+        "back": "Volver",
         "title": "Crear Plantilla",
         "description": "Crea una nueva plantilla de quiniela",
         "tabs": {
@@ -1097,66 +1100,240 @@
           "access": "Acceso"
         },
         "general": {
+          "cardTitle": "Información Básica",
+          "cardDescription": "Identificación y descripción de la plantilla",
           "title": "Información General",
-          "slug": "Slug",
-          "slugPlaceholder": "mundial-2026",
+          "titleLabel": "Título *",
+          "titlePlaceholder": "Copa Mundial 2026 - Fase de Grupos",
+          "slug": "Slug *",
+          "slugLabel": "Slug *",
+          "slugPlaceholder": "mundial-2026-grupos",
           "slugHelp": "Solo minúsculas, números y guiones",
           "name": "Nombre de la Plantilla",
           "namePlaceholder": "Copa Mundial FIFA 2026",
           "description": "Descripción",
-          "descriptionPlaceholder": "Descripción de la plantilla...",
+          "descriptionLabel": "Descripción",
+          "descriptionPlaceholder": "Plantilla para quinielas de la fase de grupos de la Copa Mundial FIFA 2026",
           "status": "Estado",
+          "statusLabel": "Estado",
           "statusDraft": "Borrador",
           "statusPublished": "Publicado",
-          "statusArchived": "Archivado"
+          "statusArchived": "Archivado",
+          "statusHelp": "Solo las plantillas PUBLICADAS pueden ser asignadas a clientes"
         },
         "scope": {
+          "cardTitle": "Alcance del Proveedor Deportivo",
+          "cardDescription": "Define qué partidos importar desde el proveedor de API deportiva",
           "title": "Alcance Deportivo",
           "description": "Define qué partidos se importarán",
-          "competitionId": "ID Externo de Competición",
-          "competitionIdPlaceholder": "1",
-          "competitionIdHelp": "ID de la competición en el proveedor (ej: API-Football)",
-          "seasonYear": "Año de Temporada",
+          "competitionId": "ID Externo de Competición *",
+          "competitionIdLabel": "ID Externo de Competición *",
+          "competitionIdPlaceholder": "1 (para Copa Mundial en API-Football)",
+          "competitionIdHelp": "ID de competición específico del proveedor (ej: ID de competición de API-Football)",
+          "seasonYear": "Año de Temporada *",
+          "seasonYearLabel": "Año de Temporada *",
           "seasonYearPlaceholder": "2026",
-          "stageLabel": "Etiqueta de Etapa (opcional)",
+          "stageLabel": "Etiqueta de Etapa (Opcional)",
+          "stageLabelLabel": "Etiqueta de Etapa (Opcional)",
           "stageLabelPlaceholder": "Group Stage",
-          "stageLabelHelp": "Filtra por etapa específica",
-          "roundLabel": "Etiqueta de Ronda (opcional)",
+          "stageLabelHelp": "Dejar vacío para importar todas las etapas",
+          "roundLabel": "Etiqueta de Ronda (Opcional)",
+          "roundLabelLabel": "Etiqueta de Ronda (Opcional)",
           "roundLabelPlaceholder": "Round 1",
-          "roundLabelHelp": "Filtra por ronda específica"
+          "roundLabelHelp": "Dejar vacío para importar todas las rondas"
         },
         "rules": {
+          "cardTitle": "Reglas de Puntuación",
+          "cardDescription": "Configuración de puntuación predeterminada para quinielas creadas desde esta plantilla",
           "title": "Reglas de Puntuación",
           "description": "Define cómo se calculan los puntos",
           "exactScore": "Puntos por Marcador Exacto",
+          "exactScoreLabel": "Puntos por Marcador Exacto",
           "exactScorePlaceholder": "5",
           "correctSign": "Puntos por Signo Correcto (1X2)",
+          "correctSignLabel": "Puntos por Signo Correcto (1X2)",
           "correctSignPlaceholder": "3",
           "goalDiffBonus": "Bonus por Diferencia de Goles",
+          "goalDiffBonusLabel": "Bonus por Diferencia de Goles",
           "goalDiffBonusPlaceholder": "1"
         },
         "access": {
+          "cardTitle": "Valores Predeterminados de Política de Acceso",
+          "cardDescription": "Configuración de acceso predeterminada para quinielas creadas desde esta plantilla",
           "title": "Configuración de Acceso Predeterminada",
           "description": "Configuración que se aplicará a las quinielas creadas",
           "accessType": "Tipo de Acceso",
+          "accessTypeLabel": "Tipo de Acceso",
           "accessTypePublic": "Público",
-          "accessTypeCode": "Por Código",
-          "accessTypeEmail": "Por Email",
+          "accessTypeCode": "Código de Invitación",
+          "accessTypeEmail": "Invitación por Email",
           "requireCaptcha": "Requerir CAPTCHA",
-          "requireEmailVerification": "Verificación de Email"
+          "requireEmailVerification": "Requerir Verificación de Email"
+        },
+        "buttons": {
+          "cancel": "Cancelar",
+          "submit": "Crear Plantilla",
+          "creating": "Creando"
         },
         "submit": "Crear Plantilla",
         "cancel": "Cancelar",
+        "creating": "Creando",
         "success": "Plantilla creada exitosamente",
-        "error": "Error al crear plantilla: {message}"
+        "error": "Error al crear plantilla",
+        "wizard": {
+          "navigation": {
+            "prev": "Atrás",
+            "next": "Siguiente",
+            "finish": "Finalizar",
+            "stepLabel": "Paso {step} de {maxSteps}"
+          },
+          "errors": {
+            "missingCompetition": "Error: Datos de competencia no disponibles",
+            "missingData": "Error: Faltan datos requeridos"
+          },
+          "steps": {
+            "sport": {
+              "title": "Deporte",
+              "description": "Selecciona el deporte para tu plantilla",
+              "footballLabel": "Fútbol",
+              "preselectedHint": "está preseleccionado. Haz clic en \"Siguiente\" para continuar.",
+              "footballDescription": "Crea plantillas para ligas, copas y torneos de fútbol"
+            },
+            "competition": {
+              "title": "Competencia y Temporada",
+              "description": "Busca y selecciona la competencia y temporada",
+              "searchPlaceholder": "Buscar competencia (ej: Liga MX, Champions League)...",
+              "youthOnlyButton": "Solo Sub-20",
+              "minCharsHint": "Escribe al menos 3 caracteres para buscar...",
+              "loadingCompetitions": "Buscando competencias",
+              "youthBadge": "Youth",
+              "noCompetitionsFound": "No se encontraron competencias. Intenta con otro término de búsqueda.",
+              "selectSeasonTitle": "Selecciona la temporada",
+              "loadingSeasons": "Buscando temporadas",
+              "currentBadge": "Actual",
+              "upcomingBadge": "Próxima",
+              "noSeasonsAvailable": "No hay temporadas actuales o futuras disponibles para esta competencia.",
+              "seasonExpiredError": "Temporada finalizada",
+              "seasonExpiredDescription": "La temporada {season} ya ha finalizado. Por favor, selecciona una temporada activa o futura.",
+              "expiredSeasonsWarning": "{count} temporada(s) finalizada(s) oculta(s). Solo se muestran temporadas activas o futuras."
+            },
+            "scope": {
+              "title": "Etapa y Ronda",
+              "description": "Define el alcance de los partidos a importar",
+              "loadingStages": "Cargando etapas",
+              "noStagesFound": "No se encontraron etapas o rondas para esta temporada. Continúa para importar todos los partidos.",
+              "hint": "Selecciona una etapa específica (ej: \"Semifinales\") o continúa para importar toda la temporada.",
+              "stageTitle": "Etapa del torneo",
+              "roundsCount": "{count} ronda(s)",
+              "roundTitle": "Ronda específica (opcional)",
+              "expiredBadge": "Finalizada",
+              "stageExpiredError": "Etapa finalizada",
+              "stageExpiredDescription": "La etapa \"{stage}\" ya ha finalizado. Por favor, selecciona una etapa activa o futura.",
+              "roundExpiredError": "Ronda finalizada",
+              "roundExpiredDescription": "La ronda \"{round}\" ya ha finalizado. Por favor, selecciona una ronda activa o futura.",
+              "previewTitle": "Vista previa del alcance",
+              "teamsLabel": "Equipos",
+              "matchesLabel": "Partidos",
+              "sampleMatchesLabel": "Ejemplos de partidos",
+              "continueWithoutSelection": "Puedes continuar sin seleccionar una etapa para importar toda la temporada."
+            },
+            "details": {
+              "title": "Detalles de la Plantilla",
+              "description": "Configura el nombre, slug y descripción",
+              "hint": "Define la información básica de la plantilla. El título y slug se generan automáticamente basados en la competencia seleccionada.",
+              "titleLabel": "Título de la Plantilla *",
+              "titlePlaceholder": "Copa Mundial 2026 - Fase de Grupos",
+              "titleHint": "Nombre descriptivo de la plantilla",
+              "slugLabel": "Slug (URL) *",
+              "slugPlaceholder": "copa-mundial-2026-grupos",
+              "slugHint": "Solo minúsculas, números y guiones",
+              "slugRequired": "El slug es requerido",
+              "slugInvalid": "El slug solo puede contener minúsculas, números y guiones",
+              "autoGenerate": "Auto-generar",
+              "descriptionLabel": "Descripción",
+              "descriptionPlaceholder": "Plantilla para quinielas de la fase de grupos de la Copa Mundial FIFA 2026",
+              "statusLabel": "Estado",
+              "statusDraft": "Borrador",
+              "statusPublished": "Publicado",
+              "statusArchived": "Archivado",
+              "statusHint": "Solo las plantillas PUBLICADAS pueden ser asignadas a clientes"
+            },
+            "rules": {
+              "title": "Reglas de Puntuación",
+              "description": "Define cómo se calculan los puntos",
+              "hint": "Configura los puntos predeterminados para las quinielas creadas desde esta plantilla.",
+              "exactScoreLabel": "Puntos por Marcador Exacto",
+              "exactScoreHint": "Puntos otorgados cuando el jugador acierta el marcador exacto (ej: 2-1)",
+              "correctSignLabel": "Puntos por Signo Correcto (1X2)",
+              "correctSignHint": "Puntos otorgados cuando el jugador acierta el resultado (victoria local, empate, victoria visitante)",
+              "goalDiffBonusLabel": "Bonus por Diferencia de Goles",
+              "goalDiffBonusHint": "Puntos adicionales cuando el jugador acierta la diferencia de goles",
+              "exampleTitle": "Ejemplo de Puntuación",
+              "exampleExact": "Marcador exacto (2-1 = 2-1)",
+              "exampleSign": "Signo correcto (2-1 vs 3-0)",
+              "exampleDiff": "Diferencia de goles (2-1 vs 3-2)",
+              "points": "puntos"
+            },
+            "access": {
+              "title": "Configuración de Acceso",
+              "description": "Define la política de acceso predeterminada",
+              "hint": "Configura cómo los usuarios podrán registrarse en las quinielas creadas desde esta plantilla.",
+              "accessTypeTitle": "Tipo de Acceso",
+              "publicLabel": "Público",
+              "publicDescription": "Cualquier usuario puede registrarse sin restricciones",
+              "codeLabel": "Por Código de Invitación",
+              "codeDescription": "Los usuarios necesitan un código de invitación para registrarse",
+              "emailLabel": "Por Invitación de Email",
+              "emailDescription": "Solo usuarios invitados por email pueden registrarse",
+              "securityTitle": "Opciones de Seguridad",
+              "captchaLabel": "Requerir CAPTCHA",
+              "captchaDescription": "Protege contra registros automatizados y bots",
+              "emailVerificationLabel": "Requerir Verificación de Email",
+              "emailVerificationDescription": "Los usuarios deben verificar su email antes de participar"
+            },
+            "review": {
+              "title": "Revisar y Crear",
+              "description": "Revisa la información y crea la plantilla",
+              "competitionTitle": "Competencia y Temporada",
+              "competitionLabel": "Competencia",
+              "seasonLabel": "Temporada",
+              "stageLabel": "Etapa",
+              "roundLabel": "Ronda",
+              "templateTitle": "Detalles de la Plantilla",
+              "titleLabel": "Título",
+              "slugLabel": "Slug",
+              "descriptionLabel": "Descripción",
+              "statusLabel": "Estado",
+              "statusDraft": "Borrador",
+              "statusPublished": "Publicado",
+              "statusArchived": "Archivado",
+              "rulesTitle": "Reglas de Puntuación",
+              "exactScoreLabel": "Marcador exacto",
+              "correctSignLabel": "Signo correcto",
+              "goalDiffBonusLabel": "Bonus diferencia de goles",
+              "points": "puntos",
+              "accessTitle": "Configuración de Acceso",
+              "accessTypeLabel": "Tipo de acceso",
+              "accessPublic": "Público",
+              "accessCode": "Por Código",
+              "accessEmail": "Por Email",
+              "captchaLabel": "CAPTCHA",
+              "emailVerificationLabel": "Verificación de email",
+              "yes": "Sí",
+              "no": "No",
+              "createButton": "Crear Plantilla",
+              "creating": "Creando plantilla"
+            }
+          }
+        }
       },
       "edit": {
         "title": "Editar Plantilla",
-        "loading": "Cargando template...",
+        "loading": "Cargando plantilla",
         "notFound": "Plantilla no encontrada",
         "backButton": "Volver a Plantillas",
         "saveButton": "Guardar Cambios",
-        "saving": "Guardando...",
+        "saving": "Guardando",
         "tabs": {
           "general": "General",
           "scope": "Alcance",
@@ -1179,7 +1356,7 @@
         "preview": {
           "title": "Vista Previa de Importación",
           "description": "Partidos estimados que se importarán del proveedor",
-          "loading": "Cargando preview...",
+          "loading": "Cargando preview",
           "teams": "Equipos",
           "matches": "Partidos",
           "dateRange": "Rango de Fechas",
@@ -1220,8 +1397,38 @@
           "success": "Plantilla eliminada exitosamente",
           "error": "Error al eliminar: {message}"
         },
+        "status": {
+          "DRAFT": "Borrador",
+          "PUBLISHED": "Publicada",
+          "ARCHIVED": "Archivada"
+        },
         "updateSuccess": "Plantilla actualizada exitosamente",
-        "updateError": "Error al actualizar: {message}"
+        "updateError": "Error al actualizar: {message}",
+        "tenantAssignmentsCount": "{count} asignaciones de clientes",
+        "basicInformation": "Información Básica",
+        "slug": "Slug",
+        "slugCannotBeChanged": "El slug no puede ser modificado después de la creación",
+        "description": "Descripción",
+        "sportProviderScope": "Alcance del Proveedor Deportivo",
+        "competitionExternalId": "ID Externo de Competición",
+        "seasonYear": "Año de Temporada",
+        "stageLabel": "Etiqueta de Etapa",
+        "roundLabel": "Etiqueta de Ronda",
+        "scoringRules": "Reglas de Puntuación",
+        "exactScore": "Puntos por Marcador Exacto",
+        "correctSign": "Puntos por Signo Correcto (1X2)",
+        "goalDiffBonus": "Bonus por Diferencia de Goles",
+        "accessPolicyDefaults": "Valores Predeterminados de Política de Acceso",
+        "accessType": "Tipo de Acceso",
+        "public": "Público",
+        "inviteCode": "Código de Invitación",
+        "emailInvitation": "Invitación por Email",
+        "requireCaptcha": "Requerir CAPTCHA",
+        "requireEmailVerification": "Requerir Verificación de Email",
+        "tenantAssignments": "Asignaciones a Clientes",
+        "tenantsProvisionedWithThisTemplate": "Clientes que han sido aprovisionados con esta plantilla",
+        "noAssignmentsYet": "Esta plantilla no ha sido asignada a ningún cliente todavía",
+        "cancel": "Cancelar"
       }
     }
   }

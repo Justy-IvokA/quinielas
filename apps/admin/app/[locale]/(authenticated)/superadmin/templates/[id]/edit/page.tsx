@@ -179,48 +179,51 @@ export default function EditTemplatePage() {
   const accessDefaults = template.accessDefaults as any;
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <div className="mb-8">
+    <div className="container mx-auto py-4 sm:py-8 px-4 sm:px-6 max-w-4xl">
+      <div className="mb-6 sm:mb-8">
         <Button
           variant="ghost"
           size="sm"
           onClick={() => router.back()}
           className="mb-4"
+          StartIcon={ArrowLeftIcon}
         >
-          <ArrowLeftIcon className="mr-2 h-4 w-4" />
           {t('backButton')}
         </Button>
         
-        <div className="flex items-start justify-between">
+        <div className="space-y-4">
+          {/* Title and Status - Stack on mobile */}
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-3xl font-bold">{template.title}</h1>
-              {template.status === "PUBLISHED" && (
-                <Badge className="bg-green-500">
-                  <CheckCircle2 className="mr-1 h-3 w-3" />
-                  {t('actions.publish')}
-                </Badge>
-              )}
-              {template.status === "DRAFT" && (
-                <Badge variant="purple">{t('../status.DRAFT')}</Badge>
-              )}
-              {template.status === "ARCHIVED" && (
-                <Badge variant="outline">
-                  <Archive className="mr-1 h-3 w-3" />
-                  {t('../status.ARCHIVED')}
-                </Badge>
-              )}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold">{template.title}</h1>
+              <div className="flex items-center gap-2">
+                {template.status === "PUBLISHED" && (
+                  <Badge className="bg-green-500 w-fit">
+                    <CheckCircle2 className="mr-1 h-3 w-3" />
+                    {t('actions.publish')}
+                  </Badge>
+                )}
+                {template.status === "DRAFT" && (
+                  <Badge variant="purple" className="w-fit">{t('status.DRAFT')}</Badge>
+                )}
+                {template.status === "ARCHIVED" && (
+                  <Badge variant="outline" className="w-fit">
+                    <Archive className="mr-1 h-3 w-3" />
+                    {t('status.ARCHIVED')}
+                  </Badge>
+                )}
+              </div>
             </div>
-            <p className="text-muted-foreground">
-              {template.assignments?.length || 0} tenant assignments
+            <p className="text-sm text-muted-foreground">
+              {t('tenantAssignmentsCount', { count: template.assignments?.length || 0 })}
             </p>
           </div>
 
-          <div className="flex gap-2">
+          {/* Action Buttons - Stack on mobile, horizontal on desktop */}
+          <div className="flex flex-col sm:flex-row gap-2">
             <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Eye className="mr-2 h-4 w-4" />
+                <Button variant="outline" size="sm" StartIcon={Eye} className="w-full sm:w-auto">
                   {t('actions.previewButton')}
                 </Button>
               </DialogTrigger>
@@ -277,8 +280,9 @@ export default function EditTemplatePage() {
               size="sm"
               onClick={handleClone}
               disabled={cloneMutation.isPending}
+              StartIcon={Copy}
+              className="w-full sm:w-auto"
             >
-              <Copy className="mr-2 h-4 w-4" />
               {t('actions.cloneButton')}
             </Button>
 
@@ -287,8 +291,9 @@ export default function EditTemplatePage() {
                 size="sm"
                 onClick={() => publishMutation.mutate({ id: templateId })}
                 disabled={publishMutation.isPending}
+                StartIcon={CheckCircle2}
+                className="w-full sm:w-auto"
               >
-                <CheckCircle2 className="mr-2 h-4 w-4" />
                 {t('actions.publishButton')}
               </Button>
             )}
@@ -299,27 +304,25 @@ export default function EditTemplatePage() {
                 size="sm"
                 onClick={() => archiveMutation.mutate({ id: templateId })}
                 disabled={archiveMutation.isPending}
+                StartIcon={Archive}
+                className="w-full sm:w-auto"
               >
-                <Archive className="mr-2 h-4 w-4" />
                 {t('actions.archiveButton')}
               </Button>
             )}
 
             {template.status === "DRAFT" && template.assignments?.length === 0 && (
               <>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => setIsDeleteOpen(true)}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {t('actions.deleteButton')}
-                </Button>
                 <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
                   <DialogTrigger asChild>
-                    <Button variant="destructive" size="sm">
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
+                    <Button 
+                      variant="destructive" 
+                      size="sm" 
+                      StartIcon={Trash2} 
+                      onClick={() => setIsDeleteOpen(true)}
+                      className="w-full sm:w-auto"
+                    >
+                      {t('actions.delete')}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -331,7 +334,7 @@ export default function EditTemplatePage() {
                     </DialogHeader>
                     <DialogFooter>
                       <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
-                        {t('../create.form.cancel')}
+                        {t('cancel')}
                       </Button>
                       <Button
                         variant="destructive"
@@ -340,6 +343,7 @@ export default function EditTemplatePage() {
                           setIsDeleteOpen(false);
                         }}
                         disabled={deleteMutation.isPending}
+                        StartIcon={Trash2}
                       >
                         {t('actions.delete')}
                       </Button>
@@ -354,16 +358,19 @@ export default function EditTemplatePage() {
 
       <form onSubmit={handleUpdate}>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="general">{t('tabs.general')}</TabsTrigger>
-            <TabsTrigger value="scope">{t('tabs.scope')}</TabsTrigger>
-            <TabsTrigger value="rules">{t('tabs.rules')}</TabsTrigger>
-            <TabsTrigger value="access">{t('tabs.access')}</TabsTrigger>
-            <TabsTrigger value="assignments">
-              <Users className="mr-2 h-4 w-4" />
-              {t('tabs.assignments')} ({template.assignments?.length || 0})
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <TabsList className="inline-flex sm:grid w-auto sm:w-full grid-cols-5 min-w-max">
+              <TabsTrigger value="general" className="whitespace-nowrap">{t('tabs.general')}</TabsTrigger>
+              <TabsTrigger value="scope" className="whitespace-nowrap">{t('tabs.scope')}</TabsTrigger>
+              <TabsTrigger value="rules" className="whitespace-nowrap">{t('tabs.rules')}</TabsTrigger>
+              <TabsTrigger value="access" className="whitespace-nowrap">{t('tabs.access')}</TabsTrigger>
+              <TabsTrigger value="assignments" className="whitespace-nowrap">
+                <Users className="mr-2 h-4 w-4" />
+                <span className="hidden sm:inline">{t('tabs.assignments')} ({template.assignments?.length || 0})</span>
+                <span className="sm:hidden">{t('tabs.assignments')} ({template.assignments?.length || 0})</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="general" className="space-y-4">
             <Card>
@@ -577,16 +584,21 @@ export default function EditTemplatePage() {
           </TabsContent>
         </Tabs>
 
-        <div className="flex justify-end gap-4 mt-6">
+        <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 sm:gap-4 mt-6">
           <Button
             type="button"
             variant="outline"
             onClick={() => router.back()}
+            className="w-full sm:w-auto"
           >
             {t('cancel')}
           </Button>
-          <Button type="submit" disabled={updateMutation.isPending}>
-            <SaveIcon className="mr-2 h-4 w-4" />
+          <Button 
+            type="submit" 
+            disabled={updateMutation.isPending} 
+            StartIcon={SaveIcon}
+            className="w-full sm:w-auto"
+          >
             {updateMutation.isPending ? t('saving') : t('saveButton')}
           </Button>
         </div>

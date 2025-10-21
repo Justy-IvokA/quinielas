@@ -25,6 +25,7 @@ import { userPoolsRouter } from "./userPools";
 import { externalMapsRouter } from "./external-maps";
 import { superadminRouter } from "./superadmin";
 import { standingsRouter } from "./standings";
+import { sportsRouter } from "./sports";
 
 export const appRouter = router({
   health: healthProcedure,
@@ -53,6 +54,7 @@ export const appRouter = router({
   externalMaps: externalMapsRouter,
   superadmin: superadminRouter,
   standings: standingsRouter,
+  sports: sportsRouter,
 });
 
 export type AppRouter = typeof appRouter;

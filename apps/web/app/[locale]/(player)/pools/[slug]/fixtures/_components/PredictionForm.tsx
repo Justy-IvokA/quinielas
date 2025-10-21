@@ -80,10 +80,10 @@ export function PredictionForm({
   if (!isEditing && initialHomeScore !== 0 && initialAwayScore !== 0) {
     return (
       <Button
-        variant="outline"
+        variant="secondary"
         size="sm"
         onClick={() => setIsEditing(true)}
-        className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10"
+        className="w-full bg-accent/45 border-accent/20 text-white hover:bg-accent/20"
       >
         {t("edit")}
       </Button>

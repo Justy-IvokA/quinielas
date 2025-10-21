@@ -1,0 +1,29 @@
+name = "quinielas-worker"
+main = "src/index.ts"
+compatibility_date = "2025-01-21"
+
+# Cloudflare Worker for background jobs
+# - Fixtures sync
+# - Prediction locking
+# - Email batches
+# - Scoring computation
+
+[env.production]
+name = "quinielas-worker-prod"
+
+# Cron triggers for scheduled jobs
+[triggers]
+crons = [
+  "*/15 * * * *",  # Lock predictions every 15 minutes
+  "0 */6 * * *",   # Sync fixtures every 6 hours
+  "0 2 * * *"      # Daily scoring at 2 AM UTC
+]
+
+# Environment variables (non-sensitive)
+[vars]
+NODE_ENV = "production"
+
+# Secrets must be set via CLI:
+# wrangler secret put DATABASE_URL
+# wrangler secret put SPORTS_API_KEY
+# wrangler secret put EMAIL_SERVER_PASSWORD

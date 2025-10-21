@@ -36,10 +36,11 @@ export function LocaleSwitcher() {
       >
         <SelectTrigger
           aria-labelledby="locale-select-label"
-          className="w-auto gap-2 rounded-lg border-border/50 bg-muted/50 px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
+          aria-label={`${t("selectLanguage")} - ${localeMetadata[locale].name}`}
+          className="w-auto gap-0 rounded-lg border-border/50 bg-muted/50 p-2 transition-colors hover:bg-muted"
         >
           <Globe className="h-4 w-4 text-muted-foreground" />
-          <SelectValue aria-label={localeMetadata[locale].name} />
+          <span className="sr-only">{localeMetadata[locale].name}</span>
         </SelectTrigger>
         <SelectContent>
           {locales.map((loc) => (

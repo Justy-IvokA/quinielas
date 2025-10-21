@@ -16,6 +16,10 @@ interface PoolDashboardCardProps {
       name: string;
       logoUrl: string | null;
     };
+    competition: {
+      name: string;
+      logoUrl: string | null;
+    };
     seasonLabel: string;
     status: "ACTIVE" | "FINALIZED";
     nextKickoff: string | null;
@@ -41,7 +45,7 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
         <div className="flex items-center gap-3">
           {pool.brand.logoUrl && (
             <img
-              src={pool.brand.logoUrl}
+              src={pool.competition.logoUrl || pool.brand.logoUrl}
               alt={pool.brand.name}
               className="w-10 h-10 rounded-lg object-cover"
             />

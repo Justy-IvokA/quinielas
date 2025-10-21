@@ -100,7 +100,6 @@ export function CreatePoolWizard() {
           onSelect={(sportId) => {
             updateWizardData({ sportId });
           }}
-          selectedSportId={wizardData.sportId}
         />
       ),
       isEnabled: !!wizardData.sportId

@@ -20,9 +20,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-  SportsLoader
+  SportsLoader,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
 } from "@qp/ui";
-import { PlusIcon, SearchIcon, FileTextIcon, CheckCircle2, Archive, FileEdit } from "lucide-react";
+import { PlusIcon, SearchIcon, FileTextIcon, CheckCircle2, Archive, FileEdit, UserPlus } from "lucide-react";
 
 export default function TemplatesPage() {
   const t = useTranslations('superadmin.templates');
@@ -30,6 +36,9 @@ export default function TemplatesPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+  const [selectedTenant, setSelectedTenant] = useState<string>("");
 
   const { data, isLoading, refetch } = trpc.superadmin.templates.list.useQuery({
     page,
@@ -37,6 +46,43 @@ export default function TemplatesPage() {
     search: search || undefined,
     status: statusFilter !== "all" ? (statusFilter as "DRAFT" | "PUBLISHED" | "ARCHIVED") : undefined
   });
+
+  // Query tenants for assignment
+  const { data: tenants } = trpc.superadmin.tenants.list.useQuery({
+    page: 1,
+    limit: 100
+  });
+
+  // Mutation to assign template to tenant
+  const assignMutation = trpc.superadmin.templates.assignToTenant.useMutation({
+    onSuccess: () => {
+      toast.success("Plantilla asignada exitosamente");
+      setAssignDialogOpen(false);
+      setSelectedTemplate(null);
+      setSelectedTenant("");
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al asignar plantilla");
+    }
+  });
+
+  const handleAssignClick = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    setAssignDialogOpen(true);
+  };
+
+  const handleAssignSubmit = () => {
+    if (!selectedTemplate || !selectedTenant) {
+      toast.error("Selecciona un tenant");
+      return;
+    }
+
+    assignMutation.mutate({
+      templateId: selectedTemplate,
+      tenantId: selectedTenant
+    });
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -141,16 +187,29 @@ export default function TemplatesPage() {
                       {new Date(template.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(`/superadmin/templates/${template.id}/edit`);
-                        }}
-                      >
-                        {t('actions.edit')}
-                      </Button>
+                      <div className="flex items-center justify-end gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          StartIcon={UserPlus}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAssignClick(template.id);
+                          }}
+                        >
+                          Asignar
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/superadmin/templates/${template.id}/edit`);
+                          }}
+                        >
+                          {t('actions.edit')}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -185,6 +244,56 @@ export default function TemplatesPage() {
           )}
         </>
       )}
+
+      {/* Dialog de Asignación */}
+      <Dialog open={assignDialogOpen} onOpenChange={setAssignDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Asignar Plantilla a Tenant</DialogTitle>
+            <DialogDescription>
+              Selecciona el tenant al que deseas asignar esta plantilla. El tenant podrá usar esta plantilla para crear quinielas.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-4">
+            <label className="text-sm font-medium mb-2 block">
+              Seleccionar Tenant
+            </label>
+            <Select value={selectedTenant} onValueChange={setSelectedTenant}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecciona un tenant..." />
+              </SelectTrigger>
+              <SelectContent>
+                {tenants?.tenants.map((tenant) => (
+                  <SelectItem key={tenant.id} value={tenant.id}>
+                    {tenant.name} ({tenant.slug})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAssignDialogOpen(false);
+                setSelectedTemplate(null);
+                setSelectedTenant("");
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleAssignSubmit}
+              disabled={!selectedTenant || assignMutation.isPending}
+              loading={assignMutation.isPending}
+            >
+              Asignar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

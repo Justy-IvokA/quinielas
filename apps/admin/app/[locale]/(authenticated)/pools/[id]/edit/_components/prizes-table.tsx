@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Select,
   SelectContent,
@@ -64,19 +64,22 @@ export function PrizesTable({ poolId }: PrizesTableProps) {
   const { data: pool } = trpc.pools.getById.useQuery({ id: poolId });
   const { data: prizes, isLoading } = trpc.pools.prizes.list.useQuery({ poolId });
 
+  const form = useForm<PrizeFormData>({
+    resolver: zodResolver(prizeFormSchema),
+    defaultValues: {
+      type: "OTHER"
+    }
+  });
+
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     watch,
+    control,
     formState: { errors }
-  } = useForm<PrizeFormData>({
-    resolver: zodResolver(prizeFormSchema),
-    defaultValues: {
-      type: "OTHER"
-    }
-  });
+  } = form;
 
   const createMutation = trpc.pools.prizes.create.useMutation({
     onSuccess: () => {
@@ -171,7 +174,8 @@ export function PrizesTable({ poolId }: PrizesTableProps) {
                   Define el premio para una o más posiciones del leaderboard.
                 </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <FormProvider {...form}>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
                     label={t("form.rankFrom")}
@@ -292,6 +296,7 @@ export function PrizesTable({ poolId }: PrizesTableProps) {
                   </Button>
                 </div>
               </form>
+              </FormProvider>
             </DialogContent>
           </Dialog>
         </div>

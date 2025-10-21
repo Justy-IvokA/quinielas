@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:deploy": "wrangler pages deploy .vercel/output/static --project-name=quinielas-web",
+    "pages:dev": "wrangler pages dev .vercel/output/static --compatibility-date=2025-01-21",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",

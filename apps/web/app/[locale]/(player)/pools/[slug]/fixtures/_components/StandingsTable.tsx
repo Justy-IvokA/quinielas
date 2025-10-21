@@ -53,12 +53,12 @@ interface StandingsGroup {
 
 interface StandingsTableProps {
   locale: string;
+  tenantSlug: string;
 }
 
-export function StandingsTable({ locale }: StandingsTableProps) {
+export function StandingsTable({ locale, tenantSlug }: StandingsTableProps) {
   const params = useParams();
   const poolSlug = params.slug as string;
-  const tenantSlug = params.locale as string; // Assuming locale is tenant slug
   
   const [selectedView, setSelectedView] = useState<"all" | "home" | "away">("all");
   const [shouldForceRefresh, setShouldForceRefresh] = useState(false);
@@ -176,7 +176,7 @@ export function StandingsTable({ locale }: StandingsTableProps) {
       )}
 
       {/* League Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-white/10">
+      <div className="flex items-center justify-between pb-2 border-b border-white/10">
         <div className="flex items-center gap-3">
           {standings.league.logo && (
             <img
@@ -203,8 +203,8 @@ export function StandingsTable({ locale }: StandingsTableProps) {
           onClick={handleRefresh}
           disabled={shouldForceRefresh || isLoading}
           className="gap-2"
+          StartIcon={RefreshCw}
         >
-          <RefreshCw className={`h-4 w-4 ${shouldForceRefresh || isLoading ? 'animate-spin' : ''}`} />
           {shouldForceRefresh || isLoading
             ? (locale === "es-MX" ? "Actualizando..." : "Refreshing...") 
             : (locale === "es-MX" ? "Actualizar" : "Refresh")}
@@ -249,7 +249,7 @@ export function StandingsTable({ locale }: StandingsTableProps) {
       {standings.league.standings.map((group, groupIndex) => (
         <div key={groupIndex} className="bg-white/5 rounded-lg overflow-hidden">
           {/* Table Header */}
-          <div className="bg-white/10 px-4 py-3 grid grid-cols-12 gap-2 text-xs font-semibold text-white/70 uppercase">
+          <div className="bg-white/10 px-2 py-2 grid grid-cols-12 gap-2 text-xs font-semibold text-white/70 uppercase">
             <div className="col-span-1 text-center">#</div>
             <div className="col-span-3">{locale === "es-MX" ? "Equipo" : "Team"}</div>
             <div className="col-span-1 text-center">{locale === "es-MX" ? "PJ" : "MP"}</div>
@@ -269,7 +269,7 @@ export function StandingsTable({ locale }: StandingsTableProps) {
             return (
               <div
                 key={team.team.id}
-                className={`px-4 py-3 grid grid-cols-12 gap-2 items-center border-b border-white/5 hover:bg-white/5 transition-colors ${
+                className={`px-2 py-2 grid grid-cols-12 gap-2 items-center border-b border-white/5 hover:bg-white/5 transition-colors ${
                   index === group.length - 1 ? "border-b-0" : ""
                 }`}
               >

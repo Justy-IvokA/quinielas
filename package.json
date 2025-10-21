@@ -18,9 +18,12 @@
     "db:migrate": "pnpm --filter @qp/db exec prisma migrate deploy",
     "db:reset": "pnpm --filter @qp/db exec prisma migrate reset --force",
     "seed": "pnpm --filter @qp/db run seed",
-    "deploy:web": "pnpm --filter @qp/web run deploy",
-    "deploy:admin": "pnpm --filter @qp/admin run deploy",
-    "deploy:all": "pnpm deploy:web && pnpm deploy:admin",
+    "pages:build:web": "pnpm --filter @qp/web run build && pnpm --filter @qp/web run pages:build",
+    "pages:build:admin": "pnpm --filter @qp/admin run build && pnpm --filter @qp/admin run pages:build",
+    "pages:deploy:web": "pnpm --filter @qp/web run pages:deploy",
+    "pages:deploy:admin": "pnpm --filter @qp/admin run pages:deploy",
+    "worker:deploy": "pnpm --filter @qp/worker run deploy",
+    "deploy:all": "pnpm pages:deploy:web && pnpm pages:deploy:admin && pnpm worker:deploy",
     "npm:package_versions": "npm view tailwindcss versions",
     "powershell:adminCache": "Remove-Item -Recurse -Force .\\apps\\admin\\.next",
     "powershell:webCache": "Remove-Item -Recurse -Force .\\apps\\web\\.next"
@@ -29,8 +32,10 @@
     "@qp/db": "workspace:*"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@types/node": "^20.12.7",
     "turbo": "^2.1.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "wrangler": "^4.44.0"
   }
 }

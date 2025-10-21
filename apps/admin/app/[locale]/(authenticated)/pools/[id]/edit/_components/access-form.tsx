@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -14,7 +14,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Select,
   SelectContent,
@@ -55,14 +55,7 @@ export function AccessForm({ poolId }: AccessFormProps) {
     { retry: false }
   );
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { errors, isDirty }
-  } = useForm<AccessFormData>({
+  const form = useForm<AccessFormData>({
     resolver: zodResolver(accessFormSchema),
     defaultValues: {
       accessType: "PUBLIC",
@@ -71,6 +64,16 @@ export function AccessForm({ poolId }: AccessFormProps) {
       domainAllowList: []
     }
   });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    control,
+    formState: { errors, isDirty }
+  } = form;
 
   const upsertMutation = trpc.access.upsert.useMutation({
     onSuccess: () => {
@@ -144,11 +147,12 @@ export function AccessForm({ poolId }: AccessFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
+    <FormProvider {...form}>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
+        </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormField
@@ -297,5 +301,6 @@ export function AccessForm({ poolId }: AccessFormProps) {
         </form>
       </CardContent>
     </Card>
+    </FormProvider>
   );
 }

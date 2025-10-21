@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -12,7 +12,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Textarea,
   Select,
@@ -50,16 +50,19 @@ export function GeneralForm({ poolId }: GeneralFormProps) {
   const { data: pool, isLoading } = trpc.pools.getById.useQuery({ id: poolId });
   const { data: brands } = trpc.tenant.listBrands.useQuery();
 
+  const form = useForm<GeneralFormData>({
+    resolver: zodResolver(generalFormSchema)
+  });
+
   const {
     register,
     handleSubmit,
     reset,
     setValue,
     watch,
+    control,
     formState: { errors, isDirty }
-  } = useForm<GeneralFormData>({
-    resolver: zodResolver(generalFormSchema)
-  });
+  } = form;
 
   const updateMutation = trpc.pools.update.useMutation({
     onSuccess: () => {
@@ -110,13 +113,14 @@ export function GeneralForm({ poolId }: GeneralFormProps) {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <FormProvider {...form}>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <FormField
             label={t("form.name")}
             htmlFor="name"
@@ -259,5 +263,6 @@ export function GeneralForm({ poolId }: GeneralFormProps) {
         </form>
       </CardContent>
     </Card>
+    </FormProvider>
   );
 }

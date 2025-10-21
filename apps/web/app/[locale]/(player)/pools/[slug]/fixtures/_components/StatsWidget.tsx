@@ -11,6 +11,7 @@ interface StatsWidgetProps {
   locale: string;
   leagueId?: string; // External league ID from API-Sports
   season?: string; // Year of the season
+  tenantSlug: string;
 }
 
 /**
@@ -28,7 +29,7 @@ interface StatsWidgetProps {
  * 
  * @see https://api-sports.io/documentation/football/v3
  */
-export function StatsWidget({ seasonId, competitionName, locale, leagueId, season }: StatsWidgetProps) {
+export function StatsWidget({ seasonId, competitionName, locale, leagueId, season, tenantSlug }: StatsWidgetProps) {
   const t = useTranslations("fixtures.stats");
   const apiKey = process.env.NEXT_PUBLIC_SPORTS_API_KEY;
 
@@ -60,11 +61,7 @@ export function StatsWidget({ seasonId, competitionName, locale, leagueId, seaso
 
       {/* Standings Table */}
       <div className="bg-black/65 rounded-lg border border-white/10 p-6">
-        <StandingsTable
-          leagueId={leagueId}
-          season={season}
-          locale={locale}
-        />
+        <StandingsTable locale={locale} tenantSlug={tenantSlug} />
       </div>
 
       {/* Help Text */}

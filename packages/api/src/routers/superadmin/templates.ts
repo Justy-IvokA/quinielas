@@ -442,12 +442,11 @@ export const superadminTemplatesRouter = router({
     .mutation(async ({ input, ctx }) => {
       const { templateId, tenantId } = input;
 
-      // Validate tenant exists and get its primary brand
+      // Validate tenant exists and get its first brand
       const tenant = await prisma.tenant.findUnique({
         where: { id: tenantId },
         include: {
           brands: {
-            where: { isPrimary: true },
             take: 1
           }
         }
@@ -460,12 +459,12 @@ export const superadminTemplatesRouter = router({
         });
       }
 
-      // Get primary brand ID
-      const primaryBrand = tenant.brands[0];
-      if (!primaryBrand) {
+      // Get first brand ID
+      const brand = tenant.brands[0];
+      if (!brand) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Tenant does not have a primary brand"
+          message: "Tenant does not have any brands"
         });
       }
 
@@ -502,7 +501,7 @@ export const superadminTemplatesRouter = router({
         const result = await provisionTemplateToTenant({
           templateId,
           tenantId,
-          brandId: primaryBrand.id
+          brandId: brand.id
         });
 
         // Update assignment with success

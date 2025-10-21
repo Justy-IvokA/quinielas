@@ -5,7 +5,13 @@ import EmailProvider from "next-auth/providers/email";
 import GoogleProvider from "next-auth/providers/google";
 import { parseAuthEnv } from "./env";
 import { createTransport } from "nodemailer";
-import { emailTemplates, createEmailBrandInfo, parseEmailLocale, type EmailLocale } from "@qp/utils/email";
+import { 
+  emailTemplates, 
+  createEmailBrandInfo, 
+  parseEmailLocale, 
+  type EmailLocale,
+  type EmailBrandInfo 
+} from "@qp/utils/email";
 
 export interface AuthConfigOptions {
   prisma: PrismaClient;

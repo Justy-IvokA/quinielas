@@ -6,7 +6,7 @@
  */
 
 import { headers } from "next/headers";
-import { db } from "@qp/db";
+import { prisma as db } from "@qp/db";
 import type { Brand } from "@qp/db";
 
 /**

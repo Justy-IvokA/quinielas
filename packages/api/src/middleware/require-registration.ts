@@ -141,7 +141,7 @@ export async function assertRegistrationAccess({
  * Adds registration to context for use in procedures.
  */
 export function requireRegistrationForPool<TInput extends { poolId: string }>() {
-  return async ({ ctx, input, next }: { ctx: AppContext; input: TInput; next: () => any }) => {
+  return async ({ ctx, input, next }: { ctx: AppContext; input: TInput; next: any }) => {
     if (!ctx.session?.user?.id) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
@@ -163,11 +163,6 @@ export function requireRegistrationForPool<TInput extends { poolId: string }>() 
     });
 
     // Add registration to context
-    return next({
-      ctx: {
-        ...ctx,
-        registration
-      }
-    });
+    return next();
   };
 }

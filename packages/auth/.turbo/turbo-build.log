@@ -2,10 +2,3 @@
 > @qp/auth@0.0.1 build C:\Users\victo\Documents\reactNextJS\quinielas\packages\auth
 > tsc --build
 
-src/env/index.ts(1,27): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/config/src/env.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth'. 'rootDir' is expected to contain all source files.
-src/env/index.ts(1,27): error TS6307: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/config/src/env.ts' is not listed within the file list of project 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/auth/tsconfig.json'. Projects must list all files or use an 'include' pattern.
-src/helpers.ts(11,17): error TS2742: The inferred type of 'createAuthInstance' cannot be named without a reference to '.pnpm/next@15.5.4_@opentelemetry+api@1.9.0_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next'. This is likely not portable. A type annotation is necessary.
-src/helpers.ts(11,17): error TS2742: The inferred type of 'createAuthInstance' cannot be named without a reference to '.pnpm/next@15.5.4_@opentelemetry+api@1.9.0_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/server'. This is likely not portable. A type annotation is necessary.
-src/helpers.ts(11,17): error TS2742: The inferred type of 'createAuthInstance' cannot be named without a reference to 'packages/auth/node_modules/next-auth/lib'. This is likely not portable. A type annotation is necessary.
-src/helpers.ts(11,17): error TS2742: The inferred type of 'createAuthInstance' cannot be named without a reference to 'packages/auth/node_modules/next-auth/lib/types'. This is likely not portable. A type annotation is necessary.
- ELIFECYCLE  Command failed with exit code 1.

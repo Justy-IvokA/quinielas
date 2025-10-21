@@ -255,8 +255,7 @@ export const poolWizardRouter = router({
               sportId: sport.id,
               slug: competitionData.name.toLowerCase().replace(/\s+/g, "-"),
               name: competitionData.name,
-              logoUrl: competitionData.logoUrl,
-              metadata: competitionData.meta || {}
+              logoUrl: competitionData.logoUrl
             }
           });
 

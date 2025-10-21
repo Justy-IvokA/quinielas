@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { Copy, Plus } from "lucide-react";
 
 import {
@@ -19,7 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Table,
   TableBody,
@@ -50,12 +50,14 @@ export function CodeBatchManager({ accessPolicyId }: CodeBatchManagerProps) {
 
   const { data: batches, isLoading } = trpc.access.getCodeBatches.useQuery({ accessPolicyId });
 
-  const { register, handleSubmit, reset } = useForm<CreateBatchForm>({
+  const form = useForm<CreateBatchForm>({
     defaultValues: {
       quantity: 10,
       usesPerCode: 1
     }
   });
+
+  const { register, handleSubmit, reset, control } = form;
 
   const createBatchMutation = trpc.access.createCodeBatch.useMutation({
     onSuccess: () => {
@@ -104,7 +106,8 @@ export function CodeBatchManager({ accessPolicyId }: CodeBatchManagerProps) {
               <DialogTitle>{t("dialog.title")}</DialogTitle>
               <DialogDescription>{t("dialog.description")}</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <FormProvider {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <FormField label={t("form.quantity")} htmlFor="quantity" required>
                 <Input
                   id="quantity"
@@ -126,6 +129,7 @@ export function CodeBatchManager({ accessPolicyId }: CodeBatchManagerProps) {
                 {t("form.submit")}
               </Button>
             </form>
+            </FormProvider>
           </DialogContent>
         </Dialog>
       </div>

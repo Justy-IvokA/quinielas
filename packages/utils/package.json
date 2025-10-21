@@ -8,7 +8,9 @@
     ".": "./src/index.ts",
     "./client": "./src/client.ts",
     "./sports": "./src/sports/index.ts",
-    "./storage/adapter": "./src/storage/adapter.ts"
+    "./storage/adapter": "./src/storage/adapter.ts",
+    "./email": "./src/email/index.ts",
+    "./csv/audit": "./src/csv/audit.ts"
   },
   "scripts": {
     "build": "tsc --build",

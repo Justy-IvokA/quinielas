@@ -136,7 +136,7 @@ export const userRouter = router({
           name: input.name,
           phone: input.phone,
           phoneVerified: hasPhoneChanged ? false : undefined, // Reset verification if phone changed
-          metadata: shouldIncrementCounter ? updatedMetadata : undefined,
+          metadata: shouldIncrementCounter ? (updatedMetadata as any) : undefined,
         },
         select: {
           id: true,

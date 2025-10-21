@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
-import { Button, FormField, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, toastSuccess, toastError } from "@qp/ui";
+import { Button, LegacyFormField as FormField, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Switch, toastSuccess, toastError } from "@qp/ui";
 
 import { trpc } from "@admin/trpc";
 
@@ -26,13 +26,15 @@ export function AccessPolicyForm({ poolId, tenantId, onSuccess }: AccessPolicyFo
   const [isSubmitting, setIsSubmitting] = useState(false);
   const utils = trpc.useUtils();
 
-  const { register, handleSubmit, watch, setValue } = useForm<FormData>({
+  const form = useForm<FormData>({
     defaultValues: {
       accessType: "PUBLIC",
       requireCaptcha: false,
       requireEmailVerification: false
     }
   });
+
+  const { register, handleSubmit, watch, setValue, control } = form;
 
   const createMutation = trpc.access.create.useMutation({
     onSuccess: () => {
@@ -61,7 +63,8 @@ export function AccessPolicyForm({ poolId, tenantId, onSuccess }: AccessPolicyFo
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <FormField label={t("accessType.label")} htmlFor="accessType" required>
         <Select
           value={accessType}
@@ -113,5 +116,6 @@ export function AccessPolicyForm({ poolId, tenantId, onSuccess }: AccessPolicyFo
         </Button>
       </div>
     </form>
+    </FormProvider>
   );
 }

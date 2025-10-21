@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm, Controller, type SubmitHandler } from "react-hook-form";
+import { useForm, FormProvider, Controller, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
@@ -17,7 +17,7 @@ import {
   Label,
   Input,
   Textarea,
-  FormField,
+  LegacyFormField as FormField,
   DateTimePicker,
   toastSuccess,
   toastError
@@ -56,6 +56,14 @@ export function CreateCodeBatchModal({
   const t = useTranslations("codes.modal");
   const [createdBatch, setCreatedBatch] = useState<any>(null);
 
+  const form = useForm<CreateBatchFormData>({
+    resolver: zodResolver(createBatchSchema),
+    defaultValues: {
+      usesPerCode: 1,
+      quantity: 100
+    }
+  });
+
   const {
     register,
     handleSubmit,
@@ -63,13 +71,7 @@ export function CreateCodeBatchModal({
     reset,
     control,
     formState: { errors }
-  } = useForm<CreateBatchFormData>({
-    resolver: zodResolver(createBatchSchema),
-    defaultValues: {
-      usesPerCode: 1,
-      quantity: 100
-    }
-  });
+  } = form;
 
   const createBatchMutation = trpc.access.createCodeBatch.useMutation({
     onSuccess: (data) => {
@@ -195,7 +197,8 @@ export function CreateCodeBatchModal({
             )}
           </div>
         ) : (
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <FormProvider {...form}>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 label={t("batchNameLabel")}
@@ -324,6 +327,7 @@ export function CreateCodeBatchModal({
               </div>
             )}
           </form>
+          </FormProvider>
         )}
 
         <DialogFooter>

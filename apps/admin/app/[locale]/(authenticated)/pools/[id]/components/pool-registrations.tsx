@@ -89,16 +89,16 @@ export function PoolRegistrations({ poolId }: PoolRegistrationsProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={registration.isActive ? "success" : "gray"}>
-                      {registration.isActive ? (
+                    <Badge variant={registration.emailVerified ? "success" : "warning"}>
+                      {registration.emailVerified ? (
                         <>
                           <UserCheck className="mr-1 h-3 w-3" />
-                          {t("status.active")}
+                          {t("status.verified")}
                         </>
                       ) : (
                         <>
-                          <UserX className="mr-1 h-3 w-3" />
-                          {t("status.inactive")}
+                          <Mail className="mr-1 h-3 w-3" />
+                          {t("status.pending")}
                         </>
                       )}
                     </Badge>

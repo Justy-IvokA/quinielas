@@ -2,6 +2,13 @@
 
 Multi-tenant sports prediction platform for FIFA World Cup 2026 and beyond.
 
+## 📚 Documentation
+
+- **[PRODUCTION_README.md](./PRODUCTION_README.md)** - Quick start para producción
+- **[PRODUCTION_BUILD_GUIDE.md](./PRODUCTION_BUILD_GUIDE.md)** - Guía completa de build y despliegue
+- **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** - Checklist de despliegue
+- **[.windsurfrules](./.windsurfrules)** - Reglas y arquitectura del proyecto
+
 ## 🏗️ Architecture
 
 **Monorepo** powered by Turborepo + PNPM workspaces.

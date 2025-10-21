@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { Mail, Plus, RefreshCw } from "lucide-react";
 import { useBrandId, useTenantId } from "@admin/providers/brand-context";
 
@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Table,
   TableBody,
@@ -53,7 +53,9 @@ export function EmailInvitationManager({ accessPolicyId }: EmailInvitationManage
 
   const { data: invitations, isLoading } = trpc.access.getEmailInvitations.useQuery({ accessPolicyId });
 
-  const { register, handleSubmit, reset } = useForm<CreateInvitationForm>();
+  const form = useForm<CreateInvitationForm>();
+
+  const { register, handleSubmit, reset, control } = form;
 
   const createInvitationMutation = trpc.access.createEmailInvitation.useMutation({
     onSuccess: () => {
@@ -114,7 +116,8 @@ export function EmailInvitationManager({ accessPolicyId }: EmailInvitationManage
               <DialogTitle>{t("dialog.title")}</DialogTitle>
               <DialogDescription>{t("dialog.description")}</DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <FormProvider {...form}>
+              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <FormField label={t("form.email")}
                 htmlFor="email"
                 required
@@ -130,6 +133,7 @@ export function EmailInvitationManager({ accessPolicyId }: EmailInvitationManage
                 {t("form.submit")}
               </Button>
             </form>
+            </FormProvider>
           </DialogContent>
         </Dialog>
       </div>

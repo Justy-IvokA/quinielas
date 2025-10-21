@@ -28,7 +28,9 @@
       "@qp/ui/*": ["packages/ui/src/*"],
       "@qp/ui": ["packages/ui/src/index.ts"],
       "@qp/utils/*": ["packages/utils/src/*"],
-      "@qp/utils": ["packages/utils/src/index.ts"]
+      "@qp/utils": ["packages/utils/src/index.ts"],
+      "@qp/utils/email": ["packages/utils/src/email/index.ts"],
+      "@qp/utils/sports": ["packages/utils/src/sports/index.ts"]
     }
   }
 }

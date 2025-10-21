@@ -138,12 +138,22 @@ export async function provisionTemplateToTenant(
 
     if (template.stageLabel || template.roundLabel) {
       console.log(`[TemplateProvision] Fetching filtered season: stage=${template.stageLabel}, round=${template.roundLabel}`);
-      seasonData = await provider.fetchSeasonRound({
-        competitionExternalId: template.competitionExternalId,
-        year: template.seasonYear,
-        stageLabel: template.stageLabel ?? undefined,
-        roundLabel: template.roundLabel ?? undefined
-      });
+      // Check if provider supports fetchSeasonRound
+      if ('fetchSeasonRound' in provider && typeof provider.fetchSeasonRound === 'function') {
+        seasonData = await provider.fetchSeasonRound({
+          competitionExternalId: template.competitionExternalId,
+          year: template.seasonYear,
+          stageLabel: template.stageLabel ?? undefined,
+          roundLabel: template.roundLabel ?? undefined
+        });
+      } else {
+        // Fallback to full season fetch
+        console.warn(`[TemplateProvision] Provider does not support fetchSeasonRound, fetching full season`);
+        seasonData = await provider.fetchSeason({
+          competitionExternalId: template.competitionExternalId,
+          year: template.seasonYear
+        });
+      }
     } else {
       console.log(`[TemplateProvision] Fetching full season`);
       seasonData = await provider.fetchSeason({

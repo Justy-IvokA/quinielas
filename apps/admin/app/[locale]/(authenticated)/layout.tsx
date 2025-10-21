@@ -45,6 +45,10 @@ export default async function AuthenticatedLayout({
   const { brand, tenant } = await resolveTenantAndBrandFromHost(host);
   // console.log("⚠ Brand 🔥: ", brand);
   // console.log("⚠ Tenant 🔥: ", tenant);
+  
+  // Add tenant relation to brand for BrandProvider
+  const brandWithTenant = brand && tenant ? { ...brand, tenant } : null;
+  
   // Get hero assets from brand theme with URL optimization
   const heroAssets = brand?.theme && typeof brand.theme === 'object' 
     ? (brand.theme as any).heroAssets 
@@ -56,7 +60,7 @@ export default async function AuthenticatedLayout({
   const hasHeroMedia = optimizedAssetUrl;
 
   return (
-    <BrandProvider brand={brand} tenant={tenant}>
+    <BrandProvider brand={brandWithTenant} tenant={tenant}>
       {/* Inject brand theme dynamically on client */}
       {brand?.theme && <BrandThemeInjector brandTheme={brand.theme} />}
       {/* Hero background media (video or image) */}

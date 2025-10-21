@@ -51,7 +51,7 @@ export function PoolFixturesManager({ poolId }: PoolFixturesManagerProps) {
   const competitionName = pool?.season?.competition?.name || "";
 
   // Get external sources for sync
-  const { data: sources, isLoading: isLoadingSources } = trpc.fixtures.listExternalSources.useQuery();
+  const { data: sources, isLoading: isLoadingSources } = trpc.fixtures.getExternalSources.useQuery();
   const [selectedSourceId, setSelectedSourceId] = useState<string | null>(null);
   const sourceId = selectedSourceId || sources?.[0]?.id || "";
 

@@ -2,32 +2,3 @@
 > @qp/api@0.0.1 build C:\Users\victo\Documents\reactNextJS\quinielas\packages\api
 > tsc --build
 
-src/context.ts(3,24): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/index.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src'. 'rootDir' is expected to contain all source files.
-  The file is in the program because:
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/context.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/context.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/routers/access/index.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/routers/fixtures/index.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/routers/pools/index.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/routers/registration/index.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/routers/users/index.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/lib/tenant-utils.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/services/access.service.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/services/codes.service.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/services/invites.service.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/services/pools.service.ts'
-    Imported via "@qp/db" from file 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src/services/registration.service.ts'
-src/services/pools.service.ts(61,7): error TS2322: Type 'CreatePoolInput' is not assignable to type '(Without<PoolCreateInput, PoolUncheckedCreateInput> & PoolUncheckedCreateInput) | (Without<...> & PoolCreateInput)'.
-  Type 'CreatePoolInput' is not assignable to type 'Without<PoolCreateInput, PoolUncheckedCreateInput> & PoolUncheckedCreateInput'.
-    Type 'CreatePoolInput' is not assignable to type 'PoolUncheckedCreateInput'.
-      Types of property 'ruleSet' are incompatible.
-        Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
-          Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
-src/services/pools.service.ts(208,7): error TS2322: Type 'UpdatePoolInput' is not assignable to type '(Without<PoolUpdateInput, PoolUncheckedUpdateInput> & PoolUncheckedUpdateInput) | (Without<...> & PoolUpdateInput)'.
-  Type 'UpdatePoolInput' is not assignable to type 'Without<PoolUncheckedUpdateInput, PoolUpdateInput> & PoolUpdateInput'.
-    Type 'UpdatePoolInput' is not assignable to type 'PoolUpdateInput'.
-      Types of property 'ruleSet' are incompatible.
-        Type 'JsonValue | undefined' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
-          Type 'null' is not assignable to type 'NullableJsonNullValueInput | InputJsonValue | undefined'.
-../db/src/index.ts(1,24): error TS6059: File 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/db/src/client.ts' is not under 'rootDir' 'C:/Users/victo/Documents/reactNextJS/quinielas/packages/api/src'. 'rootDir' is expected to contain all source files.
- ELIFECYCLE  Command failed with exit code 1.

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  FormField,
+  LegacyFormField as FormField,
   Input,
   Label,
   Switch,
@@ -45,7 +45,7 @@ export function CreatePoolForm() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("basic");
 
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<PoolFormData>({
+  const form = useForm<PoolFormData>({
     defaultValues: {
       isActive: true,
       isPublic: false,
@@ -56,6 +56,8 @@ export function CreatePoolForm() {
       }
     }
   });
+
+  const { register, handleSubmit, watch, setValue, control, formState: { errors } } = form;
 
   const createMutation = trpc.pools.create.useMutation({
     onSuccess: (data) => {
@@ -100,7 +102,8 @@ export function CreatePoolForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+    <FormProvider {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="basic">Información básica</TabsTrigger>
@@ -274,5 +277,6 @@ export function CreatePoolForm() {
         </Button>
       </div>
     </form>
+    </FormProvider>
   );
 }

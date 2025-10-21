@@ -148,6 +148,20 @@ export class MockSportsProvider implements SportsProvider {
     };
   }
 
+  async fetchSeasonRound(params: { 
+    competitionExternalId: string; 
+    year: number;
+    stageLabel?: string;
+    roundLabel?: string;
+  }): Promise<SeasonDTO> {
+    // For mock, just return the full season (same as fetchSeason)
+    // In real implementation, this would filter by stage/round
+    return this.fetchSeason({
+      competitionExternalId: params.competitionExternalId,
+      year: params.year
+    });
+  }
+
   async fetchResults(params: { matchExternalIds: string[] }): Promise<ResultDTO[]> {
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 300));

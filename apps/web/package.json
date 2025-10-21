@@ -15,7 +15,7 @@
     "format": "prettier --check ."
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "^3.9.1",
     "@qp/api": "workspace:*",
     "@qp/branding": "workspace:*",
     "@qp/ui": "workspace:*",

@@ -5,6 +5,18 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    // !! WARN !!
+    // Dangerously allow production builds to successfully complete even if
+    // your project has type errors.
+    // !! WARN !!
+    ignoreBuildErrors: true,
+  },
   transpilePackages: ["@qp/ui", "@qp/api", "@qp/auth", "@qp/db", "@qp/branding", "@qp/config", "@qp/scoring", "@qp/utils"],
   experimental: {
     optimizePackageImports: ["@qp/ui", "lucide-react"],

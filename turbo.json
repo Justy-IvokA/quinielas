@@ -4,7 +4,19 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", ".next/**"],
-      "cache": true
+      "cache": true,
+      "env": [
+        "DATABASE_URL",
+        "AUTH_SECRET",
+        "SPORTS_PROVIDER",
+        "SPORTS_API_KEY",
+        "EMAIL_SERVER_HOST",
+        "EMAIL_SERVER_PORT",
+        "EMAIL_SERVER_USER",
+        "EMAIL_SERVER_PASSWORD",
+        "EMAIL_FROM",
+        "ENABLE_EXPERIMENTAL_COREPACK"
+      ]
     },
     "dev": {
       "cache": false

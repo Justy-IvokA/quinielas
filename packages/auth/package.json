@@ -4,8 +4,12 @@
   "private": true,
   "type": "module",
   "main": "src/index.ts",
+  "types": "dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsc --build",

@@ -15,7 +15,11 @@ export const createPoolSchema = z.object({
     exactScore: z.number().int().min(0).default(5),
     correctSign: z.number().int().min(0).default(3),
     goalDiffBonus: z.number().int().min(0).default(1),
-    tieBreakers: z.array(z.enum(["EXACT_SCORES", "CORRECT_SIGNS", "PREMIUM_MATCHES", "TIE_BREAKER_QUESTION"])).default(["EXACT_SCORES", "CORRECT_SIGNS"])
+    tieBreakers: z.array(z.enum(["EXACT_SCORES", "CORRECT_SIGNS", "PREMIUM_MATCHES", "TIE_BREAKER_QUESTION"])).default(["EXACT_SCORES", "CORRECT_SIGNS"]),
+    rounds: z.object({
+      start: z.number().int().positive(),
+      end: z.number().int().positive()
+    }).optional()
   }).optional()
 });
 
@@ -34,7 +38,11 @@ export const updatePoolSchema = z.object({
     exactScore: z.number().int().min(0).optional(),
     correctSign: z.number().int().min(0).optional(),
     goalDiffBonus: z.number().int().min(0).optional(),
-    tieBreakers: z.array(z.enum(["EXACT_SCORES", "CORRECT_SIGNS", "PREMIUM_MATCHES", "TIE_BREAKER_QUESTION"])).optional()
+    tieBreakers: z.array(z.enum(["EXACT_SCORES", "CORRECT_SIGNS", "PREMIUM_MATCHES", "TIE_BREAKER_QUESTION"])).optional(),
+    rounds: z.object({
+      start: z.number().int().positive(),
+      end: z.number().int().positive()
+    }).optional()
   }).optional()
 });
 

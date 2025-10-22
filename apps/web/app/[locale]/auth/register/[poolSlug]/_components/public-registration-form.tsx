@@ -27,35 +27,42 @@ import { Alert, AlertDescription } from "@qp/ui/components/alert";
 import { trpc } from "@web/trpc";
 import { CaptchaWidget, type CaptchaProvider } from "../../../signin/_components/captcha-widget";
 import { RegistrationSuccessModal } from "../../../signin/_components/registration-success-modal";
+import { LegalNotice } from "./legal-notice";
 
-const phoneSchema = z
-  .string()
-  .regex(/^\+[1-9]\d{1,14}$/, "Formato inválido (ej: +525512345678)")
-  .optional()
-  .or(z.literal(""));
+// Función para crear schema dinámico según datos del usuario
+const createValidationSchema = (userData?: {
+  displayName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+} | null) => {
+  const hasDisplayName = !!userData?.displayName;
+  const hasEmail = !!userData?.email;
+  const hasPhone = !!userData?.phone;
 
-// Schema for first-time users
-const publicRegistrationSchemaFull = z.object({
-  displayName: z.string().min(2, "Mínimo 2 caracteres").max(50, "Máximo 50 caracteres"),
-  email: z.string().email("Correo electrónico inválido"),
-  phone: phoneSchema,
-  acceptTerms: z.boolean().refine((val) => val === true, {
-    message: "Debes aceptar los términos y condiciones"
-  }),
-  captchaToken: z.string().optional()
-});
+  return z.object({
+    displayName: hasDisplayName
+      ? z.string().optional()
+      : z.string().min(2, "Mínimo 2 caracteres").max(50, "Máximo 50 caracteres"),
+    email: hasEmail
+      ? z.string().optional()
+      : z.string().email("Correo electrónico inválido"),
+    phone: hasPhone
+      ? z.string().optional().or(z.literal(""))
+      : z.string().min(1, "El teléfono es requerido").regex(/^\+[1-9]\d{1,14}$/, "Formato inválido (ej: +525512345678)"),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message: "Debes aceptar los términos y condiciones"
+    }),
+    captchaToken: z.string().optional()
+  });
+};
 
-// Schema for returning users (no personal data needed)
-const publicRegistrationSchemaSimple = z.object({
-  displayName: z.string().optional(),
-  email: z.string().optional(),
-  phone: phoneSchema,
-  acceptTerms: z.boolean().optional(),
-  captchaToken: z.string().optional()
-});
-
-// Use a union type that's compatible with both schemas
-type PublicRegistrationFormData = z.infer<typeof publicRegistrationSchemaFull> | z.infer<typeof publicRegistrationSchemaSimple>;
+type PublicRegistrationFormData = {
+  displayName?: string;
+  email?: string;
+  phone?: string;
+  acceptTerms: boolean;
+  captchaToken?: string;
+};
 
 interface PublicRegistrationFormProps {
   poolId: string;
@@ -108,33 +115,26 @@ export function PublicRegistrationForm({
   const { theme } = useTheme();
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-  // Query to check if user has any previous registrations
-  const hasExistingDataQuery = trpc.registration.hasExistingData.useQuery(
-    { userId },
-    { 
-      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-      retry: false
-    }
-  );
-
-  const hasExistingData = hasExistingDataQuery.data?.hasData ?? false;
-  
-  // Sync with localStorage for offline detection
-  useEffect(() => {
-    if (hasExistingDataQuery.data?.hasData) {
-      try {
-        localStorage.setItem(`user_${userId}_has_data`, 'true');
-      } catch {}
-    }
-  }, [hasExistingDataQuery.data, userId]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [hasSession, setHasSession] = useState(false);
+  const [userData, setUserData] = useState<{
+    displayName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  } | null>(null);
 
   // Get optimized media URLs
   const optimizedCardUrl = getOptimizedMediaUrl(heroAssets?.mainCard?.url);
   const optimizedLogoUrl = getOptimizedMediaUrl(brandLogo?.url);
 
+  // Query to get existing user data
+  const { data: existingData, isLoading: isLoadingUserData } = trpc.registration.hasExistingData.useQuery(
+    { userId },
+    { enabled: !!userId }
+  );
+
   const form = useForm<PublicRegistrationFormData>({
-    resolver: zodResolver(hasExistingData ? publicRegistrationSchemaSimple : publicRegistrationSchemaFull),
+    resolver: zodResolver(createValidationSchema(existingData?.hasData ? existingData : null)),
     defaultValues: {
       displayName: "",
       email: "",
@@ -144,11 +144,46 @@ export function PublicRegistrationForm({
     }
   });
 
+  // Effect to populate form with existing user data and update schema
+  useEffect(() => {
+    if (existingData?.hasData) {
+      setHasSession(true);
+      const newUserData = {
+        displayName: existingData.displayName,
+        email: existingData.email,
+        phone: existingData.phone
+      };
+      setUserData(newUserData);
+
+      // Pre-fill form with existing data
+      if (existingData.displayName) {
+        form.setValue("displayName", existingData.displayName);
+      }
+      if (existingData.email) {
+        form.setValue("email", existingData.email);
+      }
+      if (existingData.phone) {
+        form.setValue("phone", existingData.phone);
+      }
+
+      // Check if user has all data complete
+      const hasAllData = existingData.displayName && existingData.email && existingData.phone;
+      if (hasAllData) {
+        // Show info modal for users with complete data
+        setShowInfoModal(true);
+      }
+
+      // Update form resolver with new schema
+      const newSchema = createValidationSchema(newUserData);
+      form.clearErrors(); // Clear any previous errors
+    } else {
+      setHasSession(false);
+      setUserData(null);
+    }
+  }, [existingData, form]);
+
   const registerMutation = trpc.registration.registerPublic.useMutation({
     onSuccess: () => {
-      try {
-        localStorage.setItem(`user_${userId}_has_data`, 'true');
-      } catch {}
       setShowSuccessModal(true);
     },
     onError: (error) => {
@@ -166,16 +201,45 @@ export function PublicRegistrationForm({
       return;
     }
 
-    registerMutation.mutate({
-      poolId,
-      userId,
-      ...(hasExistingData ? {} : {
+    // Validación adicional para usuarios con datos parciales
+    if (hasSession && userData) {
+      const displayName = data.displayName || userData.displayName;
+      const email = data.email || userData.email;
+      const phone = data.phone || userData.phone;
+
+      if (!displayName) {
+        form.setError("displayName", {
+          message: "El nombre es requerido"
+        });
+        return;
+      }
+
+      if (!email) {
+        form.setError("email", {
+          message: "El correo electrónico es requerido"
+        });
+        return;
+      }
+
+      registerMutation.mutate({
+        poolId,
+        userId,
+        displayName,
+        email,
+        phone: phone || undefined,
+        captchaToken: captchaToken || undefined
+      });
+    } else {
+      // Usuario nuevo, enviar todos los datos del formulario
+      registerMutation.mutate({
+        poolId,
+        userId,
         displayName: data.displayName,
         email: data.email,
-        phone: data.phone || undefined
-      }),
-      captchaToken: captchaToken || undefined
-    } as any);
+        phone: data.phone || undefined,
+        captchaToken: captchaToken || undefined
+      });
+    }
   };
 
   // Check registration window
@@ -201,6 +265,18 @@ export function PublicRegistrationForm({
   };
 
   const countdown = getCountdown();
+
+  // Show loading state while fetching user data
+  if (isLoadingUserData) {
+    return (
+      <section className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20">
+        <div className="max-w-md w-full flex flex-col items-center gap-4">
+          <InlineLoader className="w-8 h-8" />
+          <p className="text-sm text-muted-foreground">{tCommon("loading") || "Cargando..."}</p>
+        </div>
+      </section>
+    );
+  }
 
   if (isBeforeStart && countdown) {
     return (
@@ -248,194 +324,338 @@ export function PublicRegistrationForm({
 
   return (
     <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Pool Info */}
-          <div className="rounded-lg border bg-muted/50 p-4">
-            <h3 className="font-semibold mb-2">{poolName}</h3>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {remainingSpots !== null && (
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  <span>
-                    {t("spotsRemaining", { count: remainingSpots })}
-                  </span>
+      {/* Full screen background with brand colors */}
+      <section className="relative min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-primary/20 via-accent/20 to-secondary/20">
+        
+        {/* Registration Card */}
+        <div className="relative w-full max-w-5xl">
+          <div className="grid md:grid-cols-[45%,55%] rounded-2xl overflow-hidden shadow-2xl h-auto md:h-[65vh] md:min-h-[500px] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+
+            {/* Floating badges - Hidden on mobile */}
+            <div className="hidden md:block absolute -top-10 -left-10 px-4 py-2 rounded-full bg-gradient-to-r from-secondary to-accent shadow-lg backdrop-blur-xl animate-bounce">
+              <Sparkles className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <div className="hidden md:block absolute -bottom-12 -right-12 px-4 py-2 rounded-full bg-gradient-to-r from-accent to-primary shadow-lg backdrop-blur-xl animate-bounce">
+              <Sparkles className="w-6 h-6 text-primary-foreground" />
+            </div>
+            
+            {/* LEFT SIDE - Hero Image/Video */}
+            <div className="relative h-80 md:h-auto bg-gradient-to-br from-primary to-accent group overflow-hidden">
+              {optimizedCardUrl ? (
+                heroAssets?.mainCard?.kind === "video" ? (
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  >
+                    <source src={optimizedCardUrl} type="video/mp4" />
+                  </video>
+                ) : (
+                  <Image
+                    src={optimizedCardUrl}
+                    alt={poolName}
+                    className="object-cover"
+                    fill
+                    priority
+                  />
+                )
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center p-8">
+                  <Trophy className="w-32 h-32 text-primary-foreground/80" strokeWidth={1.5} />
                 </div>
               )}
-              {registrationEndDate && (
-                <div className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  <span>
-                    {t("window.endsOn", {
-                      date: registrationEndDate.toLocaleDateString()
-                    })}
-                  </span>
+              
+              {/* Overlay gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/20 to-transparent" />
+              
+              {/* Hover Overlay with Tech Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/95 via-accent/95 to-secondary/95 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center p-6">
+                {/* Animated grid background */}
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)] bg-[size:20px_20px] animate-[grid_20s_linear_infinite]" />
                 </div>
+                
+                {/* Animated corner accents */}
+                <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-white/40 animate-pulse" />
+                <div className="absolute top-0 right-0 w-20 h-20 border-t-2 border-r-2 border-white/40 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <div className="absolute bottom-0 left-0 w-20 h-20 border-b-2 border-l-2 border-white/40 animate-pulse" style={{ animationDelay: '1s' }} />
+                <div className="absolute bottom-0 right-0 w-20 h-20 border-b-2 border-r-2 border-white/40 animate-pulse" style={{ animationDelay: '1.5s' }} />
+                
+                {/* Scanning line effect */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-white to-transparent animate-[scan_3s_ease-in-out_infinite]" />
+                </div>
+                
+                {/* Content */}
+                <div className="relative z-10 text-center text-white max-w-md px-4 animate-[fadeIn_0.5s_ease-out]">
+                  <p className="text-sm md:text-2xl leading-relaxed font-medium drop-shadow-lg line-clamp-7 md:line-clamp-none">
+                    {heroAssets?.text?.paragraph || t("public.defaultParagraph") || "¡Únete a esta quiniela pública y compite con otros participantes! Demuestra tus conocimientos deportivos."}
+                  </p>
+                </div>
+              </div>
+              
+              {/* Content overlay */}
+              {
+                heroAssets?.text?.title && (
+                  <div className="absolute top-2 md:top-4 left-0 right-0 text-center text-white px-4">
+                    <h2 className="text-xl md:text-4xl font-bold mb-0 text-secondary drop-shadow-lg line-clamp-2">
+                      {heroAssets.text.title}
+                    </h2>
+                  </div>
+                )
+              }
+              <div className="absolute bottom-0 left-0 right-0 px-4 pb-2 text-white">
+                <h2 className="text-lg md:text-3xl font-bold mb-0 text-primary line-clamp-1">
+                  {poolName}
+                </h2>
+                <p className="text-xs md:text-base text-white/90 line-clamp-2">
+                  {poolDescription || "Registro público abierto"}
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT SIDE - Registration Form */}
+            <div className="p-4 md:p-6 flex flex-col justify-center backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[65vh] custom-scrollbar">
+              {optimizedLogoUrl && (
+              <div className="flex items-center justify-center mb-3 md:mb-6">
+                <Image
+                  src={optimizedLogoUrl}
+                  alt={poolName}
+                  width={300}
+                  height={300}
+                  priority
+                  className={`object-contain w-48 md:w-auto ${theme === 'dark' ? 'invert brightness-0 dark:invert dark:brightness-100' : ''}`}
+                />
+              </div>
+              )}
+              {heroAssets?.text?.slogan && (
+                <div className="text-[10px] md:text-xs font-bold text-secondary text-center -mt-3 md:-mt-6 mb-3 md:mb-6 line-clamp-2">
+                  {heroAssets.text.slogan}
+                </div>
+              )}
+              {heroAssets?.text?.description && (
+                <div className="text-sm md:text-xl font-bold text-foreground text-justify mb-2 md:mb-4 line-clamp-5 md:line-clamp-none">
+                  {heroAssets.text.description}
+                </div>
+              )}
+              <div className="mb-3 md:mb-6">
+                <h2 className="text-lg md:text-2xl font-bold text-accent mb-1">
+                  {t("public.formTitle") || "Registro Público"}
+                </h2>
+                <p className="text-xs md:text-sm text-muted-foreground">
+                  {t("public.description") || "Completa tu información para unirte"}
+                </p>
+                {/* Pool Info Stats */}
+                {(remainingSpots !== null || registrationEndDate) && (
+                  <div className="flex items-center gap-3 mt-2 text-[10px] md:text-xs text-muted-foreground">
+                    {remainingSpots !== null && (
+                      <div className="flex items-center gap-1">
+                        <Users className="h-3 w-3" />
+                        <span>
+                          {t("spotsRemaining", { count: remainingSpots }) || `${remainingSpots} lugares`}
+                        </span>
+                      </div>
+                    )}
+                    {registrationEndDate && (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        <span>
+                          {t("window.endsOn", {
+                            date: registrationEndDate.toLocaleDateString()
+                          })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 md:space-y-4">
+
+                  {/* Display Name */}
+                  <FormField
+                    control={form.control}
+                    name="displayName"
+                    render={({ field }) => {
+                      const isDisabled = hasSession && !!userData?.displayName;
+                      return (
+                        <FormItem>
+                          <FormLabel className="text-xs md:text-sm font-medium">
+                            {t("fields.displayName.label") || "Nombre Completo"}
+                            {!isDisabled && <span className="text-destructive ml-1">*</span>}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder={t("fields.displayName.placeholder") || "ej: Lindsey Wilson"}
+                              className="h-9 md:h-10 text-sm"
+                              disabled={isDisabled}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  {/* Email */}
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => {
+                      const isDisabled = hasSession && !!userData?.email;
+                      return (
+                        <FormItem>
+                          <FormLabel className="text-xs md:text-sm font-medium">
+                            {t("fields.email.label") || "Tu Email"}
+                            {!isDisabled && <span className="text-destructive ml-1">*</span>}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder={t("fields.email.placeholder") || "example@email.com"}
+                              className="h-9 md:h-10 text-sm"
+                              disabled={isDisabled}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  {/* Phone */}
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => {
+                      const isDisabled = hasSession && !!userData?.phone;
+                      const isRequired = !hasSession || !userData?.phone;
+                      return (
+                        <FormItem>
+                          <FormLabel className="text-xs md:text-sm font-medium">
+                            {t("fields.phone.label") || "Teléfono"}
+                            {isRequired && <span className="text-destructive ml-1">*</span>}
+                            {!isRequired && <span className="text-muted-foreground ml-1">(Opcional)</span>}
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="tel"
+                              placeholder={t("fields.phone.placeholder") || "+52 55 1234 5678"}
+                              className="h-9 md:h-10 text-sm"
+                              disabled={isDisabled}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  {/* Terms Acceptance */}
+                  <FormField
+                    control={form.control}
+                    name="acceptTerms"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-2 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            className="mt-0.5"
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <LegalNotice />
+                          <FormMessage />
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* CAPTCHA */}
+                  {requireCaptcha && captchaSiteKey && (
+                    <div className="flex justify-center">
+                      <CaptchaWidget
+                        provider={captchaProvider}
+                        siteKey={captchaSiteKey}
+                        onVerify={setCaptchaToken}
+                        onExpire={() => setCaptchaToken(null)}
+                        onError={(error) => {
+                          form.setError("root", {
+                            message: t("errors.captchaError")
+                          });
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {/* Error Display */}
+                  {form.formState.errors.root && (
+                    <Alert variant="destructive">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription className="text-sm">
+                        {form.formState.errors.root.message}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    className="w-full h-9 md:h-10 font-semibold bg-primary hover:bg-primary/90 text-sm md:text-base"
+                    disabled={registerMutation.isPending || !form.watch("acceptTerms")}
+                    StartIcon={registerMutation.isPending ? InlineLoader : undefined}
+                  >
+                    {registerMutation.isPending ? (
+                      tCommon("loading") || "Cargando..."
+                    ) : (
+                      t("submit") || "Registrarse"
+                    )}
+                  </Button>
+                </form>
+              </Form>
+
+              {heroAssets?.text?.link && (
+                <Button variant="link" href={heroAssets.text.link} StartIcon={Sparkles} EndIcon={Sparkles} className="hidden md:flex text-xs md:text-sm mt-2 text-secondary hover:text-foreground">
+                  Conoce más en {heroAssets.text.link}
+                </Button>
               )}
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Info message for returning users */}
-          {hasExistingData && (
-            <Alert className="bg-blue-500/10 border-blue-500/50">
-              <AlertCircle className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-sm text-blue-700 dark:text-blue-400">
-                {t("public.returningUser") || "Usaremos tu información de registro anterior"}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Only show personal data fields for first-time users */}
-          {!hasExistingData && (
-            <>
-              {/* Display Name */}
-              <FormField
-                control={form.control}
-                name="displayName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("fields.displayName.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder={t("fields.displayName.placeholder")}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Email */}
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("fields.email.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="email"
-                        placeholder={t("fields.email.placeholder")}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Phone (Optional) */}
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("fields.phone.label")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="tel"
-                        placeholder={t("fields.phone.placeholder")}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Terms Acceptance */}
-              <FormField
-                control={form.control}
-                name="acceptTerms"
-            render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <div className="space-y-1 leading-none">
-                  <Label>
-                    {t("fields.acceptTerms.label")}{" "}
-                    {termsUrl && (
-                      <a
-                        href={termsUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary underline"
-                      >
-                        {t("fields.acceptTerms.termsLink")}
-                      </a>
-                    )}
-                    {privacyUrl && (
-                      <>
-                        {" "}{t("fields.acceptTerms.and")}{" "}
-                        <a
-                          href={privacyUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-primary underline"
-                        >
-                          {t("fields.acceptTerms.privacyLink")}
-                        </a>
-                      </>
-                    )}
-                  </Label>
-                  <FormMessage />
-                </div>
-              </FormItem>
-            )}
-          />
-            </>
-          )}
-
-          {/* CAPTCHA */}
-          {requireCaptcha && captchaSiteKey && (
-            <div className="flex justify-center">
-              <CaptchaWidget
-                provider={captchaProvider}
-                siteKey={captchaSiteKey}
-                onVerify={setCaptchaToken}
-                onExpire={() => setCaptchaToken(null)}
-                onError={(error) => {
-                  form.setError("root", {
-                    message: t("errors.captchaError")
-                  });
-                }}
-              />
+      {/* Info Modal for users with complete data */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-background rounded-lg shadow-lg p-6 space-y-4 animate-in fade-in-0 zoom-in-95">
+            <div className="flex flex-col items-center text-center space-y-3">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <Trophy className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-foreground">
+                ¡Excelente!
+              </h2>
+              <p className="text-sm md:text-base text-muted-foreground">
+                Ya estabas registrado con todos tus datos. Acepta los términos y condiciones para poder registrar esta quiniela a tu cuenta.
+              </p>
             </div>
-          )}
-
-          {/* Error Display */}
-          {form.formState.errors.root && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                {form.formState.errors.root.message}
-              </AlertDescription>
-            </Alert>
-          )}
-
-          {/* Submit Button */}
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={registerMutation.isPending}
-          >
-            {registerMutation.isPending ? (
-              <>
-                <InlineLoader className="mr-2 h-4 w-4 animate-spin" />
-                {tCommon("loading")}
-              </>
-            ) : (
-              t("submit")
-            )}
-          </Button>
-        </form>
-      </Form>
+            <Button
+              onClick={() => setShowInfoModal(false)}
+              className="w-full"
+              variant="default"
+            >
+              Entendido
+            </Button>
+          </div>
+        </div>
+      )}
 
       <RegistrationSuccessModal
         open={showSuccessModal}
@@ -443,6 +663,66 @@ export function PublicRegistrationForm({
         poolName={poolName}
         poolSlug={poolSlug}
       />
+
+      {/* Custom animations and scrollbar styles */}
+      <style jsx global>{`
+        @keyframes grid {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(20px);
+          }
+        }
+        
+        @keyframes scan {
+          0% {
+            top: -10%;
+          }
+          50% {
+            top: 110%;
+          }
+          100% {
+            top: -10%;
+          }
+        }
+        
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: scale(1);
+          }
+        }
+
+        /* Custom elegant scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: hsl(var(--primary) / 0.3);
+          border-radius: 3px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: hsl(var(--primary) / 0.5);
+        }
+
+        /* Firefox scrollbar */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: hsl(var(--primary) / 0.3) transparent;
+        }
+      `}</style>
     </>
   );
 }

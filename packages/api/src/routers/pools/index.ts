@@ -237,9 +237,12 @@ export const poolsRouter = router({
   // Delete pool
   delete: publicProcedure
     .use(withTenant)
-    .input(z.object({ id: z.string().cuid() }))
+    .input(z.object({ 
+      id: z.string().cuid(),
+      force: z.boolean().optional().default(false) // Allow force delete for testing/development
+    }))
     .mutation(async ({ ctx, input }) => {
-      // Check if pool exists and belongs to tenant
+      // Fetch pool with counts
       const pool = await prisma.pool.findUnique({
         where: { id: input.id },
         include: {
@@ -272,24 +275,28 @@ export const poolsRouter = router({
       }
 
       // Prevent deletion if pool has registrations (users have participated)
-      if (pool._count.registrations > 0) {
+      // unless force flag is set (for testing/development)
+      if (pool._count.registrations > 0 && !input.force) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Cannot delete pool with existing registrations. Deactivate it instead."
+          message: "Cannot delete pool with existing registrations. Deactivate it instead, or use force flag for testing."
         });
       }
 
       console.log(`[Pool Delete] Deleting pool ${input.id} with:`, {
+        registrations: pool._count.registrations,
         predictions: pool._count.predictions,
         prizes: pool._count.prizes,
         invitations: pool._count.invitations,
         scoreAudits: pool._count.scoreAudits,
-        leaderboards: pool._count.leaderboards
+        leaderboards: pool._count.leaderboards,
+        force: input.force
       });
 
       // Delete pool (cascade will handle related records)
       // Relations with onDelete: Cascade in schema:
       // - AccessPolicy
+      // - Registrations (if force=true)
       // - Predictions
       // - Prizes
       // - Invitations

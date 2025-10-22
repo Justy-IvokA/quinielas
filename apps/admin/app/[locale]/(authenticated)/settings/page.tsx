@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { trpc } from "@admin/trpc";
 import { toast } from "sonner";
+import { useTenantId } from "@admin/providers/brand-context";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
-  const [tenantId, setTenantId] = useState<string>("");
+  const tenantId = useTenantId();
 
   // Fetch effective settings
   const { data: settings, isLoading, refetch } = trpc.settings.effective.useQuery(
@@ -72,7 +72,7 @@ export default function SettingsPage() {
         <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-yellow-800">
-            Please select a tenant from the navigation to manage settings.
+            {t("selectTenant")}
           </p>
         </div>
       </div>
@@ -97,12 +97,12 @@ export default function SettingsPage() {
 
       {/* Anti-Abuse Settings */}
       <div className="bg-white border rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Anti-Abuse Settings</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("antiAbuse.title")}</h2>
 
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium mb-2">
-              Captcha Level
+              {t("antiAbuse.captchaLevel.label")}
             </label>
             <select
               className="w-full border rounded px-3 py-2"
@@ -110,12 +110,12 @@ export default function SettingsPage() {
               onChange={(e) => handleSaveCaptchaLevel(e.target.value)}
               disabled={upsertMutation.isPending}
             >
-              <option value="off">Off</option>
-              <option value="auto">Auto (on anomaly)</option>
-              <option value="force">Force (always)</option>
+              <option value="off">{t("antiAbuse.captchaLevel.off")}</option>
+              <option value="auto">{t("antiAbuse.captchaLevel.auto")}</option>
+              <option value="force">{t("antiAbuse.captchaLevel.force")}</option>
             </select>
             <p className="text-sm text-gray-500 mt-1">
-              Controls when CAPTCHA is required during registration
+              {t("antiAbuse.captchaLevel.description")}
             </p>
           </div>
         </div>
@@ -123,14 +123,14 @@ export default function SettingsPage() {
 
       {/* Privacy Settings */}
       <div className="bg-white border rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">Privacy Settings</h2>
+        <h2 className="text-xl font-semibold mb-4">{t("privacy.title")}</h2>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <label className="block text-sm font-medium">IP Logging</label>
+              <label className="block text-sm font-medium">{t("privacy.ipLogging.label")}</label>
               <p className="text-sm text-gray-500">
-                Store IP addresses in audit logs and consent records
+                {t("privacy.ipLogging.description")}
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -147,9 +147,9 @@ export default function SettingsPage() {
 
           <div className="flex items-center justify-between">
             <div>
-              <label className="block text-sm font-medium">Cookie Banner</label>
+              <label className="block text-sm font-medium">{t("privacy.cookieBanner.label")}</label>
               <p className="text-sm text-gray-500">
-                Show cookie/privacy banner on public pools
+                {t("privacy.cookieBanner.description")}
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -167,10 +167,10 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium">
-                Device Fingerprinting
+                {t("privacy.deviceFingerprint.label")}
               </label>
               <p className="text-sm text-gray-500">
-                Enable device fingerprinting for fraud detection
+                {t("privacy.deviceFingerprint.description")}
               </p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
@@ -191,8 +191,7 @@ export default function SettingsPage() {
 
       <div className="text-sm text-gray-500">
         <p>
-          <strong>Note:</strong> These settings override global defaults for this
-          tenant. Pool-specific overrides can be configured per pool.
+          {t("note")}
         </p>
       </div>
     </div>

@@ -80,9 +80,9 @@ export function getDefaultRedirectForRole(role: TenantRole | null, locale: strin
       return "/superadmin/tenants";
     case "TENANT_ADMIN":
     case "TENANT_EDITOR":
-      return `/${locale}/dashboard`;
+      return `/${locale}`; // Admin home page
     case "PLAYER":
-      return `/${locale}/dashboard`; // Fixed: removed (player) route group
+      return `/${locale}`; // Player home page
     default:
       return `/${locale}`;
   }

@@ -72,7 +72,7 @@ export function BrandingForm({
             <TabsTrigger value="hero">{t("tabs.hero")}</TabsTrigger>
             <TabsTrigger value="mainCard">{t("tabs.mainCard")}</TabsTrigger>
             <TabsTrigger value="typography">{t("tabs.typography")}</TabsTrigger>
-            <TabsTrigger value="text">{t("tabs.text")}</TabsTrigger>
+            <TabsTrigger value="text">{t("tabs.textLabel")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="colors" className="space-y-4 pt-4">

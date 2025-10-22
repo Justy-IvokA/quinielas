@@ -65,7 +65,8 @@ export const registrationRouter = router({
       return {
         hasData: !!existingReg,
         displayName: existingReg?.displayName,
-        email: existingReg?.email
+        email: existingReg?.email,
+        phone: existingReg?.phone
       };
     }),
 
@@ -326,6 +327,21 @@ export const registrationRouter = router({
       displayName = displayName || userData.displayName || undefined;
       email = email || userData.email || undefined;
       phone = phone || userData.phone || undefined;
+    }
+
+    // Update User model if phone is provided and not already set
+    if (phone) {
+      const user = await prisma.user.findUnique({
+        where: { id: input.userId },
+        select: { phone: true }
+      });
+
+      if (!user?.phone) {
+        await prisma.user.update({
+          where: { id: input.userId },
+          data: { phone }
+        });
+      }
     }
 
     // Create registration

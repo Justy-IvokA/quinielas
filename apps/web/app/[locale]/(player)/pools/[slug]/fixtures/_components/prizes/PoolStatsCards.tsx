@@ -37,12 +37,9 @@ export function PoolStatsCards({ poolId, leaderboard }: PoolStatsCardsProps) {
   const { data: registrations, isLoading: registrationsLoading } = 
     trpc.pools.getRegistrations.useQuery({ poolId });
 
-  // Fetch matches for match stats
-  const { data: pool } = trpc.pools.getById.useQuery({ id: poolId });
-
-  const { data: matches } = trpc.fixtures.listBySeason.useQuery(
-    { seasonId: pool?.seasonId || "" },
-    { enabled: !!pool?.seasonId }
+  // Fetch matches for match stats (filtered by pool's round configuration)
+  const { data: matches } = trpc.fixtures.getByPoolId.useQuery(
+    { poolId, includeFinished: true }
   );
 
   // Calculate stats

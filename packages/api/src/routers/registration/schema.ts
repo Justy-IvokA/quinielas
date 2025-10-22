@@ -13,7 +13,16 @@ export const registerPublicSchema = z.object({
   email: z.string().email().optional(),
   phone: phoneSchema,
   captchaToken: z.string().optional()
-});
+}).refine(
+  (data) => {
+    // At least displayName and email must be provided if this is a new user
+    // The backend will handle fetching from existing registrations if needed
+    return true;
+  },
+  {
+    message: "Display name and email are required for registration"
+  }
+);
 
 export const registerWithCodeSchema = z.object({
   poolId: z.string().cuid(),

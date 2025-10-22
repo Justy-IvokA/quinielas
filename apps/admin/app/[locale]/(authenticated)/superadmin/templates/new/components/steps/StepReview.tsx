@@ -15,7 +15,8 @@ interface StepReviewProps {
     competitionName: string;
     seasonYear: number;
     stageLabel?: string;
-    roundLabel?: string;
+    selectedRounds?: string[];
+    roundsRange?: { start: number; end: number } | null;
     template: {
       title: string;
       slug: string;
@@ -57,6 +58,12 @@ export function StepReview({ wizardData }: StepReviewProps) {
 
   const handleCreate = () => {
     setIsCreating(true);
+    
+    // ⚠️ IMPORTANTE: NO usar roundLabel para importar
+    // Razón: Si usuario selecciona múltiples jornadas (J14, J15, J16),
+    // roundLabel solo importaría UNA jornada de la API.
+    // Solución: Importar toda la temporada y filtrar en frontend con rounds.start/end
+    
     createMutation.mutate({
       slug: wizardData.template.slug,
       title: wizardData.template.title,
@@ -66,12 +73,19 @@ export function StepReview({ wizardData }: StepReviewProps) {
       competitionExternalId: wizardData.competitionExternalId,
       seasonYear: wizardData.seasonYear,
       stageLabel: wizardData.stageLabel || undefined,
-      roundLabel: wizardData.roundLabel || undefined,
+      roundLabel: undefined, // ✅ NO filtrar en import - importar toda la temporada
       rules: {
         exactScore: wizardData.rules.exactScore,
         correctSign: wizardData.rules.correctSign,
         goalDiffBonus: wizardData.rules.goalDiffBonus,
-        tieBreakers: ["EXACT_SCORES", "CORRECT_SIGNS"]
+        tieBreakers: ["EXACT_SCORES", "CORRECT_SIGNS"],
+        // ✅ Filtrar en frontend con rounds.start/end
+        ...(wizardData.roundsRange ? {
+          rounds: {
+            start: wizardData.roundsRange.start,
+            end: wizardData.roundsRange.end
+          }
+        } : {})
       },
       accessDefaults: {
         accessType: wizardData.accessDefaults.accessType,
@@ -137,12 +151,15 @@ export function StepReview({ wizardData }: StepReviewProps) {
                 <span className="font-medium">{wizardData.stageLabel}</span>
               </div>
             )}
-            {wizardData.roundLabel && (
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">{t("roundLabel")}:</span>
-                <span className="font-medium">{wizardData.roundLabel}</span>
-              </div>
-            )}
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Jornadas:</span>
+              <span className="font-medium">
+                {wizardData.selectedRounds && wizardData.selectedRounds.length > 0 
+                  ? `${wizardData.selectedRounds.join(', ')} (${wizardData.roundsRange?.start} - ${wizardData.roundsRange?.end})`
+                  : 'Todas las jornadas'
+                }
+              </span>
+            </div>
           </CardContent>
         </Card>
 

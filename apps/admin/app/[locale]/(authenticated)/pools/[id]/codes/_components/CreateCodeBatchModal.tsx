@@ -75,7 +75,7 @@ export function CreateCodeBatchModal({
 
   const createBatchMutation = trpc.access.createCodeBatch.useMutation({
     onSuccess: (data) => {
-      toastSuccess(t("createSuccess", { count: data.totalCodes }));
+      toastSuccess(t("../messages.createSuccess", { count: data.totalCodes }));
       setCreatedBatch(data);
     },
     onError: (error) => {

@@ -17,7 +17,8 @@ interface WizardData {
   competitionName?: string;
   seasonYear?: number;
   stageLabel?: string;
-  roundLabel?: string;
+  selectedRounds?: string[]; // Array de rounds seleccionados
+  roundsRange?: { start: number; end: number } | null; // Calculado automáticamente
   pool?: {
     title: string;
     slug: string;
@@ -137,7 +138,7 @@ export function CreatePoolWizard() {
             }}
             initialData={{
               stageLabel: wizardData.stageLabel,
-              roundLabel: wizardData.roundLabel
+              selectedRounds: wizardData.selectedRounds
             }}
           />
         );
@@ -156,7 +157,8 @@ export function CreatePoolWizard() {
             competitionName={wizardData.competitionName}
             seasonYear={wizardData.seasonYear}
             stageLabel={wizardData.stageLabel}
-            roundLabel={wizardData.roundLabel}
+            selectedRounds={wizardData.selectedRounds}
+            roundsRange={wizardData.roundsRange}
             onSubmit={(data) => {
               updateWizardData({ pool: data });
             }}
@@ -219,7 +221,8 @@ export function CreatePoolWizard() {
               competitionName: wizardData.competitionName,
               seasonYear: wizardData.seasonYear,
               stageLabel: wizardData.stageLabel,
-              roundLabel: wizardData.roundLabel,
+              selectedRounds: wizardData.selectedRounds,
+              roundsRange: wizardData.roundsRange,
               pool: wizardData.pool,
               access: wizardData.access,
               prizes: wizardData.prizes

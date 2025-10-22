@@ -38,8 +38,11 @@ export function PoolsList() {
   });
 
   const handleDelete = (id: string, name: string) => {
-    if (confirm(t("actions.deleteConfirm", { name }))) {
-      deleteMutation.mutate({ id });
+    const confirmMessage = t("actions.deleteConfirm", { name }) + 
+      "\n\n⚠️ ADVERTENCIA: Esto eliminará TODOS los registros, predicciones y datos relacionados.";
+    
+    if (confirm(confirmMessage)) {
+      deleteMutation.mutate({ id, force: true }); // force=true para testing/desarrollo
     }
   };
   if (isLoading) {

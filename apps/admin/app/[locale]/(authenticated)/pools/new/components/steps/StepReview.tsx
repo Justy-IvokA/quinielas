@@ -14,7 +14,8 @@ interface StepReviewProps {
     competitionName: string;
     seasonYear: number;
     stageLabel?: string;
-    roundLabel?: string;
+    selectedRounds?: string[];
+    roundsRange?: { start: number; end: number } | null;
     pool: {
       title: string;
       slug: string;
@@ -63,8 +64,22 @@ export function StepReview({ wizardData }: StepReviewProps) {
         competitionName: wizardData.competitionName,
         seasonYear: wizardData.seasonYear,
         stageLabel: wizardData.stageLabel,
-        roundLabel: wizardData.roundLabel,
-        pool: wizardData.pool,
+        roundLabel: undefined, // ✅ NO filtrar en import - importar toda la temporada
+        pool: {
+          ...wizardData.pool,
+          // ✅ CRÍTICO: Incluir rounds en ruleSet para filtro frontend
+          ruleSet: {
+            exactScore: 5,
+            correctSign: 3,
+            goalDiffBonus: 1,
+            ...(wizardData.roundsRange ? {
+              rounds: {
+                start: wizardData.roundsRange.start,
+                end: wizardData.roundsRange.end
+              }
+            } : {})
+          }
+        },
         access: {
           accessType: wizardData.access.accessType,
           requireCaptcha: wizardData.access.requireCaptcha,
@@ -157,13 +172,6 @@ export function StepReview({ wizardData }: StepReviewProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Alert>
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          Revisa la información antes de crear la quiniela. Este proceso importará los equipos y partidos desde la API.
-        </AlertDescription>
-      </Alert>
-
       {/* Competition & Season */}
       <div className="rounded-lg border p-4">
         <h3 className="font-semibold mb-3">Competencia y temporada</h3>
@@ -182,12 +190,15 @@ export function StepReview({ wizardData }: StepReviewProps) {
               <dd className="font-medium">{wizardData.stageLabel}</dd>
             </div>
           )}
-          {wizardData.roundLabel && (
-            <div className="flex justify-between">
-              <dt className="text-muted-foreground">Ronda:</dt>
-              <dd className="font-medium">{wizardData.roundLabel}</dd>
-            </div>
-          )}
+          <div className="flex justify-between">
+            <dt className="text-muted-foreground">Jornadas:</dt>
+            <dd className="font-medium">
+              {wizardData.selectedRounds && wizardData.selectedRounds.length > 0 
+                ? `${wizardData.selectedRounds.join(', ')} (${wizardData.roundsRange?.start} - ${wizardData.roundsRange?.end})`
+                : 'Todas las jornadas'
+              }
+            </dd>
+          </div>
         </dl>
       </div>
 

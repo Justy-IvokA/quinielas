@@ -4,17 +4,21 @@ import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Info, Target, AlertCircle } from "lucide-react";
 import { SportsLoader } from "@qp/ui";
-import { Label, RadioGroup, RadioGroupItem, Alert, AlertDescription } from "@qp/ui";
+import { Label, RadioGroup, RadioGroupItem, Alert, AlertDescription, Checkbox, Button } from "@qp/ui";
 import { trpc } from "@admin/trpc";
 import { toast } from "sonner";
 
 interface StepStageRoundProps {
   competitionExternalId: string;
   seasonYear: number;
-  onSelect: (data: { stageLabel?: string; roundLabel?: string }) => void;
+  onSelect: (data: { 
+    stageLabel?: string; 
+    selectedRounds?: string[]; // Array de rounds seleccionados
+    roundsRange?: { start: number; end: number } | null; // Calculado automáticamente
+  }) => void;
   initialData?: {
     stageLabel?: string;
-    roundLabel?: string;
+    selectedRounds?: string[];
   };
 }
 
@@ -26,7 +30,8 @@ export function StepStageRound({
 }: StepStageRoundProps) {
   const t = useTranslations("superadmin.templates.create.wizard.steps.scope");
   const [selectedStage, setSelectedStage] = useState<string | null>(initialData?.stageLabel || null);
-  const [selectedRound, setSelectedRound] = useState<string | null>(initialData?.roundLabel || null);
+  const [selectedRounds, setSelectedRounds] = useState<Set<string>>(new Set(initialData?.selectedRounds || []));
+  const [selectAllRounds, setSelectAllRounds] = useState(false);
   const [stagePreviewCache, setStagePreviewCache] = useState<Record<string, any>>({});
   const [roundsStatus, setRoundsStatus] = useState<Record<string, 'active' | 'expired' | 'unknown'>>({});
   const [loadingRounds, setLoadingRounds] = useState(false);
@@ -40,29 +45,29 @@ export function StepStageRound({
     seasonYear
   });
 
-  // Query preview
+  // Query preview (solo para el stage completo o primera ronda seleccionada)
+  const firstSelectedRound = selectedRounds.size > 0 ? Array.from(selectedRounds)[0] : undefined;
   const { data: previewData, isLoading: loadingPreview } = trpc.poolWizard.previewFixtures.useQuery(
     {
       competitionExternalId,
       seasonYear,
       stageLabel: selectedStage || undefined,
-      roundLabel: selectedRound || undefined
+      roundLabel: selectAllRounds ? undefined : firstSelectedRound
     },
     {
-      enabled: !!(selectedStage || selectedRound)
+      enabled: !!(selectedStage || selectedRounds.size > 0 || selectAllRounds)
     }
   );
 
   const selectedStageData = stagesData?.stages.find((s) => s.label === selectedStage);
 
   const handleStageSelect = (stage: string) => {
-    // Don't validate stage expiration here - let user select it
-    // Validation will happen at round level or when continuing without round
     setSelectedStage(stage);
-    setSelectedRound(null);
+    setSelectedRounds(new Set());
+    setSelectAllRounds(false);
   };
 
-  const handleRoundSelect = (round: string) => {
+  const handleRoundToggle = (round: string) => {
     // Only validate if the round is marked as inactive
     if (!activeRounds.has(round)) {
       toast.error(t("roundExpiredError"), {
@@ -71,8 +76,45 @@ export function StepStageRound({
       return;
     }
 
-    setSelectedRound(round);
-    onSelect({ stageLabel: selectedStage || undefined, roundLabel: round });
+    setSelectedRounds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(round)) {
+        newSet.delete(round);
+      } else {
+        newSet.add(round);
+      }
+      setSelectAllRounds(false); // Desmarcar "todas" si se selecciona individual
+      return newSet;
+    });
+  };
+
+  const handleSelectAllRounds = (checked: boolean | "indeterminate") => {
+    const isChecked = checked === true;
+    setSelectAllRounds(isChecked);
+    if (isChecked) {
+      setSelectedRounds(new Set()); // Limpiar selección individual
+    }
+  };
+
+  // Calcular rounds.start y rounds.end basado en selección
+  const calculateRoundsRange = (): { start: number; end: number } | null => {
+    if (selectAllRounds || selectedRounds.size === 0) {
+      return null; // null = todos los partidos
+    }
+
+    const roundNumbers = Array.from(selectedRounds)
+      .map(r => parseInt(r, 10))
+      .filter(n => !isNaN(n))
+      .sort((a, b) => a - b);
+
+    if (roundNumbers.length === 0) {
+      return null;
+    }
+
+    return {
+      start: roundNumbers[0],
+      end: roundNumbers[roundNumbers.length - 1]
+    };
   };
 
   // Cache preview data when it loads
@@ -150,8 +192,13 @@ export function StepStageRound({
 
   // Update wizard data whenever selection changes
   useEffect(() => {
-    onSelect({ stageLabel: selectedStage || undefined, roundLabel: selectedRound || undefined });
-  }, [selectedStage, selectedRound]);
+    const roundsRange = calculateRoundsRange();
+    onSelect({ 
+      stageLabel: selectedStage || undefined, 
+      selectedRounds: selectAllRounds ? [] : Array.from(selectedRounds),
+      roundsRange: roundsRange
+    });
+  }, [selectedStage, selectedRounds, selectAllRounds]);
 
   if (isLoading) {
     return (
@@ -224,9 +271,21 @@ export function StepStageRound({
       {/* Round Selection */}
       {selectedStage && selectedStageData && selectedStageData.rounds && selectedStageData.rounds.length > 0 && (
         <div className="flex flex-col gap-4 pt-4 border-t">
-          <h3 className="font-semibold">{t("roundTitle")}</h3>
+          <div className="flex items-center justify-between">
+            <h3 className="font-semibold">{t("roundTitle")}</h3>
+            <div className="flex items-center gap-2">
+              <Checkbox 
+                id="select-all-rounds"
+                checked={selectAllRounds}
+                onCheckedChange={(checked) => handleSelectAllRounds(checked)}
+              />
+              <Label htmlFor="select-all-rounds" className="text-sm cursor-pointer">
+                {t("selectAllRounds") || "Todas las jornadas"}
+              </Label>
+            </div>
+          </div>
 
-          <RadioGroup value={selectedRound || ""} onValueChange={handleRoundSelect}>
+          {!selectAllRounds && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {[...selectedStageData.rounds]
                 .sort((a, b) => {
@@ -241,6 +300,7 @@ export function StepStageRound({
                 })
                 .map((round) => {
                   const isActive = activeRounds.has(round);
+                  const isSelected = selectedRounds.has(round);
                   
                   return (
                     <div
@@ -248,15 +308,20 @@ export function StepStageRound({
                       className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
                         !isActive
                           ? "opacity-40 cursor-not-allowed border-muted"
-                          : selectedRound === round
-                          ? "border-primary bg-primary/5 cursor-pointer"
-                          : "border-border hover:border-primary/50 cursor-pointer"
+                          : isSelected
+                          ? "border-primary bg-primary/5"
+                          : "border-border hover:border-primary/50"
                       }`}
                     >
-                      <RadioGroupItem 
-                        value={round} 
+                      <Checkbox 
                         id={`round-${round}`}
+                        checked={isSelected}
                         disabled={!isActive}
+                        onCheckedChange={(checked) => {
+                          if (isActive) {
+                            handleRoundToggle(round);
+                          }
+                        }}
                       />
                       <Label 
                         htmlFor={`round-${round}`} 
@@ -271,7 +336,16 @@ export function StepStageRound({
                   );
                 })}
             </div>
-          </RadioGroup>
+          )}
+
+          {selectAllRounds && (
+            <Alert>
+              <Info className="h-4 w-4" />
+              <AlertDescription>
+                {t("allRoundsSelected") || "Se incluirán todos los partidos de esta etapa"}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       )}
 
@@ -305,7 +379,24 @@ export function StepStageRound({
         </div>
       )}
 
-      {!selectedStage && !selectedRound && (
+      {/* Info sobre selección */}
+      {selectedRounds.size > 0 && !selectAllRounds && (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            {t("roundsSelectedInfo", { 
+              rounds: Array.from(selectedRounds).sort((a, b) => parseInt(a) - parseInt(b)).join(", ")
+            })}
+            {calculateRoundsRange() && (
+              <div className="mt-1 text-xs">
+                <strong>Rango:</strong> {calculateRoundsRange()?.start} - {calculateRoundsRange()?.end}
+              </div>
+            )}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!selectedStage && selectedRounds.size === 0 && !selectAllRounds && (
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>

@@ -18,7 +18,8 @@ interface WizardData {
   competitionName?: string;
   seasonYear?: number;
   stageLabel?: string;
-  roundLabel?: string;
+  selectedRounds?: string[]; // Array de rounds seleccionados
+  roundsRange?: { start: number; end: number } | null; // Calculado automáticamente
   template?: {
     title: string;
     slug: string;
@@ -132,7 +133,7 @@ export function CreateTemplateWizard() {
             }}
             initialData={{
               stageLabel: wizardData.stageLabel,
-              roundLabel: wizardData.roundLabel
+              selectedRounds: wizardData.selectedRounds
             }}
           />
         );
@@ -151,7 +152,8 @@ export function CreateTemplateWizard() {
             competitionName={wizardData.competitionName}
             seasonYear={wizardData.seasonYear}
             stageLabel={wizardData.stageLabel}
-            roundLabel={wizardData.roundLabel}
+            selectedRounds={wizardData.selectedRounds}
+            roundsRange={wizardData.roundsRange}
             onSubmit={(data) => {
               updateWizardData({ template: data });
             }}
@@ -212,7 +214,8 @@ export function CreateTemplateWizard() {
               competitionName: wizardData.competitionName,
               seasonYear: wizardData.seasonYear,
               stageLabel: wizardData.stageLabel,
-              roundLabel: wizardData.roundLabel,
+              selectedRounds: wizardData.selectedRounds,
+              roundsRange: wizardData.roundsRange,
               template: wizardData.template,
               rules: wizardData.rules,
               accessDefaults: wizardData.accessDefaults

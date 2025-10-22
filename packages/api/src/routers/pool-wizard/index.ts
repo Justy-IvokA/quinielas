@@ -204,34 +204,140 @@ export const poolWizardRouter = router({
       }
 
       try {
-        // Fetch competition data by external ID
-        // Use fetchSeasonRound if filters are specified, otherwise fetchSeason
-        let seasonData: Awaited<ReturnType<typeof provider.fetchSeason>>;
+        // ✅ OPTIMIZATION: Check if we already have this season's data in DB
+        const existingCompetition = await prisma.competition.findFirst({
+          where: {
+            sportId: sport.id,
+            name: input.competitionName
+          },
+          include: {
+            seasons: {
+              where: { year: input.seasonYear },
+              include: {
+                matches: {
+                  select: {
+                    id: true,
+                    homeTeamId: true,
+                    awayTeamId: true,
+                    kickoffTime: true,
+                    round: true,
+                    matchday: true,
+                    venue: true,
+                    status: true,
+                    homeScore: true,
+                    awayScore: true,
+                    finishedAt: true,
+                    homeTeam: {
+                      select: {
+                        id: true,
+                        name: true,
+                        shortName: true,
+                        logoUrl: true,
+                        countryCode: true
+                      }
+                    },
+                    awayTeam: {
+                      select: {
+                        id: true,
+                        name: true,
+                        shortName: true,
+                        logoUrl: true,
+                        countryCode: true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        });
+
+        const existingSeason = existingCompetition?.seasons[0];
         
-        if (input.stageLabel || input.roundLabel) {
-          console.log(`[Pool Wizard] Fetching filtered season data: stage=${input.stageLabel}, round=${input.roundLabel}`);
-          seasonData = await provider.fetchSeasonRound({
-            competitionExternalId: input.competitionExternalId,
-            year: input.seasonYear,
-            stageLabel: input.stageLabel,
-            roundLabel: input.roundLabel
-          });
-        } else {
-          console.log(`[Pool Wizard] Fetching full season data`);
-          seasonData = await provider.fetchSeason({
-            competitionExternalId: input.competitionExternalId,
-            year: input.seasonYear
-          });
+        // Check if we have existing data for the SPECIFIC rounds requested (if any)
+        let hasExistingData = false;
+        if (existingSeason && existingSeason.matches.length > 0) {
+          // If specific rounds are requested via ruleSet, check if we have those rounds
+          const requestedRounds = input.pool.ruleSet?.rounds;
+          if (requestedRounds?.start && requestedRounds?.end) {
+            const matchesInRequestedRounds = existingSeason.matches.filter(
+              m => m.round !== null && m.round >= requestedRounds.start && m.round <= requestedRounds.end
+            );
+            hasExistingData = matchesInRequestedRounds.length > 0;
+          } else {
+            // No specific rounds requested, any existing data is fine
+            hasExistingData = true;
+          }
         }
 
-        if (!seasonData) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Season data not found"
+        let seasonData: Awaited<ReturnType<typeof provider.fetchSeason>>;
+        let importedTeams = 0;
+        let importedMatches = 0;
+
+        if (hasExistingData && existingSeason) {
+          // Reuse existing data from DB - NO API call needed
+          // Build seasonData structure from DB data
+          const uniqueTeams = new Map<string, any>();
+          existingSeason.matches.forEach(match => {
+            if (match.homeTeam && !uniqueTeams.has(match.homeTeam.id)) {
+              uniqueTeams.set(match.homeTeam.id, match.homeTeam);
+            }
+            if (match.awayTeam && !uniqueTeams.has(match.awayTeam.id)) {
+              uniqueTeams.set(match.awayTeam.id, match.awayTeam);
+            }
           });
+
+          seasonData = {
+            externalId: existingSeason.id, // Use season ID as external ID (safe because hasExistingData is true)
+            name: `${input.competitionName} ${input.seasonYear}`,
+            year: input.seasonYear,
+            teams: Array.from(uniqueTeams.values()).map(team => ({
+              externalId: team.id, // Use internal ID as external for consistency
+              name: team.name,
+              shortName: team.shortName || team.name,
+              logoUrl: team.logoUrl,
+              countryCode: team.countryCode
+            })),
+            matches: existingSeason.matches.map(match => ({
+              externalId: match.id, // Use internal ID
+              homeTeamExternalId: match.homeTeamId,
+              awayTeamExternalId: match.awayTeamId,
+              kickoffTime: match.kickoffTime,
+              round: match.round ?? undefined, // Convert null to undefined
+              venue: match.venue || undefined,
+              status: match.status,
+              homeScore: match.homeScore ?? undefined, // Convert null to undefined
+              awayScore: match.awayScore ?? undefined, // Convert null to undefined
+              finishedAt: match.finishedAt || undefined
+            }))
+          };
+
+          // Skip import counts since data already exists
+          importedTeams = uniqueTeams.size;
+          importedMatches = existingSeason.matches.length;
+        } else {
+          // No existing data - Fetch from external API
+          if (input.stageLabel || input.roundLabel) {
+            seasonData = await provider.fetchSeasonRound({
+              competitionExternalId: input.competitionExternalId,
+              year: input.seasonYear,
+              stageLabel: input.stageLabel,
+              roundLabel: input.roundLabel
+            });
+          } else {
+            seasonData = await provider.fetchSeason({
+              competitionExternalId: input.competitionExternalId,
+              year: input.seasonYear
+            });
+          }
+
+          if (!seasonData) {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Season data not found"
+            });
+          }
         }
-        
-        console.log(`[Pool Wizard] Fetched ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`);
 
         // Extract competition data from season
         const competitionData = {
@@ -288,10 +394,12 @@ export const poolWizardRouter = router({
           });
         }
 
-        // seasonData already contains filtered matches and teams from fetchSeasonRound
+        // Import teams and matches only if we fetched from API (not reusing existing data)
         const teamIdMap = new Map<string, string>();
 
-        for (const teamDTO of seasonData.teams) {
+        if (!hasExistingData) {
+          // Only import if we don't have existing data
+          for (const teamDTO of seasonData.teams) {
           let team = await prisma.team.findFirst({
             where: {
               sportId: sport.id,
@@ -415,6 +523,7 @@ export const poolWizardRouter = router({
 
           importedMatches++;
         }
+        } // End of if (!hasExistingData)
 
         // Create Pool
         const pool = await prisma.pool.create({
@@ -427,7 +536,7 @@ export const poolWizardRouter = router({
             description: input.pool.description,
             isActive: true,
             isPublic: input.access.accessType === "PUBLIC",
-            ruleSet: {
+            ruleSet: input.pool.ruleSet || {
               exactScore: 5,
               correctSign: 3,
               goalDiffBonus: 1,

@@ -61,11 +61,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "profile" });
   
-  // Get session
+  // Get session (already verified by layout, but we need the user data)
   const session = await getServerAuthSession(authConfig);
   
+  // Session is guaranteed to exist because of the (authenticated) layout
   if (!session?.user) {
-    redirect(`/${locale}/auth/signin`);
+    // This should never happen, but TypeScript needs the check
+    throw new Error("Session not found despite authenticated layout");
   }
 
   // Get user with all memberships and statistics

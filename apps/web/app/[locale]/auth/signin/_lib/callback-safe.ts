@@ -17,16 +17,21 @@ export async function isCallbackUrlSafe(
 ): Promise<boolean> {
   if (!callbackUrl) return true;
 
+  // Check if it's a relative URL (starts with /)
+  if (callbackUrl.startsWith("/")) {
+    // Relative URLs are always safe (same origin)
+    return true;
+  }
+
   try {
     const url = new URL(callbackUrl);
-
-    // Allow relative URLs (same origin)
-    if (!url.hostname) return true;
 
     // Allow localhost in development
     if (
       process.env.NODE_ENV === "development" &&
-      (url.hostname === "localhost" || url.hostname === "127.0.0.1")
+      (url.hostname === "localhost" || 
+       url.hostname === "127.0.0.1" ||
+       url.hostname.endsWith(".localhost"))
     ) {
       return true;
     }

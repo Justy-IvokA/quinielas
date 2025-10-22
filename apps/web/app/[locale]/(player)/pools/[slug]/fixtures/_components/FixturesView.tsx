@@ -20,6 +20,7 @@ interface FixturesViewProps {
     slug: string;
     name: string;
     seasonId: string;
+    ruleSet?: any; // Pool rules including round filtering
     season: {
       id: string;
       name: string;
@@ -46,10 +47,14 @@ export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }
 
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "LIVE" | "FINISHED">(initialFilter);
 
-  // Fetch matches
-  const { data: matches, isLoading: matchesLoading, error: matchesError } = trpc.fixtures.listBySeason.useQuery({
-    seasonId: pool.seasonId
+  // Fetch matches (filtered by pool's round configuration in ruleSet)
+  const { data: matches, isLoading: matchesLoading, error: matchesError } = trpc.fixtures.getByPoolId.useQuery({
+    poolId: pool.id,
+    includeFinished: true
   });
+
+  // DEBUG: Log matches data
+  // console.log('🔥 [FixturesView] Pool ID:', pool);
 
   // Fetch user predictions
   const { data: predictions, isLoading: predictionsLoading } = trpc.predictions.getByPool.useQuery({
@@ -121,22 +126,25 @@ export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }
     );
   }
 
+  const brandLogo = pool.season.competition.logoUrl || pool.brand?.logoUrl;
+  const brandName = pool.season.competition.name || pool.brand?.name;
+
   return (
     <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       {/* Header */}
       <header className="mb-8">
         <div className="flex items-center gap-2 mb-4">
-          <BackButton fallbackHref={`/`} />
-          {pool.brand?.logoUrl && (
+          <BackButton fallbackHref={`/dashboard`} />
+          {brandLogo && (
             <img
-              src={pool.brand.logoUrl}
-              alt={pool.brand.name}
+              src={brandLogo}
+              alt={brandName}
               className="w-16 h-16 rounded-lg object-cover"
             />
           )}
           <div>
             <h1 className="text-primary/80 text-4xl font-bold">{pool.name}</h1>
-            <p className="text-primary/70">{pool.season.competition.name} {pool.season.year}</p>
+            <p className="text-primary/70">{brandName} {pool.season.year}</p>
           </div>
         </div>
       </header>

@@ -139,7 +139,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
       {/* Header aqui */}
       <header className="mb-8">
         <div className="flex items-center gap-1">
-          <BackButton />
+          <BackButton fallbackHref="/" />
           <div className="flex flex-col gap-0">
             <h1 className="text-primary text-4xl font-bold">{t("title")}</h1>
             <p className="text-secondary -mt-1">{t("subtitle")}</p>

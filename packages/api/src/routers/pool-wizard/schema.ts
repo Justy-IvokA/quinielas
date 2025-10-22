@@ -29,7 +29,16 @@ export const previewFixturesSchema = z.object({
 export const poolDetailsSchema = z.object({
   title: z.string().min(3).max(100),
   slug: z.string().min(3).max(100).regex(/^[a-z0-9-]+$/, "Only lowercase letters, numbers, and hyphens"),
-  description: z.string().max(500).optional()
+  description: z.string().max(500).optional(),
+  ruleSet: z.object({
+    exactScore: z.number().int().min(0).optional(),
+    correctSign: z.number().int().min(0).optional(),
+    goalDiffBonus: z.number().int().min(0).optional(),
+    rounds: z.object({
+      start: z.number().int().positive(),
+      end: z.number().int().positive()
+    }).optional()
+  }).optional()
 });
 
 // Step 5: Access Policy

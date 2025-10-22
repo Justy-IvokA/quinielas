@@ -66,6 +66,7 @@ export default async function FixturesPage({ params, searchParams }: FixturesPag
       slug: true,
       name: true,
       seasonId: true,
+      ruleSet: true, // ✅ CRITICAL: Needed for round filtering
       season: {
         select: {
           id: true,

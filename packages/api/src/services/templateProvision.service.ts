@@ -187,17 +187,27 @@ export async function provisionTemplateToTenant(
           name: template.title
         }
       });
+    }
 
-      // Create external mapping for competition
-      await prisma.externalMap.create({
-        data: {
+    // Ensure external mapping exists for competition (even if competition already existed)
+    await prisma.externalMap.upsert({
+      where: {
+        sourceId_entityType_externalId: {
           sourceId: externalSource.id,
           entityType: "COMPETITION",
-          entityId: competition.id,
           externalId: template.competitionExternalId
         }
-      });
-    }
+      },
+      create: {
+        sourceId: externalSource.id,
+        entityType: "COMPETITION",
+        entityId: competition.id,
+        externalId: template.competitionExternalId
+      },
+      update: {
+        entityId: competition.id
+      }
+    });
 
     // Create or get Season
     let season = await prisma.season.findFirst({

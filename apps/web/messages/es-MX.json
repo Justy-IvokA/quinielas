@@ -162,6 +162,7 @@
     },
     "registration": {
       "submit": "Registrarse",
+      "legal": "Al registrarte, aceptas nuestros <terms>Términos de Servicio</terms> y <privacy>Política de Privacidad</privacy>",
       "fields": {
         "displayName": {
           "label": "Nombre para mostrar",
@@ -208,6 +209,8 @@
         "returningUser": "Usaremos tu información de registro anterior"
       },
       "public": {
+        "description": "Algún amigo o conocido te invito a unirte a esta quiniela",
+        "formTitle": "Formulario de registro público",
         "returningUser": "Usaremos tu información de registro anterior"
       },
       "success": {

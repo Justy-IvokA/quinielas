@@ -6,7 +6,7 @@ export function LegalNotice() {
   const t = useTranslations("auth.signin");
 
   return (
-    <p className="text-center text-xs text-muted-foreground">
+    <p className="text-center text-xs text-accent">
       {t.rich("legal", {
         terms: (chunks) => (
           <a

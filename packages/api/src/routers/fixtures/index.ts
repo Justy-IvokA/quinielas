@@ -80,6 +80,82 @@ export const fixturesRouter = router({
     return matches;
   }),
 
+  // Get fixtures by pool (with round filtering from ruleSet)
+  getByPoolId: publicProcedure
+    .input(z.object({ 
+      poolId: z.string().cuid(),
+      includeFinished: z.boolean().optional().default(false)
+    }))
+    .query(async ({ input }) => {
+      // Get pool with ruleSet
+      const pool = await prisma.pool.findUnique({
+        where: { id: input.poolId },
+        select: {
+          id: true,
+          seasonId: true,
+          ruleSet: true
+        }
+      });
+
+      if (!pool) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Pool not found"
+        });
+      }
+
+      // Extract rounds from ruleSet
+      const ruleSet = pool.ruleSet as any;
+      const roundStart = ruleSet?.rounds?.start;
+      const roundEnd = ruleSet?.rounds?.end;
+
+      // Build where clause with round filtering
+      const whereClause: any = {
+        seasonId: pool.seasonId,
+        ...(input.includeFinished ? {} : { status: { not: "FINISHED" } })
+      };
+
+      // Apply round filter if defined
+      if (roundStart !== null && roundStart !== undefined && roundEnd !== null && roundEnd !== undefined) {
+        whereClause.round = {
+          gte: roundStart,
+          lte: roundEnd
+        };
+      }
+
+      const matches = await prisma.match.findMany({
+        where: whereClause,
+        include: {
+          homeTeam: {
+            select: {
+              id: true,
+              name: true,
+              shortName: true,
+              logoUrl: true,
+              countryCode: true
+            }
+          },
+          awayTeam: {
+            select: {
+              id: true,
+              name: true,
+              shortName: true,
+              logoUrl: true,
+              countryCode: true
+            }
+          },
+          _count: {
+            select: {
+              predictions: true
+            }
+          }
+        },
+        orderBy: [{ kickoffTime: "asc" }, { round: "asc" }]
+      });
+
+      return matches;
+    }),
+
   // Get fixture by ID
   getById: publicProcedure.input(getFixtureByIdSchema).query(async ({ input }) => {
     const match = await prisma.match.findUnique({

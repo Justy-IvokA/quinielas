@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
+    "dev": "tsx watch src/index.ts",
+    "dev:wrangler": "wrangler dev",
     "build": "tsc --build",
+    "build:wrangler": "wrangler deploy --dry-run",
     "deploy": "wrangler deploy",
     "start": "node dist/index.js",
     "run": "tsx src/runner.ts",

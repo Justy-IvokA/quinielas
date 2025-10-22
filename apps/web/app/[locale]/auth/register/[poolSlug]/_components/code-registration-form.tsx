@@ -27,42 +27,44 @@ import { Alert, AlertDescription } from "@qp/ui/components/alert";
 import { trpc } from "@web/trpc";
 import { RegistrationSuccessModal } from "../../../signin/_components/registration-success-modal";
 
-const phoneSchema = z
-  .string()
-  .regex(/^\+[1-9]\d{1,14}$/, "Formato inválido (ej: +525512345678)")
-  .optional()
-  .or(z.literal(""));
+// Función para crear schema dinámico según datos del usuario
+const createCodeValidationSchema = (userData?: {
+  displayName?: string | null;
+  email?: string | null;
+  phone?: string | null;
+} | null) => {
+  const hasDisplayName = !!userData?.displayName;
+  const hasEmail = !!userData?.email;
+  const hasPhone = !!userData?.phone;
 
-// Schema for first-time users
-const codeRegistrationSchemaFull = z.object({
-  inviteCode: z
-    .string()
-    .min(8, "El código debe tener al menos 8 caracteres")
-    .max(50, "El código debe tener máximo 50 caracteres")
-    .regex(/^[A-Za-z0-9._-]+$/, "Código inválido"),
-  displayName: z.string().min(2, "Mínimo 2 caracteres").max(50, "Máximo 50 caracteres"),
-  email: z.string().email("Correo electrónico inválido"),
-  phone: phoneSchema,
-  acceptTerms: z.boolean().refine((val) => val === true, {
-    message: "Debes aceptar los términos y condiciones"
-  })
-});
+  return z.object({
+    inviteCode: z
+      .string()
+      .min(8, "El código debe tener al menos 8 caracteres")
+      .max(50, "El código debe tener máximo 50 caracteres")
+      .regex(/^[A-Za-z0-9._-]+$/, "Código inválido"),
+    displayName: hasDisplayName
+      ? z.string().optional()
+      : z.string().min(2, "Mínimo 2 caracteres").max(50, "Máximo 50 caracteres"),
+    email: hasEmail
+      ? z.string().optional()
+      : z.string().email("Correo electrónico inválido"),
+    phone: hasPhone
+      ? z.string().optional().or(z.literal(""))
+      : z.string().min(1, "El teléfono es requerido").regex(/^\+[1-9]\d{1,14}$/, "Formato inválido (ej: +525512345678)"),
+    acceptTerms: z.boolean().refine((val) => val === true, {
+      message: "Debes aceptar los términos y condiciones"
+    })
+  });
+};
 
-// Schema for returning users (only code needed)
-const codeRegistrationSchemaSimple = z.object({
-  inviteCode: z
-    .string()
-    .min(8, "El código debe tener al menos 8 caracteres")
-    .max(50, "El código debe tener máximo 50 caracteres")
-    .regex(/^[A-Za-z0-9._-]+$/, "Código inválido"),
-  displayName: z.string().optional(),
-  email: z.string().optional(),
-  phone: phoneSchema,
-  acceptTerms: z.boolean().optional()
-});
-
-// Use a union type that's compatible with both schemas
-type CodeRegistrationFormData = z.infer<typeof codeRegistrationSchemaFull> | z.infer<typeof codeRegistrationSchemaSimple>;
+type CodeRegistrationFormData = {
+  inviteCode: string;
+  displayName?: string;
+  email?: string;
+  phone?: string;
+  acceptTerms: boolean;
+};
 
 interface CodeRegistrationFormProps {
   poolId: string;
@@ -102,35 +104,28 @@ export function CodeRegistrationForm({
   const tCommon = useTranslations("common");
   const { theme } = useTheme();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const [codeValidated, setCodeValidated] = useState(false);
   const [usesRemaining, setUsesRemaining] = useState<number | null>(null);
+  const [hasSession, setHasSession] = useState(false);
+  const [userData, setUserData] = useState<{
+    displayName?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  } | null>(null);
 
   // Query to check if user has any previous registrations
-  const hasExistingDataQuery = trpc.registration.hasExistingData.useQuery(
+  const { data: existingData, isLoading: isLoadingUserData } = trpc.registration.hasExistingData.useQuery(
     { userId },
-    { 
-      staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-      retry: false
-    }
+    { enabled: !!userId }
   );
-
-  const hasExistingData = hasExistingDataQuery.data?.hasData ?? false;
-  
-  // Sync with localStorage for offline detection
-  useEffect(() => {
-    if (hasExistingDataQuery.data?.hasData) {
-      try {
-        localStorage.setItem(`user_${userId}_has_data`, 'true');
-      } catch {}
-    }
-  }, [hasExistingDataQuery.data, userId]);
 
   // Get optimized media URLs
   const optimizedCardUrl = getOptimizedMediaUrl(heroAssets?.mainCard?.url);
   const optimizedLogoUrl = getOptimizedMediaUrl(brandLogo?.url);
 
   const form = useForm<CodeRegistrationFormData>({
-    resolver: zodResolver(hasExistingData ? codeRegistrationSchemaSimple : codeRegistrationSchemaFull),
+    resolver: zodResolver(createCodeValidationSchema(existingData?.hasData ? existingData : null)),
     defaultValues: {
       inviteCode: prefilledCode || "",
       displayName: "",
@@ -139,6 +134,41 @@ export function CodeRegistrationForm({
       acceptTerms: false
     }
   });
+
+  // Effect to populate form with existing user data and show modal
+  useEffect(() => {
+    if (existingData?.hasData) {
+      setHasSession(true);
+      const newUserData = {
+        displayName: existingData.displayName,
+        email: existingData.email,
+        phone: existingData.phone
+      };
+      setUserData(newUserData);
+
+      // Pre-fill form with existing data
+      if (existingData.displayName) {
+        form.setValue("displayName", existingData.displayName);
+      }
+      if (existingData.email) {
+        form.setValue("email", existingData.email);
+      }
+      if (existingData.phone) {
+        form.setValue("phone", existingData.phone);
+      }
+
+      // Check if user has all data complete
+      const hasAllData = existingData.displayName && existingData.email && existingData.phone;
+      if (hasAllData && codeValidated) {
+        setShowInfoModal(true);
+      }
+
+      form.clearErrors();
+    } else {
+      setHasSession(false);
+      setUserData(null);
+    }
+  }, [existingData, form, codeValidated]);
 
   const [codeToValidate, setCodeToValidate] = useState<string | null>(null);
 
@@ -199,17 +229,44 @@ export function CodeRegistrationForm({
       return;
     }
 
-    registerMutation.mutate({
-      poolId,
-      userId,
-      inviteCode: data.inviteCode,
-      // Only send personal data if it's a first-time registration
-      ...(hasExistingData ? {} : {
+    // Validación adicional para usuarios con datos parciales
+    if (hasSession && userData) {
+      const displayName = data.displayName || userData.displayName;
+      const email = data.email || userData.email;
+      const phone = data.phone || userData.phone;
+
+      if (!displayName) {
+        form.setError("displayName", {
+          message: "El nombre es requerido"
+        });
+        return;
+      }
+
+      if (!email) {
+        form.setError("email", {
+          message: "El correo electrónico es requerido"
+        });
+        return;
+      }
+
+      registerMutation.mutate({
+        poolId,
+        userId,
+        inviteCode: data.inviteCode,
+        displayName,
+        email,
+        phone: phone || undefined
+      });
+    } else {
+      registerMutation.mutate({
+        poolId,
+        userId,
+        inviteCode: data.inviteCode,
         displayName: data.displayName,
         email: data.email,
         phone: data.phone || undefined
-      })
-    } as any);
+      });
+    }
   };
 
   return (
@@ -307,7 +364,7 @@ export function CodeRegistrationForm({
             </div>
 
             {/* RIGHT SIDE - Registration Form */}
-            <div className="p-4 md:p-6 pb-6 md:pb-8 flex flex-col backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto scrollbar-thin scrollbar-thumb-primary/20 scrollbar-track-transparent">
+            <div className="p-4 md:p-6 pb-6 md:pb-8 flex flex-col backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[65vh] custom-scrollbar">
               {optimizedLogoUrl && (
               <div className="flex items-center justify-center mb-3 md:mb-6">
                 <Image
@@ -326,7 +383,7 @@ export function CodeRegistrationForm({
                 </div>
               )}
               {heroAssets?.text?.description && (
-                <div className="text-sm md:text-2xl font-bold text-foreground text-justify mb-2 md:mb-4 line-clamp-5 md:line-clamp-none">
+                <div className="text-sm md:text-base font-bold text-foreground text-justify mb-2 md:mb-4 line-clamp-5 md:line-clamp-6">
                   {heroAssets.text.description}
                 </div>
               )}
@@ -394,66 +451,89 @@ export function CodeRegistrationForm({
                     </Alert>
                   )}
 
-                  {/* Only show remaining fields after code validation */}
-                  {codeValidated && !hasExistingData && (
+                  {/* Show fields after code validation */}
+                  {codeValidated && (
                     <>
                       {/* Display Name */}
                       <FormField
                         control={form.control}
                         name="displayName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs md:text-sm font-medium">{t("fields.displayName.label") || "Nombre Completo"}</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder={t("fields.displayName.placeholder") || "ej: Lindsey Wilson"}
-                                className="h-9 md:h-10 text-sm"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          const isDisabled = hasSession && !!userData?.displayName;
+                          return (
+                            <FormItem>
+                              <FormLabel className="text-xs md:text-sm font-medium">
+                                {t("fields.displayName.label") || "Nombre Completo"}
+                                {!isDisabled && <span className="text-destructive ml-1">*</span>}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder={t("fields.displayName.placeholder") || "ej: Lindsey Wilson"}
+                                  className="h-9 md:h-10 text-sm"
+                                  disabled={isDisabled}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
                       />
 
                       {/* Email */}
                       <FormField
                         control={form.control}
                         name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs md:text-sm font-medium">{t("fields.email.label") || "Tu Email"}</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="email"
-                                placeholder={t("fields.email.placeholder") || "example@email.com"}
-                                className="h-9 md:h-10 text-sm"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          const isDisabled = hasSession && !!userData?.email;
+                          return (
+                            <FormItem>
+                              <FormLabel className="text-xs md:text-sm font-medium">
+                                {t("fields.email.label") || "Tu Email"}
+                                {!isDisabled && <span className="text-destructive ml-1">*</span>}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="email"
+                                  placeholder={t("fields.email.placeholder") || "example@email.com"}
+                                  className="h-9 md:h-10 text-sm"
+                                  disabled={isDisabled}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
                       />
 
-                      {/* Phone (Optional) */}
+                      {/* Phone */}
                       <FormField
                         control={form.control}
                         name="phone"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs md:text-sm font-medium">{t("fields.phone.label") || "Teléfono (Opcional)"}</FormLabel>
-                            <FormControl>
-                              <Input
-                                type="tel"
-                                placeholder={t("fields.phone.placeholder") || "+52 55 1234 5678"}
-                                className="h-9 md:h-10 text-sm"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                        render={({ field }) => {
+                          const isDisabled = hasSession && !!userData?.phone;
+                          const isRequired = !hasSession || !userData?.phone;
+                          return (
+                            <FormItem>
+                              <FormLabel className="text-xs md:text-sm font-medium">
+                                {t("fields.phone.label") || "Teléfono"}
+                                {isRequired && <span className="text-destructive ml-1">*</span>}
+                                {!isRequired && <span className="text-muted-foreground ml-1">(Opcional)</span>}
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="tel"
+                                  placeholder={t("fields.phone.placeholder") || "+52 55 1234 5678"}
+                                  className="h-9 md:h-10 text-sm"
+                                  disabled={isDisabled}
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          );
+                        }}
                       />
 
                       {/* Terms Acceptance */}
@@ -514,22 +594,13 @@ export function CodeRegistrationForm({
                     </Alert>
                   )}
 
-                  {/* Info message for returning users */}
-                  {codeValidated && hasExistingData && (
-                    <Alert className="bg-blue-500/10 border-blue-500/50">
-                      <CheckCircle2 className="h-4 w-4 text-blue-600" />
-                      <AlertDescription className="text-sm text-blue-700 dark:text-blue-400">
-                        {t("code.returningUser") || "Usaremos tu información de registro anterior"}
-                      </AlertDescription>
-                    </Alert>
-                  )}
 
                   {/* Submit Button */}
                   {codeValidated && (
                     <Button
                       type="submit"
                       className="w-full h-9 md:h-10 font-semibold bg-primary hover:bg-primary/90 text-sm md:text-base"
-                      disabled={registerMutation.isPending}
+                      disabled={registerMutation.isPending || !form.watch("acceptTerms")}
                       StartIcon={registerMutation.isPending ? InlineLoader : undefined}
                     >
                       {registerMutation.isPending ? (
@@ -552,6 +623,32 @@ export function CodeRegistrationForm({
         </div>
       </section>
 
+      {/* Info Modal for users with complete data */}
+      {showInfoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="relative w-full max-w-md bg-background rounded-lg shadow-lg p-6 space-y-4 animate-in fade-in-0 zoom-in-95">
+            <div className="flex flex-col items-center text-center space-y-3">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                <Trophy className="w-8 h-8 text-primary" />
+              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-foreground">
+                ¡Excelente!
+              </h2>
+              <p className="text-sm md:text-base text-muted-foreground">
+                Ya estabas registrado con todos tus datos. Ingresa el código de invitación y acepta los términos para poder registrar esta quiniela a tu cuenta.
+              </p>
+            </div>
+            <Button
+              onClick={() => setShowInfoModal(false)}
+              className="w-full"
+              variant="default"
+            >
+              Entendido
+            </Button>
+          </div>
+        </div>
+      )}
+
       <RegistrationSuccessModal
         open={showSuccessModal}
         onOpenChange={setShowSuccessModal}
@@ -559,8 +656,8 @@ export function CodeRegistrationForm({
         poolSlug={poolSlug}
       />
 
-      {/* Custom animations */}
-      <style jsx>{`
+      {/* Custom animations and scrollbar styles */}
+      <style jsx global>{`
         @keyframes grid {
           0% {
             transform: translateY(0);
@@ -591,6 +688,31 @@ export function CodeRegistrationForm({
             opacity: 1;
             transform: scale(1);
           }
+        }
+
+        /* Custom elegant scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: hsl(var(--primary) / 0.3);
+          border-radius: 3px;
+          transition: background 0.2s ease;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: hsl(var(--primary) / 0.5);
+        }
+
+        /* Firefox scrollbar */
+        .custom-scrollbar {
+          scrollbar-width: thin;
+          scrollbar-color: hsl(var(--primary) / 0.3) transparent;
         }
       `}</style>
     </>

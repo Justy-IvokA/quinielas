@@ -576,6 +576,37 @@
     "active": "Activo",
     "andMore": "Y {count} más..."
   },
+  "settings": {
+    "title": "Configuración del Sistema",
+    "settingsSaved": "Configuración guardada exitosamente",
+    "selectTenant": "Por favor selecciona un tenant desde la navegación para gestionar la configuración.",
+    "antiAbuse": {
+      "title": "Configuración Anti-Abuso",
+      "captchaLevel": {
+        "label": "Nivel de Captcha",
+        "description": "Controla cuándo se requiere CAPTCHA durante el registro",
+        "off": "Desactivado",
+        "auto": "Automático (en anomalías)",
+        "force": "Forzado (siempre)"
+      }
+    },
+    "privacy": {
+      "title": "Configuración de Privacidad",
+      "ipLogging": {
+        "label": "Registro de IPs",
+        "description": "Almacenar direcciones IP en logs de auditoría y registros de consentimiento"
+      },
+      "cookieBanner": {
+        "label": "Banner de Cookies",
+        "description": "Mostrar banner de cookies/privacidad en pools públicos"
+      },
+      "deviceFingerprint": {
+        "label": "Huella Digital de Dispositivo",
+        "description": "Habilitar huella digital de dispositivo para detección de fraude"
+      }
+    },
+    "note": "Nota: Estas configuraciones sobrescriben los valores predeterminados globales para este tenant. Las sobrescrituras específicas por pool se pueden configurar en cada pool."
+  },
   "metadata": {
     "title": {
       "default": "{appName} · Admin",
@@ -609,7 +640,34 @@
       "hero": "Hero",
       "mainCard": "Tarjeta",
       "typography": "Tipografía",
-      "text": "Textos"
+      "textLabel": "Textos",
+      "text": {
+        "title": {
+          "label": "Título Principal",
+          "placeholder": "¡Únete Ahora!",
+          "description": "Título que aparece en la parte superior de la tarjeta de registro"
+        },
+        "description": {
+          "label": "Descripción",
+          "placeholder": "Completa tu registro para participar en esta quiniela exclusiva",
+          "description": "Descripción breve que aparece debajo del nombre del pool"
+        },
+        "slogan": {
+          "label": "Eslogan",
+          "placeholder": "Tu plataforma de quinielas deportivas",
+          "description": "Eslogan de la marca que aparece debajo del logo"
+        },
+        "paragraph": {
+          "label": "Párrafo Descriptivo",
+          "placeholder": "Participa, predice y gana. Únete a nuestra comunidad de apasionados del deporte.",
+          "description": "Texto largo descriptivo para contextos específicos"
+        },
+        "link": {
+          "label": "Enlace Externo",
+          "placeholder": "https://tudominio.com/mas-info",
+          "description": "URL para más información (opcional)"
+        }
+      }
     },
     "colors": {
       "presets": "Paletas Predefinidas",
@@ -1226,6 +1284,9 @@
               "stageTitle": "Etapa del torneo",
               "roundsCount": "{count} ronda(s)",
               "roundTitle": "Ronda específica (opcional)",
+              "selectAllRounds": "Todas las rondas",
+              "allRoundsSelected": "Se incluirán todos los partidos de esta etapa",
+              "roundsSelectedInfo": "Rondas seleccionadas: {rounds}",
               "expiredBadge": "Finalizada",
               "stageExpiredError": "Etapa finalizada",
               "stageExpiredDescription": "La etapa \"{stage}\" ya ha finalizado. Por favor, selecciona una etapa activa o futura.",

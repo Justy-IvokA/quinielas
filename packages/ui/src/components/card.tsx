@@ -12,7 +12,7 @@ const cardVariants = cva(
         elevated: "bg-card border-border shadow-md hover:shadow-lg transition-shadow",
         outline: "bg-card border-2 border-border",
         ghost: "bg-card border-transparent",
-        glass: "backdrop-blur-2xl bg-white/60 dark:bg-white/5 border-white/10 shadow-lg"
+        glass: "backdrop-blur-2xl bg-secondary/20 dark:bg-primary/30 border-secondary/10 dark:border-primary/20 shadow-lg [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
       },
       padding: {
         none: "",
@@ -73,7 +73,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-accent", className)}
     {...props}
   />
 ));

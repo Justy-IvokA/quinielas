@@ -20,7 +20,8 @@ interface StepDetailsProps {
   competitionName: string;
   seasonYear: number;
   stageLabel?: string;
-  roundLabel?: string;
+  selectedRounds?: string[];
+  roundsRange?: { start: number; end: number } | null;
   onSubmit: (data: DetailsFormData) => void;
   initialData?: Partial<DetailsFormData>;
 }
@@ -29,7 +30,8 @@ export function StepDetails({
   competitionName,
   seasonYear,
   stageLabel,
-  roundLabel,
+  selectedRounds,
+  roundsRange,
   onSubmit,
   initialData
 }: StepDetailsProps) {
@@ -43,8 +45,18 @@ export function StepDetails({
     resolver: zodResolver(detailsSchema),
     mode: "onChange", // Validate on change
     defaultValues: initialData || {
-      title: generatePoolTitle({ competitionName, seasonYear, stageLabel, roundLabel }),
-      slug: generatePoolSlug({ competitionName, seasonYear, stageLabel, roundLabel })
+      title: generatePoolTitle({ 
+        competitionName, 
+        seasonYear, 
+        stageLabel, 
+        roundLabel: selectedRounds && selectedRounds.length > 0 ? selectedRounds.join('-') : undefined 
+      }),
+      slug: generatePoolSlug({ 
+        competitionName, 
+        seasonYear, 
+        stageLabel, 
+        roundLabel: selectedRounds && selectedRounds.length > 0 ? selectedRounds.join('-') : undefined 
+      })
     }
   });
 
@@ -61,8 +73,18 @@ export function StepDetails({
   }, [title, slug, description, isValid, onSubmit]);
 
   const handleAutoFill = () => {
-    const title = generatePoolTitle({ competitionName, seasonYear, stageLabel, roundLabel });
-    const slug = generatePoolSlug({ competitionName, seasonYear, stageLabel, roundLabel });
+    const title = generatePoolTitle({ 
+      competitionName, 
+      seasonYear, 
+      stageLabel, 
+      roundLabel: selectedRounds && selectedRounds.length > 0 ? selectedRounds.join('-') : undefined 
+    });
+    const slug = generatePoolSlug({ 
+      competitionName, 
+      seasonYear, 
+      stageLabel, 
+      roundLabel: selectedRounds && selectedRounds.length > 0 ? selectedRounds.join('-') : undefined 
+    });
     setValue("title", title);
     setValue("slug", slug);
   };
@@ -142,10 +164,16 @@ export function StepDetails({
               <dd className="font-medium">{stageLabel}</dd>
             </div>
           )}
-          {roundLabel && (
+          {selectedRounds && selectedRounds.length > 0 && (
             <div className="flex justify-between">
-              <dt className="text-muted-foreground">Ronda:</dt>
-              <dd className="font-medium">{roundLabel}</dd>
+              <dt className="text-muted-foreground">Jornadas:</dt>
+              <dd className="font-medium">{selectedRounds.join(', ')}</dd>
+            </div>
+          )}
+          {roundsRange && (
+            <div className="flex justify-between">
+              <dt className="text-muted-foreground">Rango:</dt>
+              <dd className="font-medium">{roundsRange.start} - {roundsRange.end}</dd>
             </div>
           )}
         </dl>

@@ -205,8 +205,8 @@ export async function upsertSetting(
     throw new Error("Global settings cannot have tenantId or poolId");
   }
 
-  if (scope === "TENANT" && (!tenantId || poolId)) {
-    throw new Error("Tenant settings must have tenantId and no poolId");
+  if (scope === "TENANT" && !tenantId) {
+    throw new Error("Tenant settings must have tenantId");
   }
 
   if (scope === "POOL" && (!tenantId || !poolId)) {
@@ -218,15 +218,15 @@ export async function upsertSetting(
     where: {
       scope_tenantId_poolId_key: {
         scope,
-        tenantId: tenantId!,
-        poolId: poolId!,
+        tenantId: (tenantId ?? null) as string,
+        poolId: (poolId ?? null) as string,
         key,
       },
     },
     create: {
       scope,
-      tenantId: tenantId || null,
-      poolId: poolId || null,
+      tenantId: tenantId ?? null,
+      poolId: poolId ?? null,
       key,
       value: value as Prisma.InputJsonValue,
     },

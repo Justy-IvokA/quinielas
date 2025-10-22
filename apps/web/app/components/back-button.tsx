@@ -16,11 +16,11 @@ export function BackButton({ fallbackHref, label }: BackButtonProps) {
   const t = useTranslations("common");
 
   const handleBack = () => {
-    // Try to go back in history, fallback to href if provided
-    if (window.history.length > 1) {
-      router.back();
-    } else if (fallbackHref) {
+    // Si existe fallbackHref, redirige. Si no, trata de regresar en el historial. En caso contrario, redirige a la página principal
+    if (fallbackHref) {
       router.push(fallbackHref);
+    } else if (window.history.length > 1) {
+      router.back();
     } else {
       router.push("/");
     }

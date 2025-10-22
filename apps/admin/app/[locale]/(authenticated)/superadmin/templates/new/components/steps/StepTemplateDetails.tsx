@@ -10,7 +10,8 @@ interface StepTemplateDetailsProps {
   competitionName: string;
   seasonYear: number;
   stageLabel?: string;
-  roundLabel?: string;
+  selectedRounds?: string[];
+  roundsRange?: { start: number; end: number } | null;
   onSubmit: (data: {
     title: string;
     slug: string;
@@ -29,7 +30,8 @@ export function StepTemplateDetails({
   competitionName,
   seasonYear,
   stageLabel,
-  roundLabel,
+  selectedRounds,
+  roundsRange,
   onSubmit,
   initialData
 }: StepTemplateDetailsProps) {

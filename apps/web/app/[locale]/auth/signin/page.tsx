@@ -132,7 +132,7 @@ async function SignInContent({ params, searchParams }: SignInPageProps) {
             />
           )}
           {/* Gradient overlay for readability */}
-          {/* <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" /> */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
         </div>
       )}
 

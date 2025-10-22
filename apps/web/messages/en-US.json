@@ -186,6 +186,44 @@
       "completed": "Completed",
       "cancelled": "Cancelled"
     },
+    "actions": {
+      "joinNow": "Join now",
+      "joinWithCode": "Join with code",
+      "joinWithInvite": "Join with invitation",
+      "makePredictions": "Make predictions",
+      "viewLeaderboard": "View leaderboard",
+      "viewFinalLeaderboard": "View final leaderboard"
+    },
+    "messages": {
+      "loginRequired": "Sign in to participate"
+    },
+    "stats": {
+      "participants": "participants",
+      "prizes": "prizes"
+    },
+    "sections": {
+      "prizes": "Prizes",
+      "howItWorks": "How it works?",
+      "rules": "Rules"
+    },
+    "prize": {
+      "rank": "Place",
+      "ranks": "Places"
+    },
+    "howItWorks": {
+      "step1": {
+        "title": "Register",
+        "description": "Join the pool and create your account"
+      },
+      "step2": {
+        "title": "Make your predictions",
+        "description": "Predict the scores before each match"
+      },
+      "step3": {
+        "title": "Win prizes",
+        "description": "Accumulate points and compete for prizes"
+      }
+    },
     "join": "Join",
     "leave": "Leave",
     "joined": "You've joined",
@@ -196,28 +234,63 @@
     "makeYourPrediction": "Make your prediction",
     "homeTeam": "Home team",
     "awayTeam": "Away team",
+    "homeScore": "Home score",
+    "awayScore": "Away score",
     "score": "Score",
     "locked": "Locked",
     "saved": "Saved",
     "save": "Save prediction",
-    "edit": "Edit prediction",
+    "saveAll": "Save all",
+    "saving": "Saving...",
+    "edit": "Edit",
+    "cancel": "Cancel",
     "deadline": "Deadline",
     "points": "Points",
     "exactScore": "Exact score",
     "correctSign": "Correct sign",
-    "goalDifference": "Goal difference"
+    "goalDifference": "Goal difference",
+    "loading": "Loading matches...",
+    "noMatches": "No matches available",
+    "unsavedChanges": "{count} unsaved changes",
+    "savedSuccess": "{count} predictions saved",
+    "savedWithErrors": "{count} saved, {errors} errors",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "today": "Today",
+      "finished": "Finished"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "live": "Live",
+      "finished": "Finished",
+      "locked": "Locked"
+    },
+    "errors": {
+      "nothingToSave": "No changes to save",
+      "saveFailed": "Failed to save predictions",
+      "matchLocked": "Match has already started, you can't modify your prediction"
+    }
   },
   "leaderboard": {
     "title": "Leaderboard",
     "rank": "Rank",
     "player": "Player",
     "points": "Points",
+    "exact": "Exact",
+    "sign": "Sign",
+    "predictions": "Predictions",
     "exactScores": "Exact scores",
     "correctSigns": "Correct signs",
     "matches": "Matches",
     "lastUpdated": "Last updated",
     "live": "Live",
-    "final": "Final"
+    "final": "Final",
+    "you": "You",
+    "noEntries": "No entries in the leaderboard",
+    "errors": {
+      "loadFailed": "Failed to load leaderboard"
+    }
   },
   "matches": {
     "title": "Matches",
@@ -309,6 +382,111 @@
       "navigation": "import { Link } from \"@web/i18n/navigation\";\n\n// Automatically adds the locale prefix\n<Link href=\"/register\">{tNav(\"register\")}</Link>"
     }
   },
+  "participants": {
+    "title": "Participants - {poolSlug}",
+    "loading": "Loading participants...",
+    "noParticipants": "No participants yet",
+    "searchPlaceholder": "Search by name or email",
+    "status": {
+      "finalized": "Finalized"
+    },
+    "stats": {
+      "totalParticipants": "Participants",
+      "averagePoints": "Average points",
+      "averageExacts": "Average exacts",
+      "totalPredictions": "Total predictions"
+    },
+    "columns": {
+      "name": "Name",
+      "points": "Points",
+      "exacts": "Exacts",
+      "signs": "Signs",
+      "misses": "Misses",
+      "draws": "Draws",
+      "predictions": "Predictions",
+      "onTime": "On time"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {current} of {total}"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Manage your pools and predictions",
+    "stats": {
+      "activePools": "Active pools",
+      "upcomingMatches": "Upcoming matches",
+      "totalParticipants": "Total participants"
+    },
+    "sections": {
+      "myPools": "My Pools"
+    },
+    "card": {
+      "nextMatch": "Next match",
+      "participants": "Participants",
+      "active": "Active",
+      "finalized": "Finalized",
+      "viewFixtures": "View fixtures"
+    },
+    "empty": {
+      "title": "You don't have any active pools",
+      "description": "Join a pool to start making predictions",
+      "browseButton": "Browse pools",
+      "noResults": "No pools found",
+      "tryDifferentFilters": "Try different filters or search",
+      "clearFilters": "Clear filters"
+    },
+    "errors": {
+      "loadFailed": "Failed to load dashboard",
+      "retry": "Retry"
+    }
+  },
+  "myPools": {
+    "title": "My Pools",
+    "subtitle": "Pools you participate in and pending invitations",
+    "loading": "Loading your pools...",
+    "filters": {
+      "all": "All",
+      "active": "Active",
+      "finalized": "Finalized",
+      "pending": "Pending"
+    },
+    "sort": {
+      "recent": "Recent",
+      "nextKickoff": "Next match",
+      "finalizedRecent": "Recently finalized"
+    },
+    "searchPlaceholder": "Search by title or competition...",
+    "status": {
+      "active": "Active",
+      "finalized": "Finalized",
+      "pendingInvite": "Pending invitation"
+    },
+    "actions": {
+      "myPredictions": "My predictions",
+      "viewResults": "View results",
+      "acceptInvite": "Accept invitation",
+      "joinNow": "Join now"
+    },
+    "info": {
+      "participants": "{count} participants",
+      "nextMatch": "Next match: {date}",
+      "allFinished": "All matches finished",
+      "noNextMatch": "No scheduled matches"
+    },
+    "empty": {
+      "title": "You aren't part of any pool yet",
+      "description": "Do you have a code or email invitation?",
+      "noResults": "No pools found with the applied filters",
+      "tryDifferentFilters": "Try different filters or search"
+    },
+    "errors": {
+      "loadFailed": "Failed to load your pools",
+      "retry": "Retry"
+    }
+  },
   "fixtures": {
     "title": "Fixtures - {poolSlug}",
     "subtitle": "Make your predictions before each match starts",
@@ -351,6 +529,63 @@
       "fixturesTitle": "Match Schedule",
       "standingsTitle": "Standings",
       "poweredBy": "Statistics powered by"
+    }
+  },
+  "prizes": {
+    "tabs": {
+      "prizes": "Prizes"
+    },
+    "hero": {
+      "inPlay": "{count} Prizes in Play",
+      "compete": "Compete for amazing prizes",
+      "keepCompeting": "Keep competing for these prizes"
+    },
+    "myChances": {
+      "title": "Your Chances",
+      "inZone": "You're in the prize zone!",
+      "currentRank": "Current position: #{rank}",
+      "close": "You're close! Reach position {rank}",
+      "improve": "Improve your predictions to enter the prize zone",
+      "topClassify": "Top {count} qualify",
+      "spotsAway": "{count} spots away from prize zone",
+      "keepImproving": "Keep improving!"
+    },
+    "types": {
+      "CASH": "Cash",
+      "DISCOUNT": "Discount",
+      "SERVICE": "Service",
+      "DAY_OFF": "Day Off",
+      "EXPERIENCE": "Experience",
+      "OTHER": "Other"
+    },
+    "rank": {
+      "single": "{rank}º Place",
+      "range": "{from}º - {to}º Place"
+    },
+    "stats": {
+      "participants": "Participants",
+      "active": "{count} active",
+      "predictions": "Predictions",
+      "totalMade": "{count} made",
+      "leader": "Current Leader",
+      "points": "{count} points",
+      "matches": "Matches",
+      "completed": "{count} completed",
+      "pending": "{count} pending",
+      "completion": "Completion",
+      "completionRate": "{rate}% completed",
+      "avgPoints": "Average points",
+      "perUser": "{points} per user"
+    },
+    "empty": {
+      "title": "No Prizes Configured",
+      "description": "The organizer hasn't added prizes yet. Check back later.",
+      "notRegistered": "Register to see your chances of winning",
+      "registerButton": "Register"
+    },
+    "grid": {
+      "title": "All Prizes",
+      "subtitle": "Compete for these amazing prizes"
     }
   }
 }

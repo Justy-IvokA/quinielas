@@ -1,6 +1,9 @@
 {
   "name": "quinielas-wl",
   "private": true,
+  "engines": {
+    "node": ">=22.11.0"
+  },
   "packageManager": "pnpm@10.18.3",
   "repository": {
     "type": "git",
@@ -33,7 +36,6 @@
     "@qp/db": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.16",
     "@types/node": "^20.12.7",
     "turbo": "^2.1.1",
     "typescript": "^5.9.3",

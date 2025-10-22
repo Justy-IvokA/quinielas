@@ -8,6 +8,10 @@
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:deploy": "wrangler pages deploy .vercel/output/static --project-name=quinielas-web",
     "pages:dev": "wrangler pages dev .vercel/output/static --compatibility-date=2025-01-21",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
@@ -16,6 +20,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@opennextjs/cloudflare": "^1.11.0",
     "@qp/api": "workspace:*",
     "@qp/branding": "workspace:*",
     "@qp/ui": "workspace:*",

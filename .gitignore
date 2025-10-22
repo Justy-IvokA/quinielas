@@ -13,3 +13,4 @@ reports
 .turbo
 **/.turbo
 *.tsbuildinfo
+.open-next

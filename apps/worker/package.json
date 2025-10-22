@@ -16,6 +16,7 @@
     "format": "prettier --check ."
   },
   "dependencies": {
+    "@opennextjs/cloudflare": "^1.11.0",
     "@qp/api": "workspace:*",
     "@qp/db": "workspace:*",
     "@qp/scoring": "workspace:*",

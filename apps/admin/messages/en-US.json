@@ -18,8 +18,10 @@
     "dashboard": "Dashboard",
     "pools": "Pools",
     "fixtures": "Fixtures",
+    "sync": "Synchronization",
     "access": "Access",
     "brands": "Brands",
+    "branding": "Branding",
     "analytics": "Analytics"
   },
   "auth": {
@@ -337,6 +339,13 @@
     "title": "Pools",
     "description": "Manage your active and inactive pools.",
     "create": "Create pool",
+    "list": {
+      "brand": "{brand}",
+      "noBrand": "No brand",
+      "description": "{description}",
+      "registrations": "{count} registrations",
+      "prizes": "{count} prizes"
+    },
     "tabs": {
       "overview": "Overview",
       "fixtures": "Fixtures",
@@ -364,44 +373,62 @@
         "inactive": "Inactive"
       }
     },
-    "settings": {
-      "status": {
-        "title": "Pool Status",
-        "description": "Control whether the pool is active or inactive",
-        "active": "Active",
-        "inactive": "Inactive",
-        "activeDescription": "The pool is active and players can register and make predictions",
-        "inactiveDescription": "The pool is inactive. Players cannot register or make predictions"
-      },
-      "actions": {
-        "activate": "Activate Pool",
-        "deactivate": "Deactivate Pool",
-        "activateConfirm": "Are you sure you want to activate {name}?",
-        "deactivateConfirm": "Are you sure you want to deactivate {name}?",
-        "activateSuccess": "Pool activated successfully",
-        "deactivateSuccess": "Pool deactivated successfully",
-        "error": "Error: {message}"
-      },
-      "danger": {
-        "title": "Danger Zone",
-        "description": "Irreversible actions",
-        "deleteTitle": "Delete Pool",
-        "deleteDescription": "Once deleted, it cannot be recovered:",
-        "deleteWarning1": "All player registrations will be deleted",
-        "deleteWarning2": "All predictions will be lost",
-        "deleteWarning3": "Assigned prizes will be deleted",
-        "deleteButton": "Delete Pool Permanently",
-        "deleteNote": "This function is disabled for security"
-      },
-      "info": {
-        "title": "Pool Information",
-        "description": "Technical pool data",
-        "id": "ID",
-        "slug": "Slug",
-        "createdAt": "Created",
-        "updatedAt": "Updated"
+  "sync": {
+    "title": "Fixtures Synchronization",
+    "description": "Monitor and control synchronization with external providers"
+  },
+  "profile": {
+    "title": "My Profile",
+    "accountInfo": "Account Information",
+    "verificationStatus": "Verification Status",
+    "tenantMemberships": "Tenant Memberships",
+    "activeRegistrations": "Active Pools",
+    "memberSince": "Member since",
+    "lastAccess": "Last access",
+    "predictions": "Predictions",
+    "prizesWon": "Prizes won",
+    "emailVerified": "Email Verified",
+    "emailNotVerified": "Email Not Verified",
+    "phoneVerified": "Phone Verified",
+    "phoneNotVerified": "Phone Not Verified",
+    "verifiedOn": "Verified on {date}",
+    "pleaseVerify": "Please verify your email for full access",
+    "tenants": "Tenants",
+    "pools": "Pools",
+    "active": "Active",
+    "andMore": "And {count} more..."
+  },
+  "settings": {
+    "title": "System Settings",
+    "settingsSaved": "Settings saved successfully",
+    "selectTenant": "Please select a tenant from the navigation to manage settings.",
+    "antiAbuse": {
+      "title": "Anti-Abuse Configuration",
+      "captchaLevel": {
+        "label": "CAPTCHA Level",
+        "description": "Controls when CAPTCHA is required during registration",
+        "off": "Disabled",
+        "auto": "Automatic (on anomalies)",
+        "force": "Forced (always)"
       }
     },
+    "privacy": {
+      "title": "Privacy Settings",
+      "ipLogging": {
+        "label": "IP Logging",
+        "description": "Store IP addresses in audit logs and consent records"
+      },
+      "cookieBanner": {
+        "label": "Cookie Banner",
+        "description": "Show cookie/privacy banner on public pools"
+      },
+      "deviceFingerprint": {
+        "label": "Device Fingerprinting",
+        "description": "Enable device fingerprinting for fraud detection"
+      }
+    },
+    "note": "Note: These settings override the global defaults for this tenant. Pool-specific overrides can be configured on each pool."
+  },
     "empty": {
       "title": "No pools created",
       "description": "Start by creating your first pool to manage predictions.",
@@ -490,6 +517,7 @@
       "hero": "Hero",
       "mainCard": "Card",
       "typography": "Typography",
+      "textLabel": "Text",
       "text": "Text"
     },
     "colors": {
@@ -1133,7 +1161,6 @@
         "updateError": "Error updating template: {message}",
         "tenantAssignmentsCount": "{count} tenant assignments",
         "basicInformation": "Basic Information",
-        "title": "Title",
         "slug": "Slug",
         "slugCannotBeChanged": "Slug cannot be changed after creation",
         "description": "Description",

@@ -163,6 +163,11 @@ export function requireRegistrationForPool<TInput extends { poolId: string }>() 
     });
 
     // Add registration to context
-    return next();
+    return next({
+      ctx: {
+        ...ctx,
+        registration
+      }
+    });
   };
 }

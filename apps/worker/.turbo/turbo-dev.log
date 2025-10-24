@@ -7,9 +7,35 @@
 🔑 API Key configured: ✅ Yes
 ✅ Worker jobs scheduled successfully
   - Lock predictions: every 1 minute
-  - Score finals: every 5 minutes
+  - Update live matches: every 5 minutes (+ on startup)
+  - Score finals: every 5 minutes (+ on startup, offset 2min)
   - Leaderboard snapshots: every 10 minutes
   - Auto fixtures sync: every 6 hours (+ on startup)
+[Worker] Running initial live matches update...
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[Worker] Running initial scoring...
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [Worker] Running initial fixtures sync...
 [AutoSync] Starting automatic fixtures sync...
 [AutoSync] Found 0 active seasons to sync
@@ -22,132 +48,105 @@
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
 [ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
 [LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LeaderboardSnapshot] Starting job...
-[ScoreFinal] Starting job...
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
 [LeaderboardSnapshot] Processing 3 pools
 [LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
 [LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
 [LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[ScoreFinal] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[ScoreFinal] Starting job...
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[ScoreFinal] Starting job...
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
@@ -156,28 +155,286 @@
 [LockPredictions] No matches to lock
 [LeaderboardSnapshot] Starting job...
 [LeaderboardSnapshot] Processing 3 pools
-[ScoreFinal] Starting job...
+[UpdateLive] Starting live matches update...
 [LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
 [LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
 [LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
+[UpdateLive] No live or recent matches found
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LeaderboardSnapshot] Starting job...
+[LeaderboardSnapshot] Processing 3 pools
+[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
+[UpdateLive] Starting live matches update...
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
+[LeaderboardSnapshot] Completed. Created 3 snapshots
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LeaderboardSnapshot] Starting job...
+[LeaderboardSnapshot] Processing 3 pools
+[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
+[UpdateLive] Starting live matches update...
+[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
+[LeaderboardSnapshot] Completed. Created 3 snapshots
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LeaderboardSnapshot] Starting job...
+[LeaderboardSnapshot] Processing 3 pools
+[UpdateLive] Starting live matches update...
+[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
+[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
+[LeaderboardSnapshot] Completed. Created 3 snapshots
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[UpdateLive] Starting live matches update...
+[UpdateLive] No live or recent matches found
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[LockPredictions] Starting job...
+[LockPredictions] No matches to lock
+[ScoreFinal] Starting job...
+[ScoreFinal] Total finished matches in last 7 days: 18
+[ScoreFinal] Finished matches with predictions: 9
+[ScoreFinal] Unscored predictions: 7
+[ScoreFinal] Found 7 finished matches to score
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6g003kuvak4lkpa8ny
+[ScoreFinal] Scored prediction cmgzzcjus000buvz4daawonqi: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6m003ouvakbsg230mm
+[ScoreFinal] Scored prediction cmgzzcpr7000duvz41ig5qs86: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6r003suvakrbg98omk
+[ScoreFinal] Scored prediction cmgzzcwpv000fuvz4zx6lds7n: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf6y0040uvak3rjvr2ak
+[ScoreFinal] Scored prediction cmgzzd7sz000juvz4yexwppdm: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf720044uvakb5m9ey7d
+[ScoreFinal] Scored prediction cmgzzdedz000luvz4vkkyhx4w: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7b004cuvakajj8nl1h
+[ScoreFinal] Scored prediction cmgzzdzy0000puvz4o1knm81o: 0 points (exact: false)
+[ScoreFinal] Scoring 1 predictions for match cmgzvjf7e004guvakwi8f5e08
+[ScoreFinal] Scored prediction cmgzze3me000ruvz4rjw1quep: 0 points (exact: false)
+[ScoreFinal] Created score audit for pool cmgzvjf7h004kuvak15gbdeqx
+[ScoreFinal] Completed. Matches: 7, Predictions: 7
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
 [LockPredictions] Starting job...
@@ -188,108 +445,11 @@
 [LeaderboardSnapshot] Starting job...
 [LeaderboardSnapshot] Processing 3 pools
 [LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
+[UpdateLive] Starting live matches update...
+[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (1 players)
 [LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
 [LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
+[UpdateLive] No live or recent matches found
 [LockPredictions] Starting job...
 [LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[ScoreFinal] Starting job...
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] Found 1 matches to lock
-[LockPredictions] Locked match: Mazatlán vs Santos Laguna (kickoff: 2025-10-22T03:00:00.000Z)
-[LockPredictions] Completed. Locked 1 matches
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LeaderboardSnapshot] Starting job...
-[LeaderboardSnapshot] Processing 3 pools
-[LeaderboardSnapshot] Created snapshot for pool cmgzvjf7h004kuvak15gbdeqx (1 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh149w59006tuvqcn30oadbr (0 players)
-[LeaderboardSnapshot] Created snapshot for pool cmh1a2a240077uvqceremslii (0 players)
-[LeaderboardSnapshot] Completed. Created 3 snapshots
-[ScoreFinal] Starting job...
-[ScoreFinal] No finished matches to score
-[LockPredictions] Starting job...
-[LockPredictions] Found 1 matches to lock
-[LockPredictions] Locked match: Monterrey vs FC Juarez (kickoff: 2025-10-22T03:05:00.000Z)
-[LockPredictions] Completed. Locked 1 matches
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
-[LockPredictions] Starting job...
-[LockPredictions] No matches to lock
+👋 Worker shutting down...

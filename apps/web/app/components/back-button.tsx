@@ -9,9 +9,10 @@ import { Button } from "@qp/ui";
 interface BackButtonProps {
   fallbackHref?: string;
   label?: string;
+  className?: string;
 }
 
-export function BackButton({ fallbackHref, label }: BackButtonProps) {
+export function BackButton({ fallbackHref, label, className }: BackButtonProps) {
   const router = useRouter();
   const t = useTranslations("common");
 
@@ -32,7 +33,7 @@ export function BackButton({ fallbackHref, label }: BackButtonProps) {
       size="sm" 
       onClick={handleBack}
       StartIcon={ArrowLeft}
-      className="hidden md:flex hover:bg-accent [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
+      className={`hidden md:flex hover:bg-accent [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)] ${className}`}
     >
       {label || t("back")}
     </Button>

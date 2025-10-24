@@ -685,5 +685,241 @@
       "title": "Todos los Premios",
       "subtitle": "Compite por estos increíbles premios"
     }
+  },
+  "legal": {
+    "terms": {
+      "title": "Términos y Condiciones de Servicio",
+      "section1": {
+        "title": "1. Introducción",
+        "content": "Estos Términos y Condiciones de Servicio (\"Términos\") rigen el acceso y uso de la plataforma de quinielas deportivas (\"Servicio\"). Al acceder o utilizar nuestro Servicio, usted acepta estar vinculado por estos Términos. Si no está de acuerdo con alguna parte de estos Términos, no debe utilizar el Servicio."
+      },
+      "section2": {
+        "title": "2. Definiciones",
+        "item1": "\"Plataforma\" se refiere a nuestro sitio web, aplicación móvil y todos los servicios relacionados.",
+        "item2": "\"Usuario\" o \"Usted\" se refiere a cualquier persona que accede o utiliza la Plataforma.",
+        "item3": "\"Quiniela\" se refiere a un evento de predicción de resultados deportivos organizado en nuestra Plataforma.",
+        "item4": "\"Predicción\" se refiere a la estimación del resultado de un partido deportivo realizada por un Usuario.",
+        "item5": "\"Puntos\" se refiere a la puntuación acumulada por predicciones correctas según las reglas de la Quiniela."
+      },
+      "section3": {
+        "title": "3. Elegibilidad del Usuario",
+        "content": "Para utilizar nuestro Servicio, usted debe cumplir con los siguientes requisitos:",
+        "requirement1": "Tener al menos 18 años de edad o la edad de mayoría legal en su jurisdicción.",
+        "requirement2": "Tener la capacidad legal para celebrar un contrato vinculante.",
+        "requirement3": "No estar prohibido de usar el Servicio bajo las leyes aplicables.",
+        "requirement4": "Proporcionar información de registro precisa y completa."
+      },
+      "section4": {
+        "title": "4. Registro de Cuenta",
+        "content": "Al registrarse, usted acepta proporcionar información verdadera, precisa y completa. Usted es responsable de mantener la confidencialidad de sus credenciales de acceso y de todas las actividades que ocurran bajo su cuenta. Debe notificarnos inmediatamente de cualquier acceso no autorizado.",
+        "disclaimer": "Nos reservamos el derecho de suspender o cancelar cuentas que violen estos Términos."
+      },
+      "section5": {
+        "title": "5. Conducta del Usuario",
+        "intro": "Usted se compromete a no:",
+        "prohibited1": "Utilizar la Plataforma de manera que viole leyes o regulaciones aplicables.",
+        "prohibited2": "Participar en fraude, manipulación de resultados o colusión con otros Usuarios.",
+        "prohibited3": "Acceder o intentar acceder a sistemas o datos no autorizados.",
+        "prohibited4": "Transmitir malware, virus o código malicioso.",
+        "prohibited5": "Acosar, amenazar o difamar a otros Usuarios.",
+        "prohibited6": "Utilizar bots, scripts o herramientas automatizadas sin autorización."
+      },
+      "section6": {
+        "title": "6. Predicciones y Puntuación",
+        "content": "Las predicciones deben realizarse antes de la hora de inicio del partido. Una vez que un partido comienza, las predicciones se bloquean automáticamente y no pueden modificarse. La puntuación se calcula automáticamente según las reglas de la Quiniela.",
+        "scoringNote": "Sistema de Puntuación:",
+        "scoringDetails": "Marcador exacto: 5 puntos | Signo correcto (1X2): 3 puntos | Diferencia de goles: 1 punto. Los desempates se resuelven mediante criterios predefinidos en cada Quiniela."
+      },
+      "section7": {
+        "title": "7. Propiedad Intelectual",
+        "content": "Todo el contenido de la Plataforma, incluyendo texto, gráficos, logos y software, es propiedad de o está licenciado por nosotros. No puede reproducir, distribuir o transmitir este contenido sin nuestra autorización previa por escrito."
+      },
+      "section8": {
+        "title": "8. Limitación de Responsabilidad",
+        "content": "En la máxima medida permitida por la ley, no seremos responsables de daños indirectos, incidentales, especiales o consecuentes derivados del uso o imposibilidad de uso del Servicio.",
+        "disclaimer": "El Servicio se proporciona \"tal cual\" sin garantías de ningún tipo, expresas o implícitas."
+      },
+      "section9": {
+        "title": "9. Indemnización",
+        "content": "Usted acepta indemnizar y eximir de responsabilidad a nuestra empresa, sus directores, empleados y agentes de cualquier reclamación, daño o gasto derivado de su violación de estos Términos o de su uso del Servicio."
+      },
+      "section10": {
+        "title": "10. Terminación",
+        "content": "Podemos terminar o suspender su cuenta inmediatamente, sin previo aviso, si viola estos Términos o si consideramos que su conducta es perjudicial para la Plataforma o sus Usuarios."
+      },
+      "section11": {
+        "title": "11. Modificaciones de los Términos",
+        "content": "Nos reservamos el derecho de modificar estos Términos en cualquier momento. Los cambios entrarán en vigor cuando se publiquen en la Plataforma. Su uso continuado del Servicio constituye aceptación de los Términos modificados."
+      },
+      "section12": {
+        "title": "12. Ley Aplicable",
+        "content": "Estos Términos se rigen por las leyes de México, sin considerar sus disposiciones sobre conflictos de leyes. Cualquier disputa se resolverá en los tribunales competentes de México."
+      },
+      "section13": {
+        "title": "13. Contacto",
+        "content": "Si tiene preguntas sobre estos Términos, por favor contáctenos a través de nuestro formulario de contacto en la Plataforma."
+      },
+      "lastUpdated": "Última actualización: {date}"
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "section1": {
+        "title": "1. Introducción",
+        "content": "Nos comprometemos a proteger su privacidad. Esta Política de Privacidad explica cómo recopilamos, utilizamos, divulgamos y salvaguardamos su información cuando utiliza nuestra Plataforma de quinielas deportivas."
+      },
+      "section2": {
+        "title": "2. Información que Recopilamos",
+        "subsection1": {
+          "title": "Información Proporcionada Directamente",
+          "content": "Nombre completo, dirección de correo electrónico, número de teléfono, información de perfil y cualquier otra información que proporcione voluntariamente."
+        },
+        "subsection2": {
+          "title": "Información Recopilada Automáticamente",
+          "content": "Dirección IP, tipo de navegador, páginas visitadas, hora y fecha de acceso, y datos de uso general de la Plataforma."
+        },
+        "subsection3": {
+          "title": "Cookies y Tecnologías Similares",
+          "content": "Utilizamos cookies y tecnologías similares para mejorar su experiencia y recopilar datos analíticos."
+        }
+      },
+      "section3": {
+        "title": "3. Cómo Utilizamos Su Información",
+        "intro": "Utilizamos la información recopilada para:",
+        "use1": "Proporcionar, mantener y mejorar el Servicio.",
+        "use2": "Procesar transacciones y enviar información relacionada.",
+        "use3": "Enviar comunicaciones de marketing (con su consentimiento).",
+        "use4": "Detectar y prevenir fraude y actividades ilícitas.",
+        "use5": "Cumplir con obligaciones legales.",
+        "use6": "Personalizar su experiencia en la Plataforma."
+      },
+      "section4": {
+        "title": "4. Compartición de Datos",
+        "content": "No vendemos ni compartimos su información personal con terceros sin su consentimiento, excepto en los siguientes casos:",
+        "note": "Excepciones:",
+        "sharing1": "Proveedores de servicios que nos ayudan a operar la Plataforma.",
+        "sharing2": "Cuando sea requerido por ley o proceso legal.",
+        "sharing3": "Para proteger nuestros derechos, privacidad o seguridad."
+      },
+      "section5": {
+        "title": "5. Seguridad de Datos",
+        "content": "Implementamos medidas de seguridad técnicas, administrativas y físicas para proteger su información personal contra acceso no autorizado, alteración, divulgación o destrucción.",
+        "disclaimer": "Sin embargo, ningún método de transmisión por Internet es 100% seguro. No podemos garantizar seguridad absoluta."
+      },
+      "section6": {
+        "title": "6. Retención de Datos",
+        "content": "Retenemos su información personal durante el tiempo que sea necesario para proporcionar el Servicio y cumplir con nuestras obligaciones legales. Puede solicitar la eliminación de su cuenta en cualquier momento."
+      },
+      "section7": {
+        "title": "7. Sus Derechos",
+        "intro": "Usted tiene derecho a:",
+        "right1": "Acceder a su información personal.",
+        "right2": "Corregir información inexacta.",
+        "right3": "Solicitar la eliminación de su información.",
+        "right4": "Optar por no recibir comunicaciones de marketing.",
+        "right5": "Solicitar la portabilidad de sus datos."
+      },
+      "section8": {
+        "title": "8. Cookies y Rastreo",
+        "content": "Utilizamos cookies para mejorar su experiencia. Puede controlar las cookies a través de la configuración de su navegador.",
+        "details": "Las cookies esenciales no pueden desactivarse, pero las cookies de análisis y marketing pueden ser rechazadas."
+      },
+      "section9": {
+        "title": "9. Enlaces a Terceros",
+        "content": "Nuestra Plataforma puede contener enlaces a sitios web de terceros. No somos responsables de sus prácticas de privacidad. Le recomendamos revisar sus políticas de privacidad."
+      },
+      "section10": {
+        "title": "10. Privacidad de Menores",
+        "content": "Nuestro Servicio no está dirigido a menores de 18 años. No recopilamos intencionalmente información de menores. Si descubrimos que hemos recopilado información de un menor, la eliminaremos inmediatamente."
+      },
+      "section11": {
+        "title": "11. Cumplimiento GDPR",
+        "content": "Si usted es residente de la Unión Europea, sus datos están protegidos bajo el Reglamento General de Protección de Datos (GDPR). Tiene derechos adicionales bajo esta regulación."
+      },
+      "section12": {
+        "title": "12. Contacto",
+        "content": "Si tiene preguntas sobre esta Política de Privacidad, contáctenos a través de nuestro formulario de contacto."
+      },
+      "lastUpdated": "Última actualización: {date}"
+    },
+    "cookies": {
+      "title": "Política de Cookies",
+      "section1": {
+        "title": "1. Introducción",
+        "content": "Esta Política de Cookies explica cómo utilizamos cookies y tecnologías similares en nuestra Plataforma de quinielas deportivas. Las cookies son pequeños archivos de texto almacenados en su dispositivo."
+      },
+      "section2": {
+        "title": "2. ¿Qué son las Cookies?",
+        "content": "Las cookies son archivos de texto pequeños que se almacenan en su navegador web. Se utilizan para recordar información sobre usted, como sus preferencias y actividad de navegación. Las cookies pueden ser persistentes (permanecen en su dispositivo) o de sesión (se eliminan cuando cierra el navegador)."
+      },
+      "section3": {
+        "title": "3. Tipos de Cookies que Utilizamos",
+        "essential": {
+          "title": "Cookies Esenciales",
+          "content": "Necesarias para el funcionamiento básico de la Plataforma, como autenticación y seguridad. No pueden desactivarse."
+        },
+        "performance": {
+          "title": "Cookies de Rendimiento",
+          "content": "Recopilan información sobre cómo utiliza la Plataforma para mejorar su funcionamiento y experiencia del usuario."
+        },
+        "functional": {
+          "title": "Cookies Funcionales",
+          "content": "Permiten personalizar su experiencia, recordando sus preferencias y configuraciones."
+        },
+        "targeting": {
+          "title": "Cookies de Orientación",
+          "content": "Utilizadas para mostrar contenido relevante y anuncios personalizados basados en sus intereses."
+        }
+      },
+      "section4": {
+        "title": "4. Cookies Específicas",
+        "intro": "Utilizamos las siguientes cookies principales:",
+        "table": {
+          "name": "Nombre",
+          "purpose": "Propósito",
+          "duration": "Duración"
+        },
+        "cookie1": {
+          "name": "session_id",
+          "purpose": "Mantener su sesión de usuario activa",
+          "duration": "Sesión"
+        },
+        "cookie2": {
+          "name": "user_preferences",
+          "purpose": "Guardar sus preferencias de idioma y tema",
+          "duration": "1 año"
+        },
+        "cookie3": {
+          "name": "analytics_token",
+          "purpose": "Rastrear actividad para análisis y mejora",
+          "duration": "2 años"
+        }
+      },
+      "section5": {
+        "title": "5. Gestión de Cookies",
+        "content": "Puede controlar las cookies a través de la configuración de su navegador. La mayoría de navegadores le permiten rechazar cookies o alertarle cuando se envía una cookie.",
+        "browsers": "Instrucciones para navegadores populares:",
+        "browser1": "Chrome: Configuración > Privacidad y seguridad > Cookies",
+        "browser2": "Firefox: Preferencias > Privacidad > Cookies",
+        "browser3": "Safari: Preferencias > Privacidad > Cookies",
+        "browser4": "Edge: Configuración > Privacidad > Cookies"
+      },
+      "section6": {
+        "title": "6. Cookies de Terceros",
+        "content": "Podemos permitir que terceros coloquen cookies en su dispositivo para análisis, publicidad y servicios de redes sociales. Estos terceros tienen sus propias políticas de cookies."
+      },
+      "section7": {
+        "title": "7. No Rastrear",
+        "content": "Si su navegador envía una señal \"No Rastrear\", respetaremos esa preferencia para cookies de seguimiento no esenciales."
+      },
+      "section8": {
+        "title": "8. Cambios en esta Política",
+        "content": "Podemos actualizar esta Política de Cookies ocasionalmente. Le notificaremos de cambios significativos publicando la política actualizada en la Plataforma."
+      },
+      "section9": {
+        "title": "9. Contacto",
+        "content": "Si tiene preguntas sobre esta Política de Cookies, contáctenos a través de nuestro formulario de contacto."
+      },
+      "lastUpdated": "Última actualización: {date}"
+    }
   }
 }

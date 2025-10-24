@@ -13,6 +13,37 @@ export async function scoreFinalJob() {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
+  // Debug: Check all finished matches
+  const allFinishedMatches = await prisma.match.count({
+    where: {
+      status: "FINISHED",
+      kickoffTime: { gte: sevenDaysAgo }
+    }
+  });
+  console.log(`[ScoreFinal] Total finished matches in last 7 days: ${allFinishedMatches}`);
+
+  // Debug: Check matches with predictions
+  const matchesWithPredictions = await prisma.match.count({
+    where: {
+      status: "FINISHED",
+      kickoffTime: { gte: sevenDaysAgo },
+      predictions: { some: {} }
+    }
+  });
+  console.log(`[ScoreFinal] Finished matches with predictions: ${matchesWithPredictions}`);
+
+  // Debug: Check unscored predictions
+  const unscoredPredictions = await prisma.prediction.count({
+    where: {
+      awardedPoints: 0,
+      match: {
+        status: "FINISHED",
+        kickoffTime: { gte: sevenDaysAgo }
+      }
+    }
+  });
+  console.log(`[ScoreFinal] Unscored predictions: ${unscoredPredictions}`);
+
   // Find finished matches that haven't been scored yet
   const finishedMatches = await prisma.match.findMany({
     where: {

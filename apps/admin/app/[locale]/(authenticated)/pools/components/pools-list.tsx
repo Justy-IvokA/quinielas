@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Calendar, Copy, CheckCircle, Edit, Eye, Trash2, Users, Mail, Ticket, Globe } from "lucide-react";
 import {
   Badge,
@@ -13,6 +14,7 @@ import {
   CardTitle,
   EmptyState,
   Skeleton,
+  SportsLoader,
   toastError,
   toastSuccess
 } from "@qp/ui";
@@ -55,7 +57,7 @@ export function PoolsList() {
               <Skeleton className="h-4 w-1/2" />
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-20 w-full" />
+              <SportsLoader size="sm" text="Cargando quiniela" />
             </CardContent>
           </Card>
         ))}
@@ -119,12 +121,25 @@ export function PoolsList() {
           <CardHeader className="relative">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <CardTitle className="line-clamp-1">{pool.name}</CardTitle>
-                <CardDescription className="mt-1 flex items-center gap-2">
-                  <span>{pool.brand?.name ?? t("status.noBrand")}</span>
-                  <span>·</span>
-                  <span>{pool.season.name}</span>
-                </CardDescription>
+                <div className="flex items-center gap-2">
+                  {pool.season?.competition?.logoUrl && (
+                    <Image
+                      src={pool.season.competition.logoUrl}
+                      alt={pool.season.competition.name}
+                      width={50}
+                      height={50}
+                      className="inline-block"
+                    />
+                  )}
+                  <div className="flex flex-col">
+                    <CardTitle className="line-clamp-1">{pool.name}</CardTitle>
+                    <CardDescription className="mt-1 flex items-center gap-2">
+                      <span>{pool.season.name}</span>
+                      <span>·</span>
+                      <span>{pool.season.year ?? t("status.noBrand")}</span>
+                    </CardDescription>
+                  </div>
+                </div>
               </div>
               <Badge variant={pool.isActive ? "default" : "gray"}>
                 {pool.isActive ? t("status.active") : t("status.inactive")}

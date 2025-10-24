@@ -27,6 +27,11 @@ const nextConfig = {
         hostname: "storage.googleapis.com",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "media.api-sports.io",
+        pathname: "/**",
+      },
     ],
   },
   webpack: (config, { isServer }) => {

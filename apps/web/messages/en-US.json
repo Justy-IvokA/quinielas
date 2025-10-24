@@ -587,5 +587,241 @@
       "title": "All Prizes",
       "subtitle": "Compete for these amazing prizes"
     }
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms and Conditions of Service",
+      "section1": {
+        "title": "1. Introduction",
+        "content": "These Terms and Conditions of Service (\"Terms\") govern your access to and use of the sports prediction platform (\"Service\"). By accessing or using our Service, you agree to be bound by these Terms. If you do not agree to any part of these Terms, you may not use the Service."
+      },
+      "section2": {
+        "title": "2. Definitions",
+        "item1": "\"Platform\" refers to our website, mobile application, and all related services.",
+        "item2": "\"User\" or \"You\" refers to any person who accesses or uses the Platform.",
+        "item3": "\"Pool\" refers to a sports prediction event organized on our Platform.",
+        "item4": "\"Prediction\" refers to a user's estimate of the outcome of a sports match.",
+        "item5": "\"Points\" refers to the score accumulated from correct predictions according to Pool rules."
+      },
+      "section3": {
+        "title": "3. User Eligibility",
+        "content": "To use our Service, you must meet the following requirements:",
+        "requirement1": "Be at least 18 years of age or the age of majority in your jurisdiction.",
+        "requirement2": "Have the legal capacity to enter into a binding contract.",
+        "requirement3": "Not be prohibited from using the Service under applicable laws.",
+        "requirement4": "Provide accurate and complete registration information."
+      },
+      "section4": {
+        "title": "4. Account Registration",
+        "content": "By registering, you agree to provide true, accurate, and complete information. You are responsible for maintaining the confidentiality of your access credentials and for all activities that occur under your account. You must notify us immediately of any unauthorized access.",
+        "disclaimer": "We reserve the right to suspend or cancel accounts that violate these Terms."
+      },
+      "section5": {
+        "title": "5. User Conduct",
+        "intro": "You agree not to:",
+        "prohibited1": "Use the Platform in any way that violates applicable laws or regulations.",
+        "prohibited2": "Engage in fraud, result manipulation, or collusion with other Users.",
+        "prohibited3": "Access or attempt to access unauthorized systems or data.",
+        "prohibited4": "Transmit malware, viruses, or malicious code.",
+        "prohibited5": "Harass, threaten, or defame other Users.",
+        "prohibited6": "Use bots, scripts, or automated tools without authorization."
+      },
+      "section6": {
+        "title": "6. Predictions and Scoring",
+        "content": "Predictions must be made before match kickoff. Once a match begins, predictions are automatically locked and cannot be modified. Scoring is calculated automatically according to Pool rules.",
+        "scoringNote": "Scoring System:",
+        "scoringDetails": "Exact score: 5 points | Correct sign (1X2): 3 points | Goal difference: 1 point. Tiebreakers are resolved using predefined criteria for each Pool."
+      },
+      "section7": {
+        "title": "7. Intellectual Property",
+        "content": "All content on the Platform, including text, graphics, logos, and software, is owned by or licensed to us. You may not reproduce, distribute, or transmit this content without our prior written permission."
+      },
+      "section8": {
+        "title": "8. Limitation of Liability",
+        "content": "To the maximum extent permitted by law, we shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of or inability to use the Service.",
+        "disclaimer": "The Service is provided \"as is\" without any warranties, express or implied."
+      },
+      "section9": {
+        "title": "9. Indemnification",
+        "content": "You agree to indemnify and hold harmless our company, its directors, employees, and agents from any claims, damages, or expenses arising from your violation of these Terms or your use of the Service."
+      },
+      "section10": {
+        "title": "10. Termination",
+        "content": "We may terminate or suspend your account immediately, without notice, if you violate these Terms or if we determine your conduct is harmful to the Platform or its Users."
+      },
+      "section11": {
+        "title": "11. Modifications to Terms",
+        "content": "We reserve the right to modify these Terms at any time. Changes will take effect when posted to the Platform. Your continued use of the Service constitutes acceptance of the modified Terms."
+      },
+      "section12": {
+        "title": "12. Governing Law",
+        "content": "These Terms are governed by the laws of Mexico, without regard to its conflict of law provisions. Any disputes shall be resolved in the competent courts of Mexico."
+      },
+      "section13": {
+        "title": "13. Contact",
+        "content": "If you have questions about these Terms, please contact us through our contact form on the Platform."
+      },
+      "lastUpdated": "Last updated: {date}"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "section1": {
+        "title": "1. Introduction",
+        "content": "We are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our sports prediction platform."
+      },
+      "section2": {
+        "title": "2. Information We Collect",
+        "subsection1": {
+          "title": "Information Provided Directly",
+          "content": "Full name, email address, phone number, profile information, and any other information you voluntarily provide."
+        },
+        "subsection2": {
+          "title": "Information Collected Automatically",
+          "content": "IP address, browser type, pages visited, access time and date, and general Platform usage data."
+        },
+        "subsection3": {
+          "title": "Cookies and Similar Technologies",
+          "content": "We use cookies and similar technologies to enhance your experience and collect analytical data."
+        }
+      },
+      "section3": {
+        "title": "3. How We Use Your Information",
+        "intro": "We use collected information to:",
+        "use1": "Provide, maintain, and improve the Service.",
+        "use2": "Process transactions and send related information.",
+        "use3": "Send marketing communications (with your consent).",
+        "use4": "Detect and prevent fraud and illegal activities.",
+        "use5": "Comply with legal obligations.",
+        "use6": "Personalize your experience on the Platform."
+      },
+      "section4": {
+        "title": "4. Data Sharing",
+        "content": "We do not sell or share your personal information with third parties without your consent, except in the following cases:",
+        "note": "Exceptions:",
+        "sharing1": "Service providers who help us operate the Platform.",
+        "sharing2": "When required by law or legal process.",
+        "sharing3": "To protect our rights, privacy, or security."
+      },
+      "section5": {
+        "title": "5. Data Security",
+        "content": "We implement technical, administrative, and physical security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction.",
+        "disclaimer": "However, no method of transmission over the Internet is 100% secure. We cannot guarantee absolute security."
+      },
+      "section6": {
+        "title": "6. Data Retention",
+        "content": "We retain your personal information for as long as necessary to provide the Service and comply with our legal obligations. You may request account deletion at any time."
+      },
+      "section7": {
+        "title": "7. Your Rights",
+        "intro": "You have the right to:",
+        "right1": "Access your personal information.",
+        "right2": "Correct inaccurate information.",
+        "right3": "Request deletion of your information.",
+        "right4": "Opt out of marketing communications.",
+        "right5": "Request data portability."
+      },
+      "section8": {
+        "title": "8. Cookies and Tracking",
+        "content": "We use cookies to enhance your experience. You can control cookies through your browser settings.",
+        "details": "Essential cookies cannot be disabled, but analytics and marketing cookies can be rejected."
+      },
+      "section9": {
+        "title": "9. Third-Party Links",
+        "content": "Our Platform may contain links to third-party websites. We are not responsible for their privacy practices. We recommend reviewing their privacy policies."
+      },
+      "section10": {
+        "title": "10. Children's Privacy",
+        "content": "Our Service is not directed to individuals under 18 years of age. We do not knowingly collect information from minors. If we discover we have collected information from a minor, we will delete it immediately."
+      },
+      "section11": {
+        "title": "11. GDPR Compliance",
+        "content": "If you are a resident of the European Union, your data is protected under the General Data Protection Regulation (GDPR). You have additional rights under this regulation."
+      },
+      "section12": {
+        "title": "12. Contact",
+        "content": "If you have questions about this Privacy Policy, please contact us through our contact form."
+      },
+      "lastUpdated": "Last updated: {date}"
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "section1": {
+        "title": "1. Introduction",
+        "content": "This Cookie Policy explains how we use cookies and similar technologies on our sports prediction platform. Cookies are small text files stored on your device."
+      },
+      "section2": {
+        "title": "2. What Are Cookies?",
+        "content": "Cookies are small text files stored in your web browser. They are used to remember information about you, such as your preferences and browsing activity. Cookies can be persistent (remain on your device) or session-based (deleted when you close your browser)."
+      },
+      "section3": {
+        "title": "3. Types of Cookies We Use",
+        "essential": {
+          "title": "Essential Cookies",
+          "content": "Necessary for basic Platform functionality, such as authentication and security. Cannot be disabled."
+        },
+        "performance": {
+          "title": "Performance Cookies",
+          "content": "Collect information about how you use the Platform to improve its functionality and user experience."
+        },
+        "functional": {
+          "title": "Functional Cookies",
+          "content": "Allow you to personalize your experience by remembering your preferences and settings."
+        },
+        "targeting": {
+          "title": "Targeting Cookies",
+          "content": "Used to display relevant content and personalized advertisements based on your interests."
+        }
+      },
+      "section4": {
+        "title": "4. Specific Cookies",
+        "intro": "We use the following main cookies:",
+        "table": {
+          "name": "Name",
+          "purpose": "Purpose",
+          "duration": "Duration"
+        },
+        "cookie1": {
+          "name": "session_id",
+          "purpose": "Keep your user session active",
+          "duration": "Session"
+        },
+        "cookie2": {
+          "name": "user_preferences",
+          "purpose": "Save your language and theme preferences",
+          "duration": "1 year"
+        },
+        "cookie3": {
+          "name": "analytics_token",
+          "purpose": "Track activity for analytics and improvement",
+          "duration": "2 years"
+        }
+      },
+      "section5": {
+        "title": "5. Managing Cookies",
+        "content": "You can control cookies through your browser settings. Most browsers allow you to reject cookies or alert you when a cookie is sent.",
+        "browsers": "Instructions for popular browsers:",
+        "browser1": "Chrome: Settings > Privacy and security > Cookies",
+        "browser2": "Firefox: Preferences > Privacy > Cookies",
+        "browser3": "Safari: Preferences > Privacy > Cookies",
+        "browser4": "Edge: Settings > Privacy > Cookies"
+      },
+      "section6": {
+        "title": "6. Third-Party Cookies",
+        "content": "We may allow third parties to place cookies on your device for analytics, advertising, and social media services. These third parties have their own cookie policies."
+      },
+      "section7": {
+        "title": "7. Do Not Track",
+        "content": "If your browser sends a \"Do Not Track\" signal, we will respect that preference for non-essential tracking cookies."
+      },
+      "section8": {
+        "title": "8. Changes to This Policy",
+        "content": "We may update this Cookie Policy occasionally. We will notify you of significant changes by posting the updated policy on the Platform."
+      },
+      "section9": {
+        "title": "9. Contact",
+        "content": "If you have questions about this Cookie Policy, please contact us through our contact form."
+      },
+      "lastUpdated": "Last updated: {date}"
+    }
   }
 }

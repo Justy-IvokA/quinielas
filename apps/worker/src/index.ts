@@ -7,6 +7,7 @@ config({ path: resolve(__dirname, "../.env") });
 import { lockPredictionsJob } from "./jobs/lock-predictions";
 import { syncFixturesJob } from "./jobs/sync-fixtures";
 import { autoSyncFixturesJob } from "./jobs/auto-sync-fixtures";
+import { updateLiveMatchesJob } from "./jobs/update-live-matches";
 import { scoreFinalJob } from "./jobs/score-final";
 import { leaderboardSnapshotJob } from "./jobs/leaderboard-snapshot";
 
@@ -23,14 +24,25 @@ setInterval(async () => {
   }
 }, 60 * 1000); // Every 1 minute
 
-// Schedule scoring job (every 5 minutes)
+// Schedule live matches update job (every 5 minutes)
 setInterval(async () => {
   try {
-    await scoreFinalJob();
+    await updateLiveMatchesJob();
   } catch (error) {
-    console.error("[Worker] Error in scoreFinalJob:", error);
+    console.error("[Worker] Error in updateLiveMatchesJob:", error);
   }
 }, 5 * 60 * 1000); // Every 5 minutes
+
+// Schedule scoring job (every 5 minutes, offset by 2 minutes)
+setTimeout(() => {
+  setInterval(async () => {
+    try {
+      await scoreFinalJob();
+    } catch (error) {
+      console.error("[Worker] Error in scoreFinalJob:", error);
+    }
+  }, 5 * 60 * 1000); // Every 5 minutes
+}, 2 * 60 * 1000); // Start after 2 minutes
 
 // Schedule leaderboard snapshot job (every 10 minutes)
 setInterval(async () => {
@@ -50,7 +62,25 @@ setInterval(async () => {
   }
 }, 6 * 60 * 60 * 1000); // Every 6 hours
 
-// Run auto sync on startup (after 30 seconds)
+// Run initial updates on startup
+setTimeout(async () => {
+  try {
+    console.log("[Worker] Running initial live matches update...");
+    await updateLiveMatchesJob();
+  } catch (error) {
+    console.error("[Worker] Error in initial updateLiveMatchesJob:", error);
+  }
+}, 10 * 1000); // After 10 seconds
+
+setTimeout(async () => {
+  try {
+    console.log("[Worker] Running initial scoring...");
+    await scoreFinalJob();
+  } catch (error) {
+    console.error("[Worker] Error in initial scoreFinalJob:", error);
+  }
+}, 15 * 1000); // After 15 seconds
+
 setTimeout(async () => {
   try {
     console.log("[Worker] Running initial fixtures sync...");
@@ -58,11 +88,12 @@ setTimeout(async () => {
   } catch (error) {
     console.error("[Worker] Error in initial autoSyncFixturesJob:", error);
   }
-}, 30 * 1000);
+}, 30 * 1000); // After 30 seconds
 
 console.log("✅ Worker jobs scheduled successfully");
 console.log("  - Lock predictions: every 1 minute");
-console.log("  - Score finals: every 5 minutes");
+console.log("  - Update live matches: every 5 minutes (+ on startup)");
+console.log("  - Score finals: every 5 minutes (+ on startup, offset 2min)");
 console.log("  - Leaderboard snapshots: every 10 minutes");
 console.log("  - Auto fixtures sync: every 6 hours (+ on startup)");
 
@@ -73,4 +104,10 @@ process.on("SIGINT", () => {
 });
 
 // Export jobs for manual triggering
-export { lockPredictionsJob, syncFixturesJob, scoreFinalJob, leaderboardSnapshotJob };
+export { 
+  lockPredictionsJob, 
+  syncFixturesJob, 
+  updateLiveMatchesJob,
+  scoreFinalJob, 
+  leaderboardSnapshotJob 
+};

@@ -25,7 +25,7 @@ export const poolsRouter = router({
         },
         include: {
           brand: { select: { name: true, slug: true, domains: true } },
-          season: { select: { name: true, year: true } },
+          season: { select: { name: true, year: true, competition: { select: { name: true, countryCode: true, logoUrl: true } } } },
           accessPolicy: { select: { accessType: true } },
           _count: {
             select: {

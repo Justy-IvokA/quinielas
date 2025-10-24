@@ -10,16 +10,20 @@ export function LegalNotice() {
       {t.rich("legal", {
         terms: (chunks) => (
           <a
-            href="/terms"
+            href="/legal/terms"
             className="underline underline-offset-4 hover:text-primary"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {chunks}
           </a>
         ),
         privacy: (chunks) => (
           <a
-            href="/privacy"
+            href="/legal/privacy"
             className="underline underline-offset-4 hover:text-primary"
+            target="_blank"
+            rel="noopener noreferrer"
           >
             {chunks}
           </a>

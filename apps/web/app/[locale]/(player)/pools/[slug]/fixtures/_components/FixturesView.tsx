@@ -117,8 +117,8 @@ export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }
   // Error state
   if (matchesError) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <Alert variant="destructive" className="mb-6">
+      <div className="container mx-auto px-4 py-4">
+        <Alert variant="destructive" className="mb-6" showIcon={false}>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{t("errors.loadFailed")}</AlertDescription>
         </Alert>
@@ -143,25 +143,25 @@ export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }
             />
           )}
           <div>
-            <h1 className="text-primary/80 text-4xl font-bold">{pool.name}</h1>
-            <p className="text-primary/70">{brandName} {pool.season.year}</p>
+            <h1 className="text-primary text-4xl font-bold">{pool.name}</h1>
+            <p className="text-accent">{pool.season.competition.name} {pool.season.year}</p>
           </div>
         </div>
       </header>
 
       {/* Tabs: Fixtures, Leaderboard, Stats & Prizes */}
       <Tabs defaultValue="fixtures" className="mb-8">
-        <TabsList className="bg-white/10 border border-white/20">
-          <TabsTrigger value="fixtures" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
+        <TabsList className="backdrop-blur-md bg-card/20 dark:bg-card/60 border border-card/40 dark:border-card/80 shadow-xl rounded-md overflow-hidden">
+          <TabsTrigger value="fixtures" className="data-[state=active]:bg-primary data-[state=active]:text-white text-foreground/80 hover:text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)] ">
             {t("tabs.fixtures")}
           </TabsTrigger>
-          <TabsTrigger value="stats" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
+          <TabsTrigger value="stats" className="data-[state=active]:bg-primary data-[state=active]:text-white text-foreground/80 hover:text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
             {t("tabs.stats")}
           </TabsTrigger>
-          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
+          <TabsTrigger value="leaderboard" className="data-[state=active]:bg-primary data-[state=active]:text-white text-foreground/80 hover:text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
             {t("tabs.leaderboard")}
           </TabsTrigger>
-          <TabsTrigger value="prizes" className="data-[state=active]:bg-primary data-[state=active]:text-foreground text-foreground/75 hover:text-foreground">
+          <TabsTrigger value="prizes" className="data-[state=active]:bg-primary data-[state=active]:text-white text-foreground/80 hover:text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
             {t("tabs.prizes")}
           </TabsTrigger>
         </TabsList>
@@ -172,28 +172,28 @@ export function FixturesView({ locale, pool, userId, initialFilter, tenantSlug }
             <Button
               variant={filter === "ALL" ? "default" : "outline"}
               onClick={() => setFilter("ALL")}
-              className={filter === "ALL" ? "bg-primary" : "bg-white/10 border-white/20 text-white"}
+              className={filter === "ALL" ? "bg-primary  [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]" : "backdrop-blur-md bg-card/20 dark:bg-card/60 border border-card/40 dark:border-card/80 text-text-foreground/80  [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"}
             >
               {t("filters.all")}
             </Button>
             <Button
               variant={filter === "PENDING" ? "default" : "outline"}
               onClick={() => setFilter("PENDING")}
-              className={filter === "PENDING" ? "bg-primary" : "bg-white/10 border-white/20 text-white"}
+              className={filter === "PENDING" ? "bg-primary [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]" : "backdrop-blur-md bg-card/20 dark:bg-card/60 border border-card/40 dark:border-card/80 text-foreground/80 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"}
             >
               {t("filters.pending")}
             </Button>
             <Button
               variant={filter === "LIVE" ? "default" : "outline"}
               onClick={() => setFilter("LIVE")}
-              className={filter === "LIVE" ? "bg-primary" : "bg-white/10 border-white/20 text-white"}
+              className={filter === "LIVE" ? "bg-primary [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]" : "backdrop-blur-md bg-card/20 dark:bg-card/60 border border-card/40 dark:border-card/80 text-foreground/80 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"}
             >
               {t("filters.live")}
             </Button>
             <Button
               variant={filter === "FINISHED" ? "default" : "outline"}
               onClick={() => setFilter("FINISHED")}
-              className={filter === "FINISHED" ? "bg-primary" : "bg-white/10 border-white/20 text-white"}
+              className={filter === "FINISHED" ? "bg-primary [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]" : "backdrop-blur-md bg-card/20 dark:bg-card/60 border border-card/40 dark:border-card/80 text-foreground/80 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"}
             >
               {t("filters.finished")}
             </Button>

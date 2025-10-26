@@ -64,7 +64,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
         competitionName: wizardData.competitionName,
         seasonYear: wizardData.seasonYear,
         stageLabel: wizardData.stageLabel,
-        roundLabel: undefined, // ✅ NO filtrar en import - importar toda la temporada
+        roundLabel:wizardData.selectedRounds?.join(", ") || undefined, // ✅ NO filtrar en import - importar toda la temporada
         pool: {
           ...wizardData.pool,
           // ✅ CRÍTICO: Incluir rounds en ruleSet para filtro frontend
@@ -137,7 +137,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
     const configUrl = getConfigUrl();
 
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <Alert className="border-green-500 bg-green-50 dark:bg-green-950">
           <CheckCircle2 className="h-5 w-5 text-green-600" />
           <AlertDescription className="text-green-900 dark:text-green-100">
@@ -171,11 +171,11 @@ export function StepReview({ wizardData }: StepReviewProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-2">
       {/* Competition & Season */}
-      <div className="rounded-lg border p-4">
-        <h3 className="font-semibold mb-3">Competencia y temporada</h3>
-        <dl className="grid gap-2 text-sm">
+      <div className="rounded-lg border px-4 py-2">
+        <h3 className="font-semibold mb-2">Competencia y temporada</h3>
+        <dl className="grid gap-1 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Competencia:</dt>
             <dd className="font-medium">{wizardData.competitionName}</dd>
@@ -203,9 +203,9 @@ export function StepReview({ wizardData }: StepReviewProps) {
       </div>
 
       {/* Pool Details */}
-      <div className="rounded-lg border p-4">
-        <h3 className="font-semibold mb-3">Detalles de la quiniela</h3>
-        <dl className="grid gap-2 text-sm">
+      <div className="rounded-lg border px-4 py-2">
+        <h3 className="font-semibold mb-2">Detalles de la quiniela</h3>
+        <dl className="grid gap-1 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Título:</dt>
             <dd className="font-medium">{wizardData.pool.title}</dd>
@@ -224,9 +224,9 @@ export function StepReview({ wizardData }: StepReviewProps) {
       </div>
 
       {/* Access Policy */}
-      <div className="rounded-lg border p-4">
-        <h3 className="font-semibold mb-3">Política de acceso</h3>
-        <dl className="grid gap-2 text-sm">
+      <div className="rounded-lg border px-4 py-2">
+        <h3 className="font-semibold mb-2">Política de acceso</h3>
+        <dl className="grid gap-1 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Tipo:</dt>
             <dd className="font-medium">
@@ -258,8 +258,8 @@ export function StepReview({ wizardData }: StepReviewProps) {
 
       {/* Prizes */}
       {wizardData.prizes && wizardData.prizes.length > 0 && (
-        <div className="rounded-lg border p-4">
-          <h3 className="font-semibold mb-3">Premios ({wizardData.prizes.length})</h3>
+        <div className="rounded-lg border px-4 py-2">
+          <h3 className="font-semibold mb-2">Premios ({wizardData.prizes.length})</h3>
           <div className="space-y-2">
             {wizardData.prizes.map((prize, idx) => (
               <div key={idx} className="flex justify-between text-sm">

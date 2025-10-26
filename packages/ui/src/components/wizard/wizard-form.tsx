@@ -58,10 +58,10 @@ export function WizardForm({
   }, [currentStep]);
 
   return (
-    <div className="w-full p-6" data-testid="wizard-form">
+    <div className="w-full pl-6 pt-4 " data-testid="wizard-form">
       {/* Step Header */}
-      <div className={cn("mb-6", containerClassname)}>
-        <h2 className="text-2xl font-semibold" data-testid="step-title">
+      <div className={cn("mb-4", containerClassname)}>
+        <h2 className="text-2xl font-semibold text-primary" data-testid="step-title">
           {currentStepData.title}
         </h2>
         <p className="mt-1 text-sm text-muted-foreground" data-testid="step-description">
@@ -84,7 +84,7 @@ export function WizardForm({
       <div className={cn("mb-6", containerClassname)}>
         <div
           className={cn(
-            "rounded-xl border border-border/50 bg-background/50 p-6",
+            "rounded-xl border-card/80 bg-card/70 p-4 shadow-sm backdrop-blur",
             currentStepData.contentClassname
           )}>
           {typeof currentStepData.content === "function"

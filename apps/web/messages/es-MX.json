@@ -39,8 +39,8 @@
   },
   "home": {
     "hero": {
-      "title": "!Únete a la Quiniela!",
-      "title0": "Bienvenido a {brandName}",
+      "title": "!Quinielas DataGol!",
+      "title0": "¡Quinielas {brandName}!",
       "subtitle": "Quinielas deportivas para tus clientes y/o empleados",
       "tagline": "Demuestra tus conocimientos deportivos y compite por increíbles premios. Predice los resultados, acumula puntos y escala en el ranking.",
       "tagline0": "Usa tu identidad de marca para crear quinielas en las que pueden participar clientes, empleados y/o el público en general. Asignando premios y reglas personalizadas.",
@@ -173,7 +173,7 @@
           "placeholder": "tu@correo.com"
         },
         "phone": {
-          "label": "Teléfono (opcional)",
+          "label": "Teléfono",
           "placeholder": "+525512345678"
         },
         "inviteCode": {
@@ -204,12 +204,13 @@
       "invite": {
         "description": "Has sido invitado a unirte a esta quiniela",
         "emailLocked": "El correo electrónico está vinculado a tu invitación",
+        "formTitle": "Formulario de invitación",
         "validating": "Validando invitación...",
         "resend": "Reenviar invitación",
         "returningUser": "Usaremos tu información de registro anterior"
       },
       "public": {
-        "description": "Algún amigo o conocido te invito a unirte a esta quiniela",
+        "description": "Algún amigo o conocido te invitó a unirte a esta quiniela. Utiliza esta liga de registro para unirte.",
         "formTitle": "Formulario de registro público",
         "returningUser": "Usaremos tu información de registro anterior"
       },
@@ -572,9 +573,9 @@
       "viewFixtures": "Ver partidos"
     },
     "empty": {
-      "title": "No tienes quinielas activas",
-      "description": "Únete a una quiniela para comenzar a hacer pronósticos",
-      "browseButton": "Explorar quinielas",
+      "title": "Aún no tienes quinielas",
+      "description": "Gracias por unirte a la plataforma de quinielas de {brandName}. Para que puedas participar en una quiniela, necesitas recibir una liga con un código de invitación y el sistema automatizará el proceso de registro.Al completarlo, aquí aparecerán tus quinielas.",
+      "browseButton": "Regresar al Inicio",
       "noResults": "No se encontraron quinielas",
       "tryDifferentFilters": "Intenta con diferentes filtros o búsqueda",
       "clearFilters": "Limpiar filtros"
@@ -678,8 +679,8 @@
     "empty": {
       "title": "Sin Premios Configurados",
       "description": "El organizador aún no ha agregado premios. Revisa más adelante.",
-      "notRegistered": "Regístrate para ver tus oportunidades de ganar",
-      "registerButton": "Registrarme"
+      "notRegistered": "Para ver tus oportunidades de ganar, primero debes registrar tus predicciones en esta quiniela",
+      "registerButton": "Registrar"
     },
     "grid": {
       "title": "Todos los Premios",

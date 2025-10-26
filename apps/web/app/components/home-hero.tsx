@@ -171,7 +171,7 @@ export function HomeHero({
                 {/* Brand name - impactful typography */}
                 <h1 className="text-2xl text-center md:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tight mb-2">
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_auto] animate-gradient">
-                    {t("title")}
+                    {host !== "localhost" ? t("title0", { brandName }) : t("title")}
                   </span>
                 </h1>
                 

@@ -132,7 +132,7 @@ export const superadminTemplatesRouter = router({
       if (existing) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "A template with this slug already exists"
+          message: "Ya existe una plantilla con este slug"
         });
       }
 
@@ -150,6 +150,61 @@ export const superadminTemplatesRouter = router({
         }
       }
 
+      // ✅ IMPORTANT: Validate and normalize competitionName
+      // If competitionName is provided, use it; otherwise use title as fallback
+      const competitionName = input.competitionName || input.title;
+
+      // ✅ IMPORTANT: Smart round validation - Check if specific rounds exist in DB
+      // This prevents the same issue that occurred in pools where matches weren't imported
+      // for specific rounds because the cache check was too broad
+      let roundLabel: string | undefined = undefined;
+      
+      if (input.rules?.rounds?.start && input.rules?.rounds?.end) {
+        console.log(`[Templates.create] Validating rounds: ${input.rules.rounds.start}-${input.rules.rounds.end}`);
+        
+        // Check if we have existing data for these specific rounds
+        if (input.competitionExternalId && input.seasonYear) {
+          const existingCompetition = await prisma.competition.findFirst({
+            where: {
+              name: competitionName
+            },
+            include: {
+              seasons: {
+                where: { year: input.seasonYear },
+                include: {
+                  matches: {
+                    select: { round: true }
+                  }
+                }
+              }
+            }
+          });
+
+          const existingSeason = existingCompetition?.seasons[0];
+          
+          if (existingSeason && existingSeason.matches.length > 0) {
+            const matchesInRequestedRounds = existingSeason.matches.filter(
+              m => m.round !== null && 
+                   m.round >= input.rules!.rounds!.start && 
+                   m.round <= input.rules!.rounds!.end
+            );
+            
+            if (matchesInRequestedRounds.length > 0) {
+              console.log(`[Templates.create] ✅ Found ${matchesInRequestedRounds.length} existing matches in rounds ${input.rules.rounds.start}-${input.rules.rounds.end}`);
+            } else {
+              console.log(`[Templates.create] ⚠️ No existing matches found for rounds ${input.rules.rounds.start}-${input.rules.rounds.end} - will import from API`);
+            }
+          } else {
+            console.log(`[Templates.create] ⚠️ No existing season data - will import from API`);
+          }
+        }
+        
+        // ✅ CRITICAL: Always set roundLabel to undefined to import FULL season
+        // Filtering by specific rounds happens in frontend via ruleSet.rounds
+        // This ensures all matches are available for filtering
+        roundLabel = undefined;
+      }
+
       const template = await prisma.poolTemplate.create({
         data: {
           slug: input.slug,
@@ -160,21 +215,19 @@ export const superadminTemplatesRouter = router({
           competitionExternalId: input.competitionExternalId,
           seasonYear: input.seasonYear,
           stageLabel: input.stageLabel,
-          roundLabel: input.roundLabel,
+          roundLabel: roundLabel, // ✅ Always undefined - import full season
           rules: input.rules as any,
           accessDefaults: input.accessDefaults as any,
           prizesDefaults: input.prizesDefaults as any,
           brandHints: input.brandHints as any,
-          meta: input.meta as any
+          meta: { competitionName: competitionName } as any
         },
         include: {
           sport: true
         }
       });
 
-      // Create audit log (use a system tenant or skip tenantId for global actions)
-      // For now, we'll create without tenantId since this is a global template
-      // Note: This might need adjustment based on your audit log requirements
+      console.log(`[Templates.create] Template created: ${template.id} (${template.slug})`);
 
       return template;
     }),
@@ -455,7 +508,7 @@ export const superadminTemplatesRouter = router({
       if (!tenant) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Tenant not found"
+          message: "No se encontró el tenant"
         });
       }
 
@@ -464,7 +517,7 @@ export const superadminTemplatesRouter = router({
       if (!brand) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Tenant does not have any brands"
+          message: "El tenant no tiene ningún brand asignado"
         });
       }
 
@@ -476,14 +529,14 @@ export const superadminTemplatesRouter = router({
       if (!template) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Template not found"
+          message: "No se encontró la plantilla"
         });
       }
 
       if (template.status !== "PUBLISHED") {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Only PUBLISHED templates can be assigned"
+          message: "Sólo se pueden asignar plantillas PUBLISHED"
         });
       }
 

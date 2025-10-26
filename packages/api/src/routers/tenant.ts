@@ -2,7 +2,7 @@ import { z } from "zod";
 import { router, procedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { requireSuperAdmin } from "../middleware/require-role";
-import { Prisma } from "@qp/db";
+import { Prisma, LicenseTier, Feature } from "@qp/db";
 
 /**
  * Tenant router - SUPERADMIN only
@@ -97,6 +97,7 @@ export const tenantRouter = router({
             },
             orderBy: { createdAt: "desc" }
           },
+          featureOverrides: true,
           _count: {
             select: {
               pools: true,
@@ -207,7 +208,8 @@ export const tenantRouter = router({
         id: z.string(),
         name: z.string().min(1).max(255).optional(),
         slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional(),
-        description: z.string().optional()
+        description: z.string().optional(),
+        licenseTier: z.nativeEnum(LicenseTier).optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -498,31 +500,129 @@ export const tenantRouter = router({
     }),
 
   /**
-   * List brands for current tenant (tenant-scoped)
+   * Get feature statuses for current tenant (tenant-scoped)
    */
-  listBrands: procedure
-    .input(z.object({ tenantId: z.string().optional() }).optional())
-    .query(async ({ ctx, input }) => {
-      // Use tenant from context if available, otherwise from input
-      const tenantId = ctx.tenant?.id || input?.tenantId;
-
-      if (!tenantId) {
+  getFeatureStatuses: procedure
+    .query(async ({ ctx }) => {
+      if (!ctx.tenant) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Tenant ID required"
+          message: "Tenant context required"
         });
       }
 
-      return ctx.prisma.brand.findMany({
-        where: { tenantId },
-        orderBy: { name: "asc" },
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          logoUrl: true,
-          domains: true
-        }
+      const { createFeatureGuard } = await import("../services/features.service");
+      const featureGuard = createFeatureGuard(ctx.prisma);
+      return featureGuard.getFeatureStatuses(ctx.tenant.id);
+    }),
+
+  /**
+   * List feature overrides for a tenant
+   */
+  listFeatureOverrides: procedure
+    .use(requireSuperAdmin)
+    .input(z.object({ tenantId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.prisma.tenantFeatureOverride.findMany({
+        where: { tenantId: input.tenantId },
+        orderBy: { createdAt: "desc" }
       });
+    }),
+
+  /**
+   * Create a feature override
+   */
+  createFeatureOverride: procedure
+    .use(requireSuperAdmin)
+    .input(
+      z.object({
+        tenantId: z.string(),
+        feature: z.nativeEnum(Feature),
+        isEnabled: z.boolean(),
+        expiresAt: z.date().optional()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      try {
+        return await ctx.prisma.tenantFeatureOverride.create({
+          data: input
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2002") {
+            throw new TRPCError({
+              code: "CONFLICT",
+              message: "Feature override already exists for this tenant and feature"
+            });
+          }
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create feature override"
+        });
+      }
+    }),
+
+  /**
+   * Update a feature override
+   */
+  updateFeatureOverride: procedure
+    .use(requireSuperAdmin)
+    .input(
+      z.object({
+        id: z.string(),
+        isEnabled: z.boolean().optional(),
+        expiresAt: z.date().nullable().optional()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, ...updateData } = input;
+      try {
+        return await ctx.prisma.tenantFeatureOverride.update({
+          where: { id },
+          data: updateData
+        });
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025") {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Feature override not found"
+            });
+          }
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to update feature override"
+        });
+      }
+    }),
+
+  /**
+   * Delete a feature override
+   */
+  deleteFeatureOverride: procedure
+    .use(requireSuperAdmin)
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      try {
+        await ctx.prisma.tenantFeatureOverride.delete({
+          where: { id: input.id }
+        });
+        return { success: true };
+      } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+          if ((error as Prisma.PrismaClientKnownRequestError).code === "P2025") {
+            throw new TRPCError({
+              code: "NOT_FOUND",
+              message: "Feature override not found"
+            });
+          }
+        }
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to delete feature override"
+        });
+      }
     })
 });

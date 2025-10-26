@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { PrismaClient, AccessType, MatchStatus, PrizeType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === "development" ? ["query", "info", "warn", "error"] : ["warn", "error"]
@@ -86,61 +86,76 @@ async function main() {
     where: { slug: "innotecnia" },
     update: {
       name: "Innotecnia",
-      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema."
+      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema.",
+      licenseTier: "COPA_DEL_MUNDO"
     },
     create: {
       slug: "innotecnia",
       name: "Innotecnia",
-      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema."
+      description: "Tenant nivel agencia, gestiona todos los modulos globales del sistema.",
+      licenseTier: "COPA_DEL_MUNDO"
     }
   });
 
   const agenciaTheme = {
     colors: {
-      primary: "262 83% 58%", // #7c3aed converted to HSL
-      secondary: "217 19% 17%", // #1f2937
-      background: "0 0% 100%", // #ffffff
-      foreground: "220 13% 9%", // #111827
-      accent: "262 83% 90%",
       card: "0 0% 100%",
-      muted: "210 40% 96%",
-      border: "214 32% 91%",
-      input: "214 32% 91%",
       ring: "262 83% 58%",
+      input: "214 32% 91%",
+      muted: "210 40% 96%",
+      accent: "29 89% 48%",
+      border: "214 32% 91%",
+      popover: "0 0% 100%",
+      primary: "55 92% 48%",
+      secondary: "211 94% 48%",
+      background: "0 0% 100%",
+      foreground: "220 13% 9%",
+      destructive: "0 84% 60%",
+      cardForeground: "220 13% 9%",
+      mutedForeground: "215 16% 47%",
+      accentForeground: "262 83% 25%",
+      popoverForeground: "220 13% 9%",
       primaryForeground: "210 40% 98%",
       secondaryForeground: "210 40% 98%",
-      accentForeground: "262 83% 25%",
-      mutedForeground: "215 16% 47%",
-      destructive: "0 84% 60%",
-      destructiveForeground: "210 40% 98%",
-      cardForeground: "220 13% 9%",
-      popover: "0 0% 100%",
-      popoverForeground: "220 13% 9%"
+      destructiveForeground: "210 40% 98%"
     },
     logo: {
-      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Finnovatica_banner.jpg?alt=media&token=7e3d1aac-172b-459f-9580-406771501dfd",
-      alt: "Innotecnia Logo"
+      alt: "Innotecnia Logo",
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/innotecnia/logo/1761333121060-uo7afe-innobanner-640-light.png"
     },
-    heroAssets: {
-      kind: "none",
-      url: null,
-      overlay: false,
-      loop: true,
-      muted: true,
-      autoplay: true
+    text: {
+      link: "https://innotecnia.com/",
+      title: "Quinielas DataGol",
+      slogan: "El futuro de la publicidad es ahora...",
+      paragraph: "Participa, predice y gana fabulosos premios. Únete a nuestra comunidad de apasionados del deporte.",
+      description: "\"DataGol\" la plataforma número uno en quinielas deportivas para las empresas."
+    },
+    logotype: {
+      alt: "InnoLogo",
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/innotecnia/logotype/1761331356867-ztb6q2-innologo-256-light.png"
     },
     mainCard: {
-      kind: "none",
-      url: null,
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/innotecnia/mainCard/1761331474694-jnxqzb-stream.mp4",
+      kind: "video",
       loop: true,
       muted: true,
-      autoplay: false
+      poster: "https://storage.googleapis.com/rodsardb.firebasestorage.app/innotecnia/poster/1761331506504-f1m1js-dp.png",
+      autoplay: true
+    },
+    heroAssets: {
+      alt: "InnoFondo",
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/innotecnia/hero/1761331396133-oc7xti-admin-bg.jpg",
+      kind: "image",
+      loop: true,
+      muted: true,
+      overlay: false,
+      autoplay: true
     },
     typography: {
-      fontFamily: "Inter, ui-sans-serif, system-ui",
-      headingsFamily: "Inter, ui-sans-serif, system-ui",
       baseSize: "16px",
-      lineHeight: "1.5"
+      fontFamily: "Poppins, system-ui, sans-serif",
+      lineHeight: "1.5",
+      headingsFamily: "Inter, ui-sans-serif, system-ui"
     }
   };
 
@@ -204,70 +219,72 @@ async function main() {
     where: { slug: "ivoka" },
     update: {
       name: "Ivoka",
-      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc."
+      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc.",
+      licenseTier: "GRAN_JUGADA"
     },
     create: {
       slug: "ivoka",
       name: "Ivoka",
-      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc."
+      description: "Tenant de nivel customer, gestiona quinielas, premios, reglas, Etc.",
+      licenseTier: "GRAN_JUGADA"
     }
   });
 
   const ivokaTheme = {
     colors: {
+      card: "60 100% 99%",
+      ring: "217 100% 50%",
+      input: "60 10% 90%",
+      muted: "60 10% 95%",
+      accent: "248 84% 67%",
+      border: "60 10% 90%",
+      popover: "60 100% 99%",
       primary: "217 100% 50%",
       secondary: "20 99% 60%",
       background: "53 100% 98%",
       foreground: "90 8% 11%",
-      accent: "248 84% 67%",
-      card: "60 100% 99%",
-      muted: "60 10% 95%",
-      border: "60 10% 90%",
-      input: "60 10% 90%",
-      ring: "217 100% 50%",
+      destructive: "0 84% 60%",
+      cardForeground: "80 7% 11%",
+      mutedForeground: "80 5% 45%",
+      accentForeground: "0 0% 100%",
+      popoverForeground: "80 7% 11%",
       primaryForeground: "0 0% 100%",
       secondaryForeground: "0 0% 100%",
-      accentForeground: "0 0% 100%",
-      mutedForeground: "80 5% 45%",
-      destructive: "0 84% 60%",
-      destructiveForeground: "0 0% 98%",
-      cardForeground: "80 7% 11%",
-      popover: "60 100% 99%",
-      popoverForeground: "80 7% 11%"
+      destructiveForeground: "0 0% 98%"
     },
     logo: {
-      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/ivoka/logo/1760809403916-h3pd7f-ivoka-black-2x.png",
-      alt: "Logo Color"
+      alt: "Logo Color",
+      url: "https://storage.googleapis.com/rodsardb.firebasestorage.app/ivoka/logo/1760809403916-h3pd7f-ivoka-black-2x.png"
     },
     text: {
+      link: "ivoka.ai/eventosespeciales",
       title: "¡Únete Ahora!",
       slogan: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
       paragraph: "Imagina un lugar donde la tecnología más avanzada del mundo no es una amenaza, sino tu mejor aliada para el crecimiento. Un espacio donde no solo aprendes a manejar herramientas de inteligencia artificial, sino que, en el proceso, redescubres el poder de tu propia voz, pones en orden tus finanzas y te conviertes en una versión más plena y auténtica de ti mismo.",
-      description: "¡ Únete a esta quiniela exclusiva con código, solo nuestros mejores clientes participan, registra tus pronósticos y participa para ganar fabulosos premios !",
-      link: "ivoka.ai/eventosespeciales"
+      description: "¡ Únete a esta quiniela exclusiva con código, solo nuestros mejores clientes participan, registra tus pronósticos y participa para ganar fabulosos premios !"
     },
-    heroAssets: {
-      kind: "image",
-      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_bg.jpeg?alt=media&token=abeb5dbe-b395-4286-a24e-5580aeca612a",
-      alt: "Quinielas Background",
-      poster: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fivokalogo%2Bslogan%402x.png?alt=media&token=e0580c0e-40a8-499d-8cc9-1128412ad0d5",
-      overlay: true,
+    mainCard: {
+      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_video_loop.mp4?alt=media&token=4b8c5e3d-9f2a-4b3e-8f3d-5e3d9f2a4b3e",
+      kind: "video",
       loop: true,
       muted: true,
       autoplay: true
     },
-    mainCard: {
-      kind: "video",
-      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_video_loop.mp4?alt=media&token=4b8c5e3d-9f2a-4b3e-8f3d-5e3d9f2a4b3e",
+    heroAssets: {
+      alt: "Quinielas Background",
+      url: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fquinielas_bg.jpeg?alt=media&token=abeb5dbe-b395-4286-a24e-5580aeca612a",
+      kind: "image",
       loop: true,
       muted: true,
+      poster: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Fivokalogo%2Bslogan%402x.png?alt=media&token=e0580c0e-40a8-499d-8cc9-1128412ad0d5",
+      overlay: true,
       autoplay: true
     },
     typography: {
-      fontFamily: "Manrope, ui-sans-serif, system-ui",
-      headingsFamily: "Manrope, ui-sans-serif, system-ui",
       baseSize: "16px",
-      lineHeight: "1.5"
+      fontFamily: "Manrope, ui-sans-serif, system-ui",
+      lineHeight: "1.5",
+      headingsFamily: "Manrope, ui-sans-serif, system-ui"
     }
   };
 
@@ -278,7 +295,7 @@ async function main() {
       description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
       logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_color_256x256.png?alt=media&token=73d1a20d-b3bb-4373-966d-a14c2ffbb4fa",
       theme: ivokaTheme,
-      domains: ["localhost", "ivoka.localhost"]
+      domains: ["ivoka.localhost"]
     },
     create: {
       tenantId: tenant.id,
@@ -287,7 +304,7 @@ async function main() {
       description: "La Comunidad líder que une TU potencial humano con inteligencia artificial",
       logoUrl: "https://firebasestorage.googleapis.com/v0/b/rodsardb.firebasestorage.app/o/assets%2Flogo_color_256x256.png?alt=media&token=73d1a20d-b3bb-4373-966d-a14c2ffbb4fa",
       theme: ivokaTheme,
-      domains: ["localhost", "ivoka.localhost"]
+      domains: ["ivoka.localhost"]
     }
   });
 
@@ -532,7 +549,7 @@ async function main() {
     }
   });
 
-  // Player 1 - Angelica Osorio
+  // Player 1 - Angelica Osorio (PLAYER)
   const demoUser1 = await prisma.user.upsert({
     where: { email: "chronos.devs@gmail.com" },
     update: {
@@ -548,7 +565,7 @@ async function main() {
     }
   });
 
-  // Player 2 - Sergio Sánchez
+  // Player 2 - Sergio Sánchez (PLAYER)
   const demoUser2 = await prisma.user.upsert({
     where: { email: "sergio.sanchez@ivoka.ai" },
     update: {
@@ -589,11 +606,48 @@ async function main() {
     }
   });
 
+  await prisma.tenantMember.upsert({
+    where: { tenantId_userId: { tenantId: tenant.id, userId: demoUser2.id } },
+    update: { role: "PLAYER" },
+    create: {
+      tenantId: tenant.id,
+      userId: demoUser2.id,
+      role: "PLAYER"
+    }
+  });
+
   console.log("✅ TENANT_ADMIN created:", {
     email: "vemancera@ivoka.ai",
     tenant: tenant.slug,
     role: "TENANT_ADMIN"
   });
+
+  // ========================================
+  // FEATURE OVERRIDES (Example)
+  // ========================================
+  console.log("🔧 Creating example feature overrides...");
+
+  // Example: Disable analytics for Ivoka tenant (even though GRAN_JUGADA includes it)
+  await prisma.tenantFeatureOverride.upsert({
+    where: {
+      tenantId_feature: {
+        tenantId: tenant.id,
+        feature: "ANALYTICS_ADVANCED"
+      }
+    },
+    update: {
+      isEnabled: false,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    },
+    create: {
+      tenantId: tenant.id,
+      feature: "ANALYTICS_ADVANCED",
+      isEnabled: false,
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+    }
+  });
+
+  console.log("✅ Example feature override created (ANALYTICS_ADVANCED disabled for Ivoka)");
 
   // ========================================
   // SUMMARY

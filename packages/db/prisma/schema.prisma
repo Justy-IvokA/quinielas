@@ -69,11 +69,27 @@ enum PolicyType {
   PRIVACY
 }
 
+enum LicenseTier {
+  GOLAZO
+  GRAN_JUGADA
+  COPA_DEL_MUNDO
+}
+
+enum Feature {
+  TRIVIA
+  REWARDS_CHALLENGES
+  NOTIFICATIONS_INTERMEDIATE
+  NOTIFICATIONS_ADVANCED
+  ANALYTICS_ADVANCED
+  PUSH_NOTIFICATIONS
+}
+
 model Tenant {
   id          String          @id @default(cuid())
   slug        String          @unique
   name        String
   description String?
+  licenseTier LicenseTier     @default(GOLAZO)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
@@ -96,6 +112,7 @@ model Tenant {
   consentRecords        ConsentRecord[]
   dataRetentionPolicies DataRetentionPolicy[]
   templateAssignments   TenantTemplateAssignment[]
+  featureOverrides      TenantFeatureOverride[]
 
   @@index([slug])
 }
@@ -775,4 +792,19 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model TenantFeatureOverride {
+  id        String   @id @default(cuid())
+  tenantId  String
+  feature   Feature
+  isEnabled Boolean
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, feature])
+  @@index([tenantId])
 }

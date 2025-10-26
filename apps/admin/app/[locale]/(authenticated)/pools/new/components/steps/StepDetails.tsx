@@ -97,8 +97,8 @@ export function StepDetails({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} id="wizard-step-4" className="flex flex-col gap-6">
-      <div className="space-y-2">
+    <form onSubmit={handleSubmit(onSubmit)} id="wizard-step-4" className="flex flex-col gap-4">
+      <div className="space-y-1">
         <Label htmlFor="title">
           Título de la quiniela
           <span className="text-destructive ml-1">*</span>
@@ -147,9 +147,9 @@ export function StepDetails({
         )}
       </div>
 
-      <div className="rounded-lg border bg-muted/50 p-4">
+      <div className="rounded-lg border bg-muted/50 p-2">
         <h4 className="font-medium mb-2">Información del torneo</h4>
-        <dl className="grid gap-2 text-sm">
+        <dl className="grid gap-1 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Competencia:</dt>
             <dd className="font-medium">{competitionName}</dd>

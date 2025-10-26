@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "Quinielas WL",
-    "loading": "Loading...",
+    "loading": "Loading",
     "error": "Error",
     "success": "Success",
     "cancel": "Cancel",
@@ -38,9 +38,11 @@
   },
   "home": {
     "hero": {
-      "title": "Welcome to {brandName}",
+      "title": "DataGol pools!",
+      "title0": "{brandName}'s Pools!",
       "subtitle": "The most complete sports prediction platform",
-      "cta": "Join the demo pool",
+      "tagline": "Show your sports knowledge and compete for incredible prizes. Predict the results, accumulate points and scale in the ranking.",
+      "cta": "Join the pool",
       "viewMyPools": "View my pools",
       "learnMore": "Learn more",
       "platformLabel": "White-Label Platform",
@@ -48,6 +50,7 @@
       "healthIssue": "Services experiencing issues",
       "healthChecking": "Checking status…",
       "multiTenantBadge": "Multi-tenant",
+      "multiUserBadge": "Multi-user",
       "realTimeBadge": "Real-time",
       "howItWorks": {
         "title": "How it works?",
@@ -163,6 +166,7 @@
       "invite": {
         "description": "You have been invited to join this pool",
         "emailLocked": "Email is linked to your invitation",
+        "formTitle": "Invitation Form",
         "validating": "Validating invitation...",
         "resend": "Resend invitation",
         "returningUser": "We'll use your previous registration information"
@@ -249,7 +253,7 @@
     "exactScore": "Exact score",
     "correctSign": "Correct sign",
     "goalDifference": "Goal difference",
-    "loading": "Loading matches...",
+    "loading": "Loading matches",
     "noMatches": "No matches available",
     "unsavedChanges": "{count} unsaved changes",
     "savedSuccess": "{count} predictions saved",
@@ -384,7 +388,7 @@
   },
   "participants": {
     "title": "Participants - {poolSlug}",
-    "loading": "Loading participants...",
+    "loading": "Loading participants",
     "noParticipants": "No participants yet",
     "searchPlaceholder": "Search by name or email",
     "status": {
@@ -446,7 +450,7 @@
   "myPools": {
     "title": "My Pools",
     "subtitle": "Pools you participate in and pending invitations",
-    "loading": "Loading your pools...",
+    "loading": "Loading your pools",
     "filters": {
       "all": "All",
       "active": "Active",
@@ -490,12 +494,13 @@
   "fixtures": {
     "title": "Fixtures - {poolSlug}",
     "subtitle": "Make your predictions before each match starts",
-    "loading": "Loading fixtures...",
+    "loading": "Loading fixtures",
     "noMatches": "No matches available",
     "round": "Round {number}",
     "tabs": {
       "fixtures": "Fixtures",
       "leaderboard": "Leaderboard",
+      "prizes": "Prizes",
       "stats": "Statistics"
     },
     "filters": {
@@ -580,7 +585,7 @@
     "empty": {
       "title": "No Prizes Configured",
       "description": "The organizer hasn't added prizes yet. Check back later.",
-      "notRegistered": "Register to see your chances of winning",
+      "notRegistered": "In order to see your chances of winning, first you need to register your predictions",
       "registerButton": "Register"
     },
     "grid": {

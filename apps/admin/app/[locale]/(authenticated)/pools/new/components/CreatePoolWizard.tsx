@@ -235,7 +235,7 @@ export function CreatePoolWizard() {
   ];
 
   return (
-    <div className="w-full">
+    <div className="w-[calc(100%-1.5rem)]">
       <WizardForm
         steps={steps}
         prevLabel="Atrás"

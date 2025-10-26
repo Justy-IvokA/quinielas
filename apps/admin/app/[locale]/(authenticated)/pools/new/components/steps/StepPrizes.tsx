@@ -88,16 +88,16 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} id="wizard-step-6" className="flex flex-col gap-6">
-      <Alert>
-        <Trophy className="h-4 w-4" />
+      <Alert showIcon={false} variant="info" className="py-2">
+        <Trophy className="h-4 w-4 -mt-2" />
         <AlertDescription>
           Debes configurar al menos el premio para el <strong>1er lugar</strong>. Puedes agregar más premios para otras posiciones si lo deseas.
         </AlertDescription>
       </Alert>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         {fields.map((field, index) => (
-          <div key={field.id} className="rounded-lg border p-4 space-y-4">
+          <div key={field.id} className="rounded-lg border px-4 py-1 space-y-2">
             <div className="flex items-center justify-between">
               <h4 className="font-medium">Premio #{index + 1}</h4>
               {fields.length > 1 && field.rankFrom !== 1 && (
@@ -113,7 +113,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor={`prizes.${index}.rankFrom`}>
                   Posición desde
                   <span className="text-destructive ml-1">*</span>
@@ -122,6 +122,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
                   id={`prizes.${index}.rankFrom`}
                   type="number"
                   min={1}
+                  style={{ height: "30px" }}
                   {...register(`prizes.${index}.rankFrom`, { valueAsNumber: true })}
                 />
                 {errors.prizes?.[index]?.rankFrom?.message && (
@@ -129,7 +130,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
                 )}
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <Label htmlFor={`prizes.${index}.rankTo`}>
                   Posición hasta
                   <span className="text-destructive ml-1">*</span>
@@ -138,6 +139,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
                   id={`prizes.${index}.rankTo`}
                   type="number"
                   min={1}
+                  style={{ height: "30px" }}
                   {...register(`prizes.${index}.rankTo`, { valueAsNumber: true })}
                 />
                 {errors.prizes?.[index]?.rankTo?.message && (
@@ -146,42 +148,46 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor={`prizes.${index}.type`}>Tipo de premio</Label>
-              <select
-                id={`prizes.${index}.type`}
-                {...register(`prizes.${index}.type`)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="CASH">Efectivo</option>
-                <option value="DISCOUNT">Descuento</option>
-                <option value="SERVICE">Servicio</option>
-                <option value="DAY_OFF">Día libre</option>
-                <option value="EXPERIENCE">Experiencia</option>
-                <option value="OTHER">Otro</option>
-              </select>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <Label htmlFor={`prizes.${index}.type`}>Tipo de premio</Label>
+                <select
+                  id={`prizes.${index}.type`}
+                  {...register(`prizes.${index}.type`)}
+                  className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-0 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="CASH">Efectivo</option>
+                  <option value="DISCOUNT">Descuento</option>
+                  <option value="SERVICE">Servicio</option>
+                  <option value="DAY_OFF">Día libre</option>
+                  <option value="EXPERIENCE">Experiencia</option>
+                  <option value="OTHER">Otro</option>
+                </select>
+              </div>
+
+              <div className="space-y-1">
+                <Label htmlFor={`prizes.${index}.title`}>
+                  Título del premio
+                  <span className="text-destructive ml-1">*</span>
+                </Label>
+                <Input
+                  id={`prizes.${index}.title`}
+                  placeholder="¡Primer lugar!"
+                  style={{ height: "30px" }}
+                  {...register(`prizes.${index}.title`)}
+                />
+                {errors.prizes?.[index]?.title?.message && (
+                  <p className="text-sm text-destructive">{errors.prizes[index]?.title?.message}</p>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor={`prizes.${index}.title`}>
-                Título del premio
-                <span className="text-destructive ml-1">*</span>
-              </Label>
-              <Input
-                id={`prizes.${index}.title`}
-                placeholder="$1,000 MXN"
-                {...register(`prizes.${index}.title`)}
-              />
-              {errors.prizes?.[index]?.title?.message && (
-                <p className="text-sm text-destructive">{errors.prizes[index]?.title?.message}</p>
-              )}
-            </div>
-
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor={`prizes.${index}.description`}>Descripción (opcional)</Label>
               <Input
                 id={`prizes.${index}.description`}
                 placeholder="Premio en efectivo para el ganador"
+                style={{ height: "30px" }}
                 {...register(`prizes.${index}.description`)}
               />
               {errors.prizes?.[index]?.description?.message && (
@@ -189,22 +195,24 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
               )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor={`prizes.${index}.value`}>Valor (opcional)</Label>
               <Input
                 id={`prizes.${index}.value`}
                 placeholder="$1,000"
+                style={{ height: "30px" }}
                 {...register(`prizes.${index}.value`)}
               />
               <p className="text-sm text-muted-foreground">Valor monetario o equivalente</p>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1">
               <Label htmlFor={`prizes.${index}.imageUrl`}>URL de imagen (opcional)</Label>
               <Input
                 id={`prizes.${index}.imageUrl`}
                 type="url"
                 placeholder="https://..."
+                style={{ height: "30px" }}
                 {...register(`prizes.${index}.imageUrl`)}
               />
               {errors.prizes?.[index]?.imageUrl?.message && (
@@ -215,8 +223,7 @@ export function StepPrizes({ onSubmit, initialData }: StepPrizesProps) {
         ))}
       </div>
 
-      <Button type="button" variant="outline" onClick={addPrize} className="w-full">
-        <Plus className="h-4 w-4 mr-2" />
+      <Button type="button" variant="default" onClick={addPrize} className="-mt-3 w-1/2 self-end" StartIcon={Plus}>
         Agregar premio
       </Button>
     </form>

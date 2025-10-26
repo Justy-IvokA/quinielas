@@ -69,15 +69,15 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
   }, [accessType, requireCaptcha, requireEmailVerification, emailDomains, maxUsers, startAt, endAt, isValid, onSubmit]);
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} id="wizard-step-5" className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit(handleFormSubmit)} id="wizard-step-5" className="flex flex-col gap-2">
       {/* Access Type */}
-      <div className="space-y-2">
+      <div className="space-y-1">
         <Label>
           Tipo de acceso
           <span className="text-destructive ml-1">*</span>
         </Label>
         <RadioGroup value={accessType} onValueChange={(val) => setValue("accessType", val as any)}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
             <div
               className={`flex items-start gap-3 p-4 rounded-lg border cursor-pointer transition-colors ${
                 accessType === "PUBLIC" ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
@@ -134,10 +134,10 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
 
       {/* Helper Messages for CODE and EMAIL_INVITE */}
       {accessType === "CODE" && (
-        <Alert>
+        <Alert className="py-2 text-sm" showIcon={false} variant="info">
           <Info className="h-4 w-4" />
           <AlertTitle>Códigos de Invitación</AlertTitle>
-          <AlertDescription>
+          <AlertDescription className="text-xs">
             Podrás crear y gestionar lotes de códigos después de crear la quiniela.
             Los códigos permiten controlar quién puede registrarse mediante códigos únicos.
           </AlertDescription>
@@ -145,10 +145,10 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
       )}
 
       {accessType === "EMAIL_INVITE" && (
-        <Alert>
+        <Alert className="py-2 text-sm" showIcon={false} variant="info">
           <Mail className="h-4 w-4" />
           <AlertTitle>Invitaciones por Email</AlertTitle>
-          <AlertDescription>
+          <AlertDescription className="text-xs">
             Podrás crear y enviar invitaciones por email después de crear la quiniela.
             Cada invitación incluirá un enlace único para registrarse.
           </AlertDescription>
@@ -156,7 +156,7 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
       )}
 
       {/* Security Options */}
-      <div className="flex flex-col gap-4 pt-4 border-t">
+      <div className="flex flex-col gap-4 pt-2 border-t">
         <h3 className="font-semibold flex items-center gap-2">
           <Lock className="h-4 w-4" />
           Opciones de seguridad
@@ -195,29 +195,31 @@ export function StepAccess({ onSubmit, initialData }: StepAccessProps) {
       </div>
 
       {/* Advanced Options */}
-      <div className="flex flex-col gap-4 pt-4 border-t">
+      <div className="flex flex-col gap-2 pt-2 border-t">
         <h3 className="font-semibold">Opciones avanzadas (opcional)</h3>
 
-        <div className="space-y-2">
-          <Label htmlFor="emailDomains">Dominios de email permitidos</Label>
-          <Input
-            id="emailDomains"
-            placeholder="empresa.com, partner.com"
-            {...register("emailDomains")}
-          />
-          <p className="text-sm text-muted-foreground">Separados por comas (ej: empresa.com, partner.com)</p>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="space-y-1">
+            <Label htmlFor="emailDomains">Dominios de email permitidos</Label>
+            <Input
+              id="emailDomains"
+              placeholder="empresa.com, partner.com"
+              {...register("emailDomains")}
+            />
+            <p className="text-sm text-muted-foreground">Separados por comas (ej: empresa.com, partner.com)</p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="maxUsers">Límite de usuarios</Label>
-          <Input
-            id="maxUsers"
-            type="number"
-            min={1}
-            placeholder="Sin límite"
-            {...register("maxUsers", { valueAsNumber: true })}
-          />
-          <p className="text-sm text-muted-foreground">Número máximo de participantes</p>
+          <div className="space-y-1">
+            <Label htmlFor="maxUsers">Límite de usuarios</Label>
+            <Input
+              id="maxUsers"
+              type="number"
+              min={1}
+              placeholder="Sin límite"
+              {...register("maxUsers", { valueAsNumber: true })}
+            />
+            <p className="text-sm text-muted-foreground">Número máximo de participantes</p>
+          </div>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">

@@ -57,20 +57,14 @@ export function StepReview({ wizardData }: StepReviewProps) {
   });
 
   const handleCreate = () => {
-    setIsCreating(true);
-    
-    // ⚠️ IMPORTANTE: NO usar roundLabel para importar
-    // Razón: Si usuario selecciona múltiples jornadas (J14, J15, J16),
-    // roundLabel solo importaría UNA jornada de la API.
-    // Solución: Importar toda la temporada y filtrar en frontend con rounds.start/end
-    
-    createMutation.mutate({
+    const datos = {
       slug: wizardData.template.slug,
       title: wizardData.template.title,
       description: wizardData.template.description || undefined,
       status: wizardData.template.status,
       sportId: wizardData.sportId || undefined,
       competitionExternalId: wizardData.competitionExternalId,
+      competitionName: wizardData.competitionName,
       seasonYear: wizardData.seasonYear,
       stageLabel: wizardData.stageLabel || undefined,
       roundLabel: undefined, // ✅ NO filtrar en import - importar toda la temporada
@@ -92,7 +86,17 @@ export function StepReview({ wizardData }: StepReviewProps) {
         requireCaptcha: wizardData.accessDefaults.requireCaptcha,
         requireEmailVerification: wizardData.accessDefaults.requireEmailVerification
       }
-    });
+    };
+
+    console.log("🔥 DATOS TEMPLATE:", datos);
+  
+    setIsCreating(true);
+    
+    // ⚠️ IMPORTANTE: NO usar roundLabel para importar
+    // Razón: Si usuario selecciona múltiples jornadas (J14, J15, J16),
+    // roundLabel solo importaría UNA jornada de la API.
+    // Solución: Importar toda la temporada y filtrar en frontend con rounds.start/end
+    createMutation.mutate(datos);
   };
 
   const getAccessTypeLabel = (type: string) => {
@@ -114,16 +118,16 @@ export function StepReview({ wizardData }: StepReviewProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="rounded-lg border bg-muted/50 p-4">
-        <div className="flex items-center gap-2 mb-2">
+    <div className="flex flex-col gap-2">
+      <div className="rounded-lg border bg-muted/50 p-2">
+        <div className="flex items-center gap-2">
           <CheckCircle2 className="h-5 w-5 text-green-600" />
           <h3 className="font-semibold">{t("title")}</h3>
         </div>
         <p className="text-sm text-muted-foreground">{t("description")}</p>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid gap-2">
         {/* Competition & Season */}
         <Card>
           <CardHeader>
@@ -132,11 +136,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
               {t("competitionTitle")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Deporte ID:</span>
-              <span className="font-medium">{wizardData.sportId}</span>
-            </div>
+          <CardContent className="grid gap-0 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t("competitionLabel")}:</span>
               <span className="font-medium">{wizardData.competitionName}</span>
@@ -171,7 +171,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
               {t("templateTitle")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm">
+          <CardContent className="grid gap-0 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t("titleLabel")}:</span>
               <span className="font-medium">{wizardData.template.title}</span>
@@ -183,7 +183,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
             {wizardData.template.description && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">{t("descriptionLabel")}:</span>
-                <span className="font-medium text-right max-w-xs">{wizardData.template.description}</span>
+                <span className="font-medium text-right max-w-xs md:max-w-md line-clamp-1">{wizardData.template.description}</span>
               </div>
             )}
             <div className="flex justify-between">
@@ -201,7 +201,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
               {t("rulesTitle")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm">
+          <CardContent className="grid gap-0 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t("exactScoreLabel")}:</span>
               <span className="font-semibold text-yellow-600 dark:text-yellow-500">
@@ -231,7 +231,7 @@ export function StepReview({ wizardData }: StepReviewProps) {
               {t("accessTitle")}
             </CardTitle>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm">
+          <CardContent className="grid gap-0 text-sm">
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t("accessTypeLabel")}:</span>
               <span className="font-medium">{getAccessTypeLabel(wizardData.accessDefaults.accessType)}</span>

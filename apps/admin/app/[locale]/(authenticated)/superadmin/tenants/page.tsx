@@ -95,18 +95,18 @@ export default function TenantsPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>
-          <p className="text-foreground mt-1">
+          <h1 className="text-3xl font-bold text-primary">{t('title')}</h1>
+          <p className="text-accent mt-1">
             {t('description')}
           </p>
         </div>
 
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button StartIcon={PlusIcon}>
+            <Button StartIcon={PlusIcon} className="text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
               {t('createButton')}
             </Button>
           </DialogTrigger>
@@ -277,18 +277,18 @@ export default function TenantsPage() {
         <>
           <div className="border rounded-lg text-foreground">
             <Table>
-              <TableHeader>
+              <TableHeader className="border-card/80 bg-card/70 p-4 shadow-sm backdrop-blur">
                 <TableRow>
-                  <TableHead>{t('table.name')}</TableHead>
-                  <TableHead>{t('table.slug')}</TableHead>
-                  <TableHead className="text-center">{t('table.brands')}</TableHead>
-                  <TableHead className="text-center">{t('table.pools')}</TableHead>
-                  <TableHead className="text-center">{t('table.members')}</TableHead>
-                  <TableHead>{t('table.created')}</TableHead>
-                  <TableHead className="text-right">{t('table.actions')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.name')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.slug')}</TableHead>
+                  <TableHead className="text-center text-secondary">{t('table.brands')}</TableHead>
+                  <TableHead className="text-center text-secondary">{t('table.pools')}</TableHead>
+                  <TableHead className="text-center text-secondary">{t('table.members')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.created')}</TableHead>
+                  <TableHead className="text-right text-secondary">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="border-border/50 bg-card/40 p-4 shadow-sm backdrop-blur">
                 {data?.tenants.map((tenant) => (
                   <TableRow
                     key={tenant.id}

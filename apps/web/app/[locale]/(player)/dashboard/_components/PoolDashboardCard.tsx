@@ -39,20 +39,18 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
   const nextKickoffDate = pool.nextKickoff ? new Date(pool.nextKickoff) : null;
 
   return (
-    <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group">
+    <div className="backdrop-blur-md bg-card/20 dark:bg-card/70 border border-card/10 dark:border-card/80 shadow-xl rounded-xl overflow-hidden hover:border-primary/50 transition-all duration-300 group">
       {/* Brand Header */}
-      <div className="bg-gradient-to-r from-primary/20 to-primary/10 p-4 border-b border-white/10">
+      <div className="bg-gradient-to-r from-card/50 to-card/10 p-4 border-b border-card/10">
         <div className="flex items-center gap-3">
-          {pool.brand.logoUrl && (
-            <img
-              src={pool.competition.logoUrl || pool.brand.logoUrl}
-              alt={pool.brand.name}
-              className="w-10 h-10 rounded-lg object-cover"
-            />
-          )}
+          <img
+            src={pool.competition.logoUrl ? pool.competition.logoUrl : pool.brand.logoUrl || ""}
+            alt={pool.brand.name}
+            className="w-10 h-10 rounded-lg object-cover"
+          />
           <div className="flex-1 min-w-0">
-            <h3 className="text-primary font-bold truncate">{pool.title}</h3>
-            <p className="text-white/60 text-sm truncate">{pool.seasonLabel}</p>
+            <h3 className="text-primary dark:text-secondary font-bold truncate">{pool.title}</h3>
+            <p className="text-accent text-sm truncate">{pool.seasonLabel}</p>
           </div>
         </div>
       </div>
@@ -61,10 +59,10 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
       <div className="p-4 space-y-4">
         {/* Next Match */}
         {nextKickoffDate && (
-          <div className="flex items-center gap-2 text-white/80">
-            <Calendar className="w-4 h-4 text-primary" />
+          <div className="flex items-center gap-2 text-foreground">
+            <Calendar className="w-4 h-4 text-primary dark:text-secondary" />
             <div className="flex-1">
-              <p className="text-xs text-primary">{t("card.nextMatch")}</p>
+              <p className="text-xs text-primary dark:text-secondary">{t("card.nextMatch")}</p>
               <p className="text-sm font-medium">
                 {format(nextKickoffDate, "d MMM, HH:mm", { locale: es })}
               </p>
@@ -73,10 +71,10 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
         )}
 
         {/* Participants */}
-        <div className="flex items-center gap-2 text-white/80">
-          <Users className="w-4 h-4 text-primary" />
+        <div className="flex items-center gap-2 text-foreground">
+          <Users className="w-4 h-4 text-primary dark:text-secondary" />
           <div className="flex-1">
-            <p className="text-xs text-white/60">{t("card.participants")}</p>
+            <p className="text-xs text-primary dark:text-secondary">{t("card.participants")}</p>
             <p className="text-sm font-medium">{pool.participantCount}</p>
           </div>
         </div>
@@ -91,7 +89,7 @@ export function PoolDashboardCard({ pool, locale }: PoolDashboardCardProps) {
         {/* Action Button */}
         <Button
           onClick={handleNavigate}
-          className="w-full bg-primary/20 hover:bg-primary/30 text-white border border-primary/40 group-hover:bg-primary group-hover:border-primary transition-all"
+          className="w-full bg-card/20 dark:bg-card/70 hover:bg-primary/70 hover:dark:bg-secondary/70 text-foreground border border-card/30 dark:border-card/80 transition-all"
           variant="ghost"
           StartIcon={ArrowRight}
           EndIcon={ArrowLeft}

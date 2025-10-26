@@ -220,7 +220,7 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
     });
 
     if (!leagueResponse.response || leagueResponse.response.length === 0) {
-      throw new Error(`League ${params.competitionExternalId} not found for season ${params.year}`);
+      throw new Error(`No se encontró la liga ${params.competitionExternalId} para la temporada ${params.year}`);
     }
 
     const league = leagueResponse.response[0];
@@ -231,26 +231,26 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
     let roundFilter: string | undefined;
     if (params.stageLabel && params.roundLabel) {
       roundFilter = `${params.stageLabel} - ${params.roundLabel}`;
-    } else if (params.roundLabel) {
+    } else if (params.stageLabel) {
       // Try common patterns
-      roundFilter = `Regular Season - ${params.roundLabel}`;
+      roundFilter = params.stageLabel;
     }
 
     // Fetch fixtures with round filter
     const fixturesParams: Record<string, string> = {
       league: params.competitionExternalId,
-      season: params.year.toString()
+      season: params.year.toString(),
     };
     
     if (roundFilter) {
       fixturesParams.round = roundFilter;
-      console.log(`[API-Football] Filtering by round: "${roundFilter}"`);
+      console.log(`[API-Football] Filtrando por etapa - jornada: "${roundFilter}"`);
     }
 
     const fixturesResponse = await this.request<any[]>("/fixtures", fixturesParams);
 
     if (!fixturesResponse.response || fixturesResponse.response.length === 0) {
-      console.warn(`[API-Football] No fixtures found for round filter: "${roundFilter}"`);
+      console.warn(`[API-Football] No se encontraron partidos para la etapa - jornada: "${roundFilter}"`);
     }
 
     const matches: MatchDTO[] = fixturesResponse.response.map((item: any) => {

@@ -27,20 +27,20 @@ export function UserPoolsToolbar({
   return (
     <div className="flex flex-col sm:flex-row gap-4 mb-6">
       {/* Search */}
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/50" />
+      <div className="relative flex-1 bg-card/10 border-card/20 dark:bg-card/50 dark:border-card/60 backdrop-blur-md rounded-lg">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary dark:text-secondary" />
         <Input
           type="text"
           placeholder={t("searchPlaceholder")}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-10 bg-white/10 border-white/20 text-primary placeholder:text-primary/50 focus:bg-white/15"
+          className="pl-10 bg-transparent text-foreground placeholder:text-foreground-muted focus:bg-white/15"
         />
       </div>
 
       {/* Filter */}
       <Select value={filter} onValueChange={(value) => onFilterChange(value as typeof filter)}>
-        <SelectTrigger className="w-full sm:w-[180px] bg-white/10 border-white/20 text-primary">
+        <SelectTrigger className="w-full sm:w-[180px] bg-card/10 border-card/20 dark:bg-card/50 dark:border-card/60 backdrop-blur-md text-foreground">
           <SelectValue placeholder={tCommon("filter")} />
         </SelectTrigger>
         <SelectContent>
@@ -53,7 +53,7 @@ export function UserPoolsToolbar({
 
       {/* Sort */}
       <Select value={sort} onValueChange={(value) => onSortChange(value as typeof sort)}>
-        <SelectTrigger className="w-full sm:w-[200px] bg-white/10 border-white/20 text-primary">
+        <SelectTrigger className="w-full sm:w-[200px] bg-card/10 border-card/20 dark:bg-card/50 dark:border-card/60 backdrop-blur-md text-foreground">
           <SelectValue placeholder={tCommon("sort")} />
         </SelectTrigger>
         <SelectContent>

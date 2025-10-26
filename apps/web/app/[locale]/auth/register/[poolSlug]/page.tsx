@@ -190,8 +190,8 @@ async function RegisterContent({ params, searchParams }: RegisterPageProps) {
             poolSlug={pool.slug}
             userId={session.user.id}
             inviteToken={token}
-            termsUrl="/terms"
-            privacyUrl="/privacy"
+            termsUrl="/legal/terms"
+            privacyUrl="/legal/privacy"
             brandName={brand?.name}
             brandLogo={brand?.theme && typeof brand.theme === 'object' ? (brand.theme as any).logo : null}
             heroAssets={heroAssets}

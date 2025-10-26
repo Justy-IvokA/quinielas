@@ -112,18 +112,18 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
   if (hasNoPools) {
     return (
       <div className="container mx-auto px-4 py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
-        <div className="mb-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
-          <h1 className="text-primary/80 text-4xl font-bold mb-2">{t("title")}</h1>
-          <p className="text-primary/70">{t("subtitle")}</p>
+        <div className="mb-8">
+          <h1 className="text-primary text-4xl font-bold mb-0">{t("title")}</h1>
+          <p className="text-accent">{t("subtitle")}</p>
         </div>
 
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-2xl p-12 max-w-md">
-            <Trophy className="w-16 h-16 text-white/50 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">{t("empty.title")}</h2>
-            <p className="text-white/70 mb-6">{t("empty.description")}</p>
+          <div className="backdrop-blur-md bg-primary/50 dark:bg-secondary/50 border border-primary/60 dark:border-secondary/60 shadow-xl rounded-2xl p-12 max-w-md">
+            <Trophy className="w-16 h-16 text-secondary/80 dark:text-primary/80 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-secondary dark:text-primary mb-2">{t("empty.title")}</h2>
+            <p className="text-white/80 mb-6">{t("empty.description", { brandName: brand?.name || "DataGol" })}</p>
             <Button
-              onClick={() => window.location.href = `/${locale}/pools`}
+              onClick={() => window.location.href = `/${locale}/`}
               className="bg-primary hover:bg-primary/90"
             >
               {t("empty.browseButton")}
@@ -142,7 +142,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
           <BackButton fallbackHref="/" />
           <div className="flex flex-col gap-0">
             <h1 className="text-primary text-4xl font-bold">{t("title")}</h1>
-            <p className="text-secondary -mt-1">{t("subtitle")}</p>
+            <p className="text-accent -mt-1">{t("subtitle")}</p>
           </div>
         </div>
       </header>
@@ -160,7 +160,7 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
       {/* No results with filters */}
       {hasNoResults && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-2xl p-12 max-w-md">
+          <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-2xl p-12 max-w-md">
             <Trophy className="w-16 h-16 text-white/50 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-white mb-2">{t("empty.noResults")}</h2>
             <p className="text-white/70 mb-6">{t("empty.tryDifferentFilters")}</p>
@@ -182,21 +182,21 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
       {/* Stats Overview */}
       {!hasNoResults && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl p-6">
+        <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-2xl p-6">
           <div className="flex items-center gap-3">
-            <Trophy className="w-8 h-8 text-primary" />
+            <Trophy className="w-8 h-8 text-primary dark:text-secondary" />
             <div>
-              <p className="text-primary text-sm">{t("stats.activePools")}</p>
+              <p className="text-primary dark:text-secondary text-sm">{t("stats.activePools")}</p>
               <p className="text-2xl font-bold text-white">{activePools.length}</p>
             </div>
           </div>
         </div>
 
-        <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl p-6">
+        <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-2xl p-6">
           <div className="flex items-center gap-3">
-            <Calendar className="w-8 h-8 text-primary" />
+            <Calendar className="w-8 h-8 text-primary dark:text-secondary" />
             <div>
-              <p className="text-primary text-sm">{t("stats.upcomingMatches")}</p>
+              <p className="text-primary dark:text-secondary text-sm">{t("stats.upcomingMatches")}</p>
               <p className="text-2xl font-bold text-white">
                 {activePools.filter((p) => p.nextKickoff).length}
               </p>
@@ -204,11 +204,11 @@ export function DashboardView({ locale, tenant, brand, user }: DashboardViewProp
           </div>
         </div>
 
-        <div className="backdrop-blur-md bg-white/10 dark:bg-slate-900/20 border border-white/20 dark:border-white/10 shadow-xl rounded-xl p-6">
+        <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-2xl p-6">
           <div className="flex items-center gap-3">
-            <TrendingUp className="w-8 h-8 text-primary" />
+            <TrendingUp className="w-8 h-8 text-primary dark:text-secondary" />
             <div>
-              <p className="text-primary text-sm">{t("stats.totalParticipants")}</p>
+              <p className="text-primary dark:text-secondary text-sm">{t("stats.totalParticipants")}</p>
               <p className="text-2xl font-bold text-white">
                 {activePools.reduce((sum, p) => sum + p.participantCount, 0)}
               </p>

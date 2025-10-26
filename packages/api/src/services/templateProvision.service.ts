@@ -136,6 +136,10 @@ export async function provisionTemplateToTenant(
       });
     }
 
+    // ✅ IMPORTANT: Log template configuration for debugging
+    console.log(`[TemplateProvision] Template config: competitionExternalId=${template.competitionExternalId}, seasonYear=${template.seasonYear}, stageLabel=${template.stageLabel}, roundLabel=${template.roundLabel}`);
+    console.log(`[TemplateProvision] Template rules: ${JSON.stringify(template.rules, null, 2)}`);
+
     if (template.stageLabel || template.roundLabel) {
       console.log(`[TemplateProvision] Fetching filtered season: stage=${template.stageLabel}, round=${template.roundLabel}`);
       // Check if provider supports fetchSeasonRound
@@ -155,7 +159,7 @@ export async function provisionTemplateToTenant(
         });
       }
     } else {
-      console.log(`[TemplateProvision] Fetching full season`);
+      console.log(`[TemplateProvision] ✅ Fetching FULL season (roundLabel is undefined - import all matches)`);
       seasonData = await provider.fetchSeason({
         competitionExternalId: template.competitionExternalId,
         year: template.seasonYear
@@ -171,20 +175,55 @@ export async function provisionTemplateToTenant(
 
     console.log(`[TemplateProvision] Fetched ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`);
 
-    // Create or get Competition
-    let competition = await prisma.competition.findFirst({
+    // ✅ Use competitionName if available, otherwise fallback to title
+    const competitionName = (template.meta as any)?.competitionName || template.title;
+    const competitionSlug = competitionName.toLowerCase().replace(/\s+/g, "-");
+
+    // ✅ IMPORTANT: Search by competitionExternalId first (most reliable)
+    // Workaround: ExternalMap doesn't have direct relation to Competition
+    // So we search ExternalMap first, then fetch Competition by entityId
+    let competition: any = null;
+    
+    const externalMapForCompetition = await prisma.externalMap.findFirst({
       where: {
-        sportId: sport.id,
-        slug: template.title.toLowerCase().replace(/\s+/g, "-")
+        externalId: template.competitionExternalId,
+        entityType: "COMPETITION"
       }
     });
 
+    if (externalMapForCompetition) {
+      // Found external mapping - fetch the Competition
+      competition = await prisma.competition.findUnique({
+        where: { id: externalMapForCompetition.entityId }
+      });
+      
+      if (competition) {
+        console.log(`[TemplateProvision] ✅ Found Competition via ExternalMap: ${competition.id} (${competition.name})`);
+      }
+    }
+
+    // Fallback: search by name if not found by externalId
     if (!competition) {
+      competition = await prisma.competition.findFirst({
+        where: {
+          sportId: sport.id,
+          name: competitionName
+        }
+      });
+      
+      if (competition) {
+        console.log(`[TemplateProvision] ✅ Found Competition by name: ${competition.id} (${competition.name})`);
+      }
+    }
+
+    // Create if still not found
+    if (!competition) {
+      console.log(`[TemplateProvision] Creating new Competition: name=${competitionName}, slug=${competitionSlug}`);
       competition = await prisma.competition.create({
         data: {
           sportId: sport.id,
-          slug: template.title.toLowerCase().replace(/\s+/g, "-"),
-          name: template.title
+          slug: competitionSlug,
+          name: competitionName
         }
       });
     }
@@ -218,13 +257,16 @@ export async function provisionTemplateToTenant(
     });
 
     if (!season) {
+      console.log(`[TemplateProvision] Creating new Season: year=${template.seasonYear}, competitionId=${competition.id}`);
       season = await prisma.season.create({
         data: {
           competitionId: competition.id,
-          name: `${template.title} ${template.seasonYear}`,
+          name: `${template.title}`,
           year: template.seasonYear
         }
       });
+    } else {
+      console.log(`[TemplateProvision] ✅ Reusing existing Season: ${season.id} (${season.name})`);
     }
 
     // Import teams
@@ -291,13 +333,14 @@ export async function provisionTemplateToTenant(
 
     // Import matches
     let importedMatches = 0;
+    console.log(`[TemplateProvision] Starting match import: ${seasonData.matches.length} matches to process`);
 
     for (const matchDTO of seasonData.matches) {
       const homeTeamId = teamIdMap.get(matchDTO.homeTeamExternalId);
       const awayTeamId = teamIdMap.get(matchDTO.awayTeamExternalId);
 
       if (!homeTeamId || !awayTeamId) {
-        console.warn(`[TemplateProvision] Skipping match: team mapping not found`);
+        console.warn(`[TemplateProvision] Skipping match: team mapping not found for ${matchDTO.homeTeamExternalId} vs ${matchDTO.awayTeamExternalId}`);
         continue;
       }
 
@@ -363,6 +406,12 @@ export async function provisionTemplateToTenant(
       tieBreakers: ["EXACT_SCORES", "CORRECT_SIGNS"]
     };
 
+    // ✅ IMPORTANT: Log rules including round filtering
+    console.log(`[TemplateProvision] Creating pool with rules: ${JSON.stringify(rules, null, 2)}`);
+    if (rules.rounds) {
+      console.log(`[TemplateProvision] ✅ Pool will filter matches by rounds: ${rules.rounds.start}-${rules.rounds.end}`);
+    }
+
     // Create Pool
     const pool = await prisma.pool.create({
       data: {
@@ -377,6 +426,8 @@ export async function provisionTemplateToTenant(
         ruleSet: rules
       }
     });
+
+    console.log(`[TemplateProvision] ✅ Pool created: ${pool.id} (${pool.slug}) with ${importedMatches} matches`);
 
     // Parse access defaults from template
     const accessDefaults = template.accessDefaults as any || {};

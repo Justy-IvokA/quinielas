@@ -23,6 +23,7 @@ export default async function HomePage() {
   if (host.includes(":")) {
     host = host.split(":")[0];
   }
+  
   const { brand } = await resolveTenantAndBrandFromHost(host);
   
   const brandName = brand?.name || webEnv.NEXT_PUBLIC_APP_NAME;

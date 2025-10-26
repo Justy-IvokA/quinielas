@@ -28,7 +28,7 @@ import {
   DialogHeader,
   DialogTitle
 } from "@qp/ui";
-import { PlusIcon, SearchIcon, FileTextIcon, CheckCircle2, Archive, FileEdit, UserPlus } from "lucide-react";
+import { PlusIcon, SearchIcon, FileTextIcon, CheckCircle2, Archive, FileEdit, UserPlus, Pencil, Trash2 } from "lucide-react";
 
 export default function TemplatesPage() {
   const t = useTranslations('superadmin.templates');
@@ -37,6 +37,7 @@ export default function TemplatesPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [assignDialogOpen, setAssignDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [selectedTenant, setSelectedTenant] = useState<string>("");
 
@@ -67,6 +68,19 @@ export default function TemplatesPage() {
     }
   });
 
+  // Mutation to delete template
+  const deleteMutation = trpc.superadmin.templates.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Plantilla eliminada exitosamente");
+      setDeleteDialogOpen(false);
+      setSelectedTemplate(null);
+      refetch();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al eliminar plantilla");
+    }
+  });
+
   const handleAssignClick = (templateId: string) => {
     setSelectedTemplate(templateId);
     setAssignDialogOpen(true);
@@ -84,6 +98,19 @@ export default function TemplatesPage() {
     });
   };
 
+  const handleDeleteClick = (templateId: string) => {
+    setSelectedTemplate(templateId);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteSubmit = () => {
+    if (!selectedTemplate) return;
+
+    deleteMutation.mutate({
+      id: selectedTemplate
+    });
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PUBLISHED":
@@ -98,16 +125,16 @@ export default function TemplatesPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-3xl font-bold text-primary">{t('title')}</h1>
+          <p className="text-accent mt-1">
             {t('description')}
           </p>
         </div>
 
-        <Button onClick={() => router.push("/superadmin/templates/new")} StartIcon={PlusIcon}>
+        <Button onClick={() => router.push("/superadmin/templates/new")} StartIcon={PlusIcon} className="text-foreground [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
           {t('createButton')}
         </Button>
       </div>
@@ -141,21 +168,21 @@ export default function TemplatesPage() {
         </div>
       ) : (
         <>
-          <div className="border rounded-lg">
+          <div className="border rounded-lg text-foreground">
             <Table>
-              <TableHeader>
+              <TableHeader className="border-card/80 bg-card/70 p-4 shadow-sm backdrop-blur">
                 <TableRow>
-                  <TableHead>{t('table.name')}</TableHead>
-                  <TableHead>{t('table.slug')}</TableHead>
-                  <TableHead>{t('table.status')}</TableHead>
-                  <TableHead>{t('table.sport')}</TableHead>
-                  <TableHead>{t('table.season')}</TableHead>
-                  <TableHead className="text-center">{t('table.assignments')}</TableHead>
-                  <TableHead>{t('table.created')}</TableHead>
-                  <TableHead className="text-right">{t('table.actions')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.name')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.slug')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.status')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.sport')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.season')}</TableHead>
+                  <TableHead className="text-center text-secondary">{t('table.assignments')}</TableHead>
+                  <TableHead className="text-secondary">{t('table.created')}</TableHead>
+                  <TableHead className="text-right text-secondary">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="border-card/50 bg-card/40 p-4 shadow-sm backdrop-blur">
                 {data?.templates.map((template) => (
                   <TableRow
                     key={template.id}
@@ -187,27 +214,42 @@ export default function TemplatesPage() {
                       {new Date(template.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          StartIcon={UserPlus}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAssignClick(template.id);
-                          }}
-                        >
-                          Asignar
-                        </Button>
+                      <div className="flex items-center justify-end gap-1">
                         <Button
                           variant="ghost"
                           size="sm"
+                          className="h-8 w-8 p-0 hover:bg-blue-500/20"
+                          title="Editar plantilla"
                           onClick={(e) => {
                             e.stopPropagation();
                             router.push(`/superadmin/templates/${template.id}/edit`);
                           }}
                         >
-                          {t('actions.edit')}
+                          <Pencil className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-amber-500/20"
+                          title="Asignar a tenant"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleAssignClick(template.id);
+                          }}
+                        >
+                          <UserPlus className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 hover:bg-red-500/20"
+                          title="Eliminar plantilla"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(template.id);
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
                         </Button>
                       </div>
                     </TableCell>
@@ -290,6 +332,57 @@ export default function TemplatesPage() {
               loading={assignMutation.isPending}
             >
               Asignar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de Eliminación */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-600 dark:text-red-400">
+              <Trash2 className="h-5 w-5" />
+              Eliminar Plantilla Permanentemente
+            </DialogTitle>
+            <DialogDescription>
+              ⚠️ Esta acción no se puede deshacer. Se eliminará la plantilla de forma permanente.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-4">
+            <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-4 border border-red-200 dark:border-red-800">
+              <h4 className="font-semibold text-red-900 dark:text-red-200 mb-2">Alcances de la eliminación:</h4>
+              <ul className="text-sm text-red-800 dark:text-red-300 space-y-1 list-disc list-inside">
+                <li>La plantilla se eliminará de la base de datos</li>
+                <li>No se podrá recuperar después de eliminar</li>
+                <li>Si la plantilla está asignada a tenants, las asignaciones también se eliminarán</li>
+                <li>Los pools creados a partir de esta plantilla NO serán afectados</li>
+              </ul>
+            </div>
+
+            <div className="text-sm text-muted-foreground">
+              <p>Solo se pueden eliminar plantillas en estado <strong>DRAFT</strong> sin asignaciones activas.</p>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setSelectedTemplate(null);
+              }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteSubmit}
+              disabled={deleteMutation.isPending}
+              loading={deleteMutation.isPending}
+            >
+              Eliminar Permanentemente
             </Button>
           </DialogFooter>
         </DialogContent>

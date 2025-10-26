@@ -61,10 +61,20 @@ export function PoolFixturesManager({ poolId }: PoolFixturesManagerProps) {
     { enabled: !!seasonId }
   );
   
+  // ✅ Filter matches by rounds if specified in pool rules
+  const ruleSet = pool?.ruleSet as any;
+  const roundsFilter = ruleSet?.rounds;
+  
+  const filteredMatches = allMatches?.filter(m => {
+    if (!roundsFilter) return true; // No filter - show all
+    if (m.round === null || m.round === undefined) return false; // Skip matches without round
+    return m.round >= roundsFilter.start && m.round <= roundsFilter.end;
+  }) || [];
+  
   // Filter matches by status
-  const upcomingMatches = allMatches?.filter(m => m.status === "SCHEDULED") || [];
-  const liveMatches = allMatches?.filter(m => m.status === "LIVE") || [];
-  const finishedMatches = allMatches?.filter(m => m.status === "FINISHED") || [];
+  const upcomingMatches = filteredMatches.filter(m => m.status === "SCHEDULED") || [];
+  const liveMatches = filteredMatches.filter(m => m.status === "LIVE") || [];
+  const finishedMatches = filteredMatches.filter(m => m.status === "FINISHED") || [];
   
   const isLoadingUpcoming = isLoadingMatches;
   const isLoadingLive = isLoadingMatches;
@@ -118,7 +128,7 @@ export function PoolFixturesManager({ poolId }: PoolFixturesManagerProps) {
         <CardHeader>
           <CardTitle>{pool.name}</CardTitle>
           <CardDescription>
-            {competitionName} - {seasonName} ({allMatches?.length || 0} partidos)
+            {competitionName} - {seasonName} ({filteredMatches.length} partidos{roundsFilter ? ` - Jornadas ${roundsFilter.start}-${roundsFilter.end}` : ""})
           </CardDescription>
         </CardHeader>
       </Card>

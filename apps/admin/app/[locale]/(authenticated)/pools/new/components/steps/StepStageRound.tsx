@@ -220,7 +220,7 @@ export function StepStageRound({
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-2">
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
@@ -229,7 +229,7 @@ export function StepStageRound({
       </Alert>
 
       {/* Stage Selection */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2 mt-1">
         <div className="flex items-center gap-2">
           <Target className="h-5 w-5 text-muted-foreground" />
           <h3 className="font-semibold">{t("stageTitle")}</h3>
@@ -240,7 +240,7 @@ export function StepStageRound({
             {stagesData.stages.map((stage) => (
               <div
                 key={stage.label}
-                className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                className={`flex items-start gap-2 px-2 py-1 rounded-lg border cursor-pointer transition-colors ${
                   selectedStage === stage.label
                     ? "border-primary bg-primary/5"
                     : "border-border hover:border-primary/50"
@@ -249,7 +249,7 @@ export function StepStageRound({
                 <RadioGroupItem 
                   value={stage.label} 
                   id={`stage-${stage.label}`} 
-                  className="mt-1"
+                  className="mt-2"
                 />
                 <Label 
                   htmlFor={`stage-${stage.label}`} 
@@ -270,7 +270,7 @@ export function StepStageRound({
 
       {/* Round Selection */}
       {selectedStage && selectedStageData && selectedStageData.rounds && selectedStageData.rounds.length > 0 && (
-        <div className="flex flex-col gap-4 pt-4 border-t">
+        <div className="flex flex-col gap-2 border-t">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">{t("roundTitle")}</h3>
             <div className="flex items-center gap-2">
@@ -305,7 +305,7 @@ export function StepStageRound({
                   return (
                     <div
                       key={round}
-                      className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
+                      className={`flex items-center gap-2 px-2 py-1 rounded-lg border transition-colors ${
                         !isActive
                           ? "opacity-40 cursor-not-allowed border-muted"
                           : isSelected
@@ -364,7 +364,7 @@ export function StepStageRound({
             </div>
           </div>
 
-          {previewData.sampleMatches.length > 0 && (
+          {/* {previewData.sampleMatches.length > 0 && (
             <div className="mt-4 pt-4 border-t">
               <p className="text-xs text-muted-foreground mb-2">{t("sampleMatchesLabel")}:</p>
               <div className="space-y-1">
@@ -375,12 +375,12 @@ export function StepStageRound({
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </div>
       )}
 
       {/* Info sobre selección */}
-      {selectedRounds.size > 0 && !selectAllRounds && (
+      {/* {selectedRounds.size > 0 && !selectAllRounds && (
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
@@ -403,7 +403,7 @@ export function StepStageRound({
             {t("continueWithoutSelection")}
           </AlertDescription>
         </Alert>
-      )}
+      )} */}
     </div>
   );
 }

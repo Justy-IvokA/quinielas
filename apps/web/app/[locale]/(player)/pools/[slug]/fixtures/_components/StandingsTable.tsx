@@ -141,7 +141,7 @@ export function StandingsTable({ locale, tenantSlug }: StandingsTableProps) {
 
   if (error) {
     return (
-      <Alert variant="default" className="bg-red-500/10 border-red-500/20">
+      <Alert variant="default" className="bg-red-500/10 border-red-500/20" showIcon={false}>
         <AlertCircle className="h-4 w-4 text-red-500" />
         <AlertDescription className="text-red-200">
           {error.message || (locale === "es-MX" ? "Error al cargar estadísticas" : "Error loading standings")}
@@ -152,7 +152,7 @@ export function StandingsTable({ locale, tenantSlug }: StandingsTableProps) {
 
   if (!standings || !standings.league.standings || standings.league.standings.length === 0) {
     return (
-      <Alert className="bg-blue-500/10 border-blue-500/20">
+      <Alert className="bg-blue-500/10 border-blue-500/20" showIcon={false}>
         <AlertCircle className="h-4 w-4 text-blue-400" />
         <AlertDescription className="text-blue-200">
           {locale === "es-MX"

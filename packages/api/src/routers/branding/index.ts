@@ -388,24 +388,35 @@ export const brandingRouter = router({
         // Upload new file
         const result = await storage.upload(buffer, key, input.contentType);
 
-        // Audit log
-        await ctx.prisma.auditLog.create({
-          data: {
-            tenantId: ctx.tenant.id,
-            actorId: ctx.session?.user?.id,
-            action: "brand.media.upload",
-            resourceType: "Brand",
-            metadata: {
-              kind: input.kind,
-              filename: input.filename,
-              contentType: input.contentType,
-              size: input.size,
-              url: result.url
-            },
-            ipAddress: ctx.ip,
-            userAgent: ctx.userAgent
+        // Audit log - only if user exists
+        const actorId = ctx.session?.user?.id;
+        if (actorId) {
+          // Verify user exists before creating audit log
+          const userExists = await ctx.prisma.user.findUnique({
+            where: { id: actorId },
+            select: { id: true }
+          });
+
+          if (userExists) {
+            await ctx.prisma.auditLog.create({
+              data: {
+                tenantId: ctx.tenant.id,
+                actorId: actorId,
+                action: "brand.media.upload",
+                resourceType: "Brand",
+                metadata: {
+                  kind: input.kind,
+                  filename: input.filename,
+                  contentType: input.contentType,
+                  size: input.size,
+                  url: result.url
+                },
+                ipAddress: ctx.ip,
+                userAgent: ctx.userAgent
+              }
+            });
           }
-        });
+        }
 
         return {
           url: result.url,
@@ -464,22 +475,33 @@ export const brandingRouter = router({
         // Delete file
         await storage.remove(fileKey);
 
-        // Audit log
-        await ctx.prisma.auditLog.create({
-          data: {
-            tenantId: ctx.tenant.id,
-            actorId: ctx.session?.user?.id,
-            action: "brand.media.delete",
-            resourceType: "Brand",
-            metadata: {
-              kind: input.kind,
-              url: input.url,
-              fileKey
-            },
-            ipAddress: ctx.ip,
-            userAgent: ctx.userAgent
+        // Audit log - only if user exists
+        const actorId = ctx.session?.user?.id;
+        if (actorId) {
+          // Verify user exists before creating audit log
+          const userExists = await ctx.prisma.user.findUnique({
+            where: { id: actorId },
+            select: { id: true }
+          });
+
+          if (userExists) {
+            await ctx.prisma.auditLog.create({
+              data: {
+                tenantId: ctx.tenant.id,
+                actorId: actorId,
+                action: "brand.media.delete",
+                resourceType: "Brand",
+                metadata: {
+                  kind: input.kind,
+                  url: input.url,
+                  fileKey
+                },
+                ipAddress: ctx.ip,
+                userAgent: ctx.userAgent
+              }
+            });
           }
-        });
+        }
 
         return {
           success: true,
@@ -596,18 +618,29 @@ export const brandingRouter = router({
         }
       });
 
-      // Audit log
-      await ctx.prisma.auditLog.create({
-        data: {
-          tenantId: ctx.tenant.id,
-          actorId: ctx.session?.user?.id,
-          action: "brand.theme.reset",
-          resourceType: "Brand",
-          resourceId: brand.id,
-          ipAddress: ctx.ip,
-          userAgent: ctx.userAgent
+      // Audit log - only if user exists
+      const actorId = ctx.session?.user?.id;
+      if (actorId) {
+        // Verify user exists before creating audit log
+        const userExists = await ctx.prisma.user.findUnique({
+          where: { id: actorId },
+          select: { id: true }
+        });
+
+        if (userExists) {
+          await ctx.prisma.auditLog.create({
+            data: {
+              tenantId: ctx.tenant.id,
+              actorId: actorId,
+              action: "brand.theme.reset",
+              resourceType: "Brand",
+              resourceId: brand.id,
+              ipAddress: ctx.ip,
+              userAgent: ctx.userAgent
+            }
+          });
         }
-      });
+      }
 
       return {
         id: updatedBrand.id,

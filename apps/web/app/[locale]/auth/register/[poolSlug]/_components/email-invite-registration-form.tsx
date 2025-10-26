@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, AlertCircle, Mail, RefreshCw, Sparkles, Trophy } from "lucide-react";
+import { AlertCircle, Mail, RefreshCw, Sparkles, Trophy } from "lucide-react";
 import { InlineLoader } from "@qp/ui";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { getOptimizedMediaUrl } from "@qp/utils/client";
+import { useSession } from "next-auth/react";
 import { Button } from "@qp/ui/components/button";
 import { Input } from "@qp/ui/components/input";
 import { Checkbox } from "@qp/ui/components/checkbox";
@@ -82,7 +83,7 @@ export function EmailInviteRegistrationForm({
   inviteToken,
   termsUrl,
   privacyUrl,
-  brandName = "Quinielas",
+  brandName = "DataGol",
   brandLogo,
   heroAssets,
   brandColors
@@ -90,20 +91,23 @@ export function EmailInviteRegistrationForm({
   const t = useTranslations("auth.registration");
   const tCommon = useTranslations("common");
   const { theme } = useTheme();
+  const { data: session, status } = useSession();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [invitationEmail, setInvitationEmail] = useState<string | null>(null);
   const [tokenExpired, setTokenExpired] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
   const [userData, setUserData] = useState<{
     displayName?: string | null;
     phone?: string | null;
   } | null>(null);
 
-  // Query to check if user has any previous registrations
-  const { data: existingData, isLoading: isLoadingUserData } = trpc.registration.hasExistingData.useQuery(
-    { userId },
-    { enabled: !!userId }
+  // Determinar si hay sesión activa
+  const hasSession = status === "authenticated" && !!session?.user;
+
+  // Consulta de datos del usuario - solo se ejecuta si hay sesión
+  const { data: userDataFromQuery, isLoading: isLoadingUserData } = trpc.users.getById.useQuery(
+    { id: session?.user?.id || "" },
+    { enabled: hasSession && !!session?.user?.id }
   );
 
   // Get optimized media URLs
@@ -111,7 +115,7 @@ export function EmailInviteRegistrationForm({
   const optimizedLogoUrl = getOptimizedMediaUrl(brandLogo?.url);
 
   const form = useForm<EmailInviteRegistrationFormData>({
-    resolver: zodResolver(createEmailInviteValidationSchema(existingData?.hasData ? existingData : null)),
+    resolver: zodResolver(createEmailInviteValidationSchema(hasSession ? userDataFromQuery : null)),
     defaultValues: {
       displayName: "",
       phone: "",
@@ -119,36 +123,36 @@ export function EmailInviteRegistrationForm({
     }
   });
 
-  // Effect to populate form with existing user data and show modal
+  // Effect to populate form with existing user data when session exists
   useEffect(() => {
-    if (existingData?.hasData) {
-      setHasSession(true);
+    if (hasSession && userDataFromQuery) {
       const newUserData = {
-        displayName: existingData.displayName,
-        phone: existingData.phone
+        displayName: userDataFromQuery.name,
+        phone: userDataFromQuery.phone
       };
       setUserData(newUserData);
 
       // Pre-fill form with existing data
-      if (existingData.displayName) {
-        form.setValue("displayName", existingData.displayName);
+      if (userDataFromQuery.name) {
+        form.setValue("displayName", userDataFromQuery.name);
       }
-      if (existingData.phone) {
-        form.setValue("phone", existingData.phone);
+      if (userDataFromQuery.phone) {
+        form.setValue("phone", userDataFromQuery.phone);
       }
 
       // Check if user has all data complete
-      const hasAllData = existingData.displayName && existingData.phone;
+      const hasAllData = userDataFromQuery.name && userDataFromQuery.phone;
       if (hasAllData) {
         setShowInfoModal(true);
       }
 
       form.clearErrors();
-    } else {
-      setHasSession(false);
+    } else if (!hasSession) {
+      // Clear user data if no session
       setUserData(null);
+      setShowInfoModal(false);
     }
-  }, [existingData, form]);
+  }, [hasSession, userDataFromQuery, form]);
 
   // Validate token on mount
   const validateTokenQuery = trpc.registration.validateInviteToken.useQuery(
@@ -279,7 +283,7 @@ export function EmailInviteRegistrationForm({
         
         {/* Registration Card */}
         <div className="relative w-full max-w-5xl">
-          <div className="grid md:grid-cols-[45%,55%] rounded-2xl overflow-hidden shadow-2xl h-auto md:h-[65vh] md:min-h-[500px] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+          <div className="grid md:grid-cols-[45%,55%] rounded-2xl overflow-hidden shadow-2xl h-auto md:h-[85vh] md:min-h-[500px] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
 
             {/* Floating badges - Hidden on mobile */}
             <div className="hidden md:block absolute -top-10 -left-10 px-4 py-2 rounded-full bg-gradient-to-r from-secondary to-accent shadow-lg backdrop-blur-xl animate-bounce">
@@ -367,7 +371,7 @@ export function EmailInviteRegistrationForm({
             </div>
 
             {/* RIGHT SIDE - Registration Form */}
-            <div className="p-4 md:p-6 flex flex-col justify-center backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[65vh] custom-scrollbar">
+            <div className="p-4 md:p-6 pt-8 md:pt-6 flex flex-col backdrop-blur-xl bg-card/40 dark:bg-card/70 border-l border-card/30 dark:border-card/60 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[85vh] custom-scrollbar">
               {optimizedLogoUrl && (
               <div className="flex items-center justify-center mb-3 md:mb-6">
                 <Image
@@ -381,15 +385,16 @@ export function EmailInviteRegistrationForm({
               </div>
               )}
               {heroAssets?.text?.slogan && (
-                <div className="text-[10px] md:text-xs font-bold text-secondary text-center -mt-3 md:-mt-6 mb-3 md:mb-6 line-clamp-2">
+                <div className="text-[10px] h-auto md:text-xs font-bold text-secondary text-center -mt-3 md:-mt-6 mb-3 md:mb-6 line-clamp-2">
                   {heroAssets.text.slogan}
                 </div>
               )}
               {heroAssets?.text?.description && (
-                <div className="text-sm md:text-base font-bold text-foreground text-justify mb-2 md:mb-4 line-clamp-5 md:line-clamp-6">
+                <div className="text-sm md:text-2xl font-bold text-foreground text-justify mb-2 md:mb-4 line-clamp-5 md:line-clamp-6">
                   {heroAssets.text.description}
                 </div>
               )}
+              
               <div className="mb-3 md:mb-6">
                 <h2 className="text-lg md:text-2xl font-bold text-accent mb-1">
                   {t("invite.formTitle") || "Registro por Invitación"}
@@ -400,7 +405,7 @@ export function EmailInviteRegistrationForm({
               </div>
 
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 md:space-y-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2 md:space-y-1">
 
                   {/* Email Display (Read-only) */}
                   <div className="space-y-2">

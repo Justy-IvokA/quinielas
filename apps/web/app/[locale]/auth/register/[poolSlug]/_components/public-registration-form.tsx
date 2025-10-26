@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { Users, Calendar, AlertCircle } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { Button } from "@qp/ui/components/button";
 import { Input } from "@qp/ui/components/input";
 import { Checkbox } from "@qp/ui/components/checkbox";
@@ -113,28 +114,31 @@ export function PublicRegistrationForm({
   const t = useTranslations("auth.registration");
   const tCommon = useTranslations("common");
   const { theme } = useTheme();
+  const { data: session, status } = useSession();
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showInfoModal, setShowInfoModal] = useState(false);
-  const [hasSession, setHasSession] = useState(false);
   const [userData, setUserData] = useState<{
     displayName?: string | null;
     email?: string | null;
     phone?: string | null;
   } | null>(null);
 
+  // Determinar si hay sesión activa
+  const hasSession = status === "authenticated" && !!session?.user;
+
+  // Consulta de datos del usuario - solo se ejecuta si hay sesión
+  const { data: userDataFromQuery, isLoading: isLoadingUserData } = trpc.users.getById.useQuery(
+    { id: session?.user?.id || "" },
+    { enabled: hasSession && !!session?.user?.id }
+  );
+
   // Get optimized media URLs
   const optimizedCardUrl = getOptimizedMediaUrl(heroAssets?.mainCard?.url);
   const optimizedLogoUrl = getOptimizedMediaUrl(brandLogo?.url);
 
-  // Query to get existing user data
-  const { data: existingData, isLoading: isLoadingUserData } = trpc.registration.hasExistingData.useQuery(
-    { userId },
-    { enabled: !!userId }
-  );
-
   const form = useForm<PublicRegistrationFormData>({
-    resolver: zodResolver(createValidationSchema(existingData?.hasData ? existingData : null)),
+    resolver: zodResolver(createValidationSchema(hasSession ? userDataFromQuery : null)),
     defaultValues: {
       displayName: "",
       email: "",
@@ -144,43 +148,41 @@ export function PublicRegistrationForm({
     }
   });
 
-  // Effect to populate form with existing user data and update schema
+  // Effect to populate form with existing user data when session exists
   useEffect(() => {
-    if (existingData?.hasData) {
-      setHasSession(true);
+    if (hasSession && userDataFromQuery) {
       const newUserData = {
-        displayName: existingData.displayName,
-        email: existingData.email,
-        phone: existingData.phone
+        displayName: userDataFromQuery.name,
+        email: userDataFromQuery.email,
+        phone: userDataFromQuery.phone
       };
       setUserData(newUserData);
 
       // Pre-fill form with existing data
-      if (existingData.displayName) {
-        form.setValue("displayName", existingData.displayName);
+      if (userDataFromQuery.name) {
+        form.setValue("displayName", userDataFromQuery.name);
       }
-      if (existingData.email) {
-        form.setValue("email", existingData.email);
+      if (userDataFromQuery.email) {
+        form.setValue("email", userDataFromQuery.email);
       }
-      if (existingData.phone) {
-        form.setValue("phone", existingData.phone);
+      if (userDataFromQuery.phone) {
+        form.setValue("phone", userDataFromQuery.phone);
       }
 
       // Check if user has all data complete
-      const hasAllData = existingData.displayName && existingData.email && existingData.phone;
+      const hasAllData = userDataFromQuery.name && userDataFromQuery.email && userDataFromQuery.phone;
       if (hasAllData) {
         // Show info modal for users with complete data
         setShowInfoModal(true);
       }
 
-      // Update form resolver with new schema
-      const newSchema = createValidationSchema(newUserData);
-      form.clearErrors(); // Clear any previous errors
-    } else {
-      setHasSession(false);
+      form.clearErrors();
+    } else if (!hasSession) {
+      // Clear user data if no session
       setUserData(null);
+      setShowInfoModal(false);
     }
-  }, [existingData, form]);
+  }, [hasSession, userDataFromQuery, form]);
 
   const registerMutation = trpc.registration.registerPublic.useMutation({
     onSuccess: () => {
@@ -329,7 +331,7 @@ export function PublicRegistrationForm({
         
         {/* Registration Card */}
         <div className="relative w-full max-w-5xl">
-          <div className="grid md:grid-cols-[45%,55%] rounded-2xl overflow-hidden shadow-2xl h-auto md:h-[65vh] md:min-h-[500px] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+          <div className="grid md:grid-cols-[45%,55%] rounded-2xl overflow-hidden shadow-2xl h-auto md:h-[85vh] md:min-h-[500px] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
 
             {/* Floating badges - Hidden on mobile */}
             <div className="hidden md:block absolute -top-10 -left-10 px-4 py-2 rounded-full bg-gradient-to-r from-secondary to-accent shadow-lg backdrop-blur-xl animate-bounce">
@@ -417,7 +419,7 @@ export function PublicRegistrationForm({
             </div>
 
             {/* RIGHT SIDE - Registration Form */}
-            <div className="p-4 md:p-6 flex flex-col justify-center backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[65vh] custom-scrollbar">
+            <div className="p-4 md:p-6 flex flex-col justify-center backdrop-blur-xl bg-white/20 dark:bg-gray-900/20 border-l border-white/20 dark:border-gray-700/50 overflow-y-auto max-h-[calc(100vh-2rem)] md:max-h-[85vh] custom-scrollbar">
               {optimizedLogoUrl && (
               <div className="flex items-center justify-center mb-3 md:mb-6">
                 <Image

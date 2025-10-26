@@ -34,12 +34,13 @@ import {
   SelectValue,
   SportsLoader
 } from "@qp/ui";
-import { ArrowLeftIcon, TrashIcon, UserPlusIcon, Building2Icon, Globe, Settings } from "lucide-react";
+import { ArrowLeftIcon, TrashIcon, UserPlusIcon, Building2Icon, Globe, Settings, PlusIcon } from "lucide-react";
 
 export default function TenantDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isAddMemberOpen, setIsAddMemberOpen] = useState(false);
+  const [isAddOverrideOpen, setIsAddOverrideOpen] = useState(false);
   
   // Unwrap params Promise (Next.js 15)
   const { id } = use(params);
@@ -100,6 +101,41 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
     }
   });
 
+  const { data: featureOverrides, refetch: refetchOverrides } = trpc.tenant.listFeatureOverrides.useQuery({
+    tenantId: id
+  });
+
+  const createOverrideMutation = trpc.tenant.createFeatureOverride.useMutation({
+    onSuccess: () => {
+      toast.success("Override de feature creado exitosamente");
+      setIsAddOverrideOpen(false);
+      refetchOverrides();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al crear override");
+    }
+  });
+
+  const updateOverrideMutation = trpc.tenant.updateFeatureOverride.useMutation({
+    onSuccess: () => {
+      toast.success("Override actualizado exitosamente");
+      refetchOverrides();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al actualizar override");
+    }
+  });
+
+  const deleteOverrideMutation = trpc.tenant.deleteFeatureOverride.useMutation({
+    onSuccess: () => {
+      toast.success("Override eliminado exitosamente");
+      refetchOverrides();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Error al eliminar override");
+    }
+  });
+
   const handleUpdate = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -108,7 +144,20 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
       id,
       name: formData.get("name") as string,
       slug: formData.get("slug") as string,
-      description: formData.get("description") as string || undefined
+      description: formData.get("description") as string || undefined,
+      licenseTier: formData.get("licenseTier") as any
+    });
+  };
+
+  const handleAddOverride = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+
+    createOverrideMutation.mutate({
+      tenantId: id,
+      feature: formData.get("feature") as any,
+      isEnabled: formData.get("isEnabled") === "true",
+      expiresAt: formData.get("expiresAt") ? new Date(formData.get("expiresAt") as string) : undefined
     });
   };
 
@@ -202,6 +251,20 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
                       name="description"
                       defaultValue={tenant.description || ""}
                     />
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="licenseTier">Tier de Licencia</Label>
+                    <Select name="licenseTier" defaultValue={tenant.licenseTier}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="GOLAZO">Golazo</SelectItem>
+                        <SelectItem value="GRAN_JUGADA">Gran Jugada</SelectItem>
+                        <SelectItem value="COPA_DEL_MUNDO">La Copa del Mundo</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
@@ -324,7 +387,7 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mb-6">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>
             <CardTitle>Miembros</CardTitle>
@@ -449,6 +512,149 @@ export default function TenantDetailPage({ params }: { params: Promise<{ id: str
                       >
                         Remover
                       </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Feature Overrides</CardTitle>
+            <CardDescription>Overrides específicos de features para este tenant</CardDescription>
+          </div>
+
+          <Dialog open={isAddOverrideOpen} onOpenChange={setIsAddOverrideOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" StartIcon={PlusIcon}>
+                Agregar Override
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <form onSubmit={handleAddOverride}>
+                <DialogHeader>
+                  <DialogTitle>Agregar Feature Override</DialogTitle>
+                  <DialogDescription>
+                    Crea un override para habilitar o deshabilitar una feature específica
+                  </DialogDescription>
+                </DialogHeader>
+
+                <div className="grid gap-4 py-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="feature">Feature</Label>
+                    <Select name="feature" required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecciona una feature" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="TRIVIA">Trivia</SelectItem>
+                        <SelectItem value="REWARDS_CHALLENGES">Rewards & Challenges</SelectItem>
+                        <SelectItem value="NOTIFICATIONS_INTERMEDIATE">Notificaciones Intermedias</SelectItem>
+                        <SelectItem value="NOTIFICATIONS_ADVANCED">Notificaciones Avanzadas</SelectItem>
+                        <SelectItem value="ANALYTICS_ADVANCED">Analytics Avanzado</SelectItem>
+                        <SelectItem value="PUSH_NOTIFICATIONS">Push Notifications</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="isEnabled">Estado</Label>
+                    <Select name="isEnabled" required>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="true">Habilitado</SelectItem>
+                        <SelectItem value="false">Deshabilitado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="grid gap-2">
+                    <Label htmlFor="expiresAt">Expira en (opcional)</Label>
+                    <Input
+                      id="expiresAt"
+                      name="expiresAt"
+                      type="datetime-local"
+                    />
+                  </div>
+                </div>
+
+                <DialogFooter>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddOverrideOpen(false)}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button type="submit" disabled={createOverrideMutation.isPending}>
+                    {createOverrideMutation.isPending ? "Creando..." : "Crear"}
+                  </Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          {!featureOverrides || featureOverrides.length === 0 ? (
+            <p className="text-muted-foreground">No hay overrides configurados</p>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Feature</TableHead>
+                  <TableHead>Estado</TableHead>
+                  <TableHead>Expira</TableHead>
+                  <TableHead>Creado</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {featureOverrides.map((override) => (
+                  <TableRow key={override.id}>
+                    <TableCell className="font-medium">
+                      {override.feature.replace(/_/g, ' ')}
+                    </TableCell>
+                    <TableCell>
+                      <span className={override.isEnabled ? "text-green-600" : "text-red-600"}>
+                        {override.isEnabled ? "Habilitado" : "Deshabilitado"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {override.expiresAt ? new Date(override.expiresAt).toLocaleDateString() : "Nunca"}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {new Date(override.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            updateOverrideMutation.mutate({
+                              id: override.id,
+                              isEnabled: !override.isEnabled
+                            })
+                          }
+                        >
+                          {override.isEnabled ? "Deshabilitar" : "Habilitar"}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            deleteOverrideMutation.mutate({ id: override.id })
+                          }
+                        >
+                          Eliminar
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

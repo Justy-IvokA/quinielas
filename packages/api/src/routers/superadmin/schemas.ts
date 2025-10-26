@@ -114,10 +114,11 @@ export const createTemplateSchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).default("DRAFT"),
   
   // Sport scope
-  sportId: z.string().uuid().optional(), // cuid() 
+  sportId: z.string().cuid().optional(), // uuid() 
   
   // External provider scope
   competitionExternalId: z.string().optional(),
+  competitionName: z.string().optional(),
   seasonYear: z.number().int().optional(),
   stageLabel: z.string().optional(),
   roundLabel: z.string().optional(),
@@ -127,7 +128,11 @@ export const createTemplateSchema = z.object({
     exactScore: z.number().int().default(5),
     correctSign: z.number().int().default(3),
     goalDiffBonus: z.number().int().default(1),
-    tieBreakers: z.array(z.string()).default(["EXACT_SCORES", "CORRECT_SIGNS"])
+    tieBreakers: z.array(z.string()).default(["EXACT_SCORES", "CORRECT_SIGNS"]),
+    rounds: z.object({
+      start: z.number().int(),
+      end: z.number().int()
+    }).optional()
   }).optional(),
   
   accessDefaults: z.object({
@@ -165,6 +170,7 @@ export const updateTemplateSchema = z.object({
   
   // External provider scope
   competitionExternalId: z.string().optional().nullable(),
+  competitionName: z.string().optional().nullable(),
   seasonYear: z.number().int().optional().nullable(),
   stageLabel: z.string().optional().nullable(),
   roundLabel: z.string().optional().nullable(),
@@ -174,7 +180,11 @@ export const updateTemplateSchema = z.object({
     exactScore: z.number().int(),
     correctSign: z.number().int(),
     goalDiffBonus: z.number().int(),
-    tieBreakers: z.array(z.string())
+    tieBreakers: z.array(z.string()),
+    rounds: z.object({
+      start: z.number().int(),
+      end: z.number().int()
+    }).optional()
   }).optional().nullable(),
   
   accessDefaults: z.object({

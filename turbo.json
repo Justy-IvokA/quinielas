@@ -18,6 +18,41 @@
         "ENABLE_EXPERIMENTAL_COREPACK"
       ]
     },
+    "@qp/config#build": {
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/utils#build": {
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/db#build": {
+      "dependsOn": ["@qp/config#build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/branding#build": {
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/scoring#build": {
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/ui#build": {
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/auth#build": {
+      "dependsOn": ["@qp/config#build", "@qp/db#build", "@qp/utils#build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
+    "@qp/api#build": {
+      "dependsOn": ["@qp/auth#build", "@qp/branding#build", "@qp/db#build", "@qp/scoring#build", "@qp/utils#build"],
+      "outputs": ["dist/**"],
+      "cache": true
+    },
     "dev": {
       "cache": false
     },

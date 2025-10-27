@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false
+  },
+  "references": [
+    { "path": "packages/config", "prepend": false },
+    { "path": "packages/utils", "prepend": false },
+    { "path": "packages/db", "prepend": false },
+    { "path": "packages/branding", "prepend": false },
+    { "path": "packages/scoring", "prepend": false },
+    { "path": "packages/auth", "prepend": false },
+    { "path": "packages/api", "prepend": false }
+  ]
+}

@@ -23,11 +23,11 @@ export default async function PoolPage({ params }: PoolPageProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex items-center justify-between">
+      <header className="flex items-center justify-between [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
         <div className="flex items-center gap-4">
           <BackButton fallbackHref="/pools" />
           <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-bold">{t("pools.details.title")}</h1>
+            <h1 className="text-3xl font-bold text-primary">{t("pools.details.title")}</h1>
           </div>
         </div>
         <Button asChild StartIcon={Edit}>

@@ -373,6 +373,32 @@
         "inactive": "Inactive"
       }
     },
+    "empty": {
+      "title": "No pools created",
+      "description": "Start by creating your first pool to manage predictions.",
+      "cta": "Create first pool"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "noBrand": "No brand"
+    },
+    "actions": {
+      "view": "View details",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Are you sure you want to delete pool \"{name}\"?",
+      "deleteSuccess": "Pool deleted successfully",
+      "deleteError": "Error deleting pool: {message}"
+    },
+    "stats": {
+      "registrations": "{count} registrations",
+      "prizes": "{count} prizes"
+    },
+    "details": {
+      "title": "Pool details"
+    }
+  },
   "sync": {
     "title": "Fixtures Synchronization",
     "description": "Monitor and control synchronization with external providers"
@@ -427,32 +453,63 @@
         "description": "Enable device fingerprinting for fraud detection"
       }
     },
-    "note": "Note: These settings override the global defaults for this tenant. Pool-specific overrides can be configured on each pool."
-  },
-    "empty": {
-      "title": "No pools created",
-      "description": "Start by creating your first pool to manage predictions.",
-      "cta": "Create first pool"
-    },
-    "status": {
-      "active": "Active",
-      "inactive": "Inactive",
-      "noBrand": "No brand"
-    },
-    "actions": {
-      "view": "View details",
-      "edit": "Edit",
-      "delete": "Delete",
-      "deleteConfirm": "Are you sure you want to delete pool \"{name}\"?",
-      "deleteSuccess": "Pool deleted successfully",
-      "deleteError": "Error deleting pool: {message}"
-    },
-    "stats": {
-      "registrations": "{count} registrations",
-      "prizes": "{count} prizes"
-    },
-    "details": {
-      "title": "Pool details"
+    "note": "Note: These settings override the global defaults for this tenant. Pool-specific overrides can be configured on each pool.",
+    "sync": {
+      "title": "Worker Sync Settings",
+      "description": "Configure cron schedules for background worker jobs. Changes require a worker re-deploy to take effect.",
+      "warning": "⚠️ Important: Changes to these settings require a worker re-deploy to take effect. Contact your DevOps team to apply the changes.",
+      "jobs": {
+        "auto-sync-fixtures": {
+          "label": "Auto Sync Fixtures",
+          "description": "Automatically imports new matches from the sports provider",
+          "default": "0 */6 * * *"
+        },
+        "leaderboard-snapshot": {
+          "label": "Leaderboard Snapshot",
+          "description": "Periodically captures the state of the leaderboard",
+          "default": "*/10 * * * *"
+        },
+        "purge-audit-logs": {
+          "label": "Purge Audit Logs",
+          "description": "Deletes old audit logs according to retention policy",
+          "default": "0 2 * * *"
+        },
+        "purge-invitations": {
+          "label": "Purge Expired Invitations",
+          "description": "Deletes expired email invitations",
+          "default": "0 3 * * *"
+        },
+        "purge-tokens": {
+          "label": "Purge Expired Tokens",
+          "description": "Deletes expired authentication and verification tokens",
+          "default": "0 4 * * *"
+        },
+        "refresh-standings": {
+          "label": "Refresh Standings",
+          "description": "Updates team standings from the sports provider",
+          "default": "0 */12 * * *"
+        },
+        "lock-predictions": {
+          "label": "Lock Predictions",
+          "description": "Automatically locks predictions when matches start",
+          "default": "* * * * *"
+        },
+        "update-live-matches": {
+          "label": "Update Live Matches",
+          "description": "Updates live match status every 5 minutes",
+          "default": "*/5 * * * *"
+        },
+        "score-final": {
+          "label": "Calculate Final Scores",
+          "description": "Calculates final scores after matches end",
+          "default": "*/5 * * * *"
+        }
+      },
+      "cronHelp": "Cron Format: minute (0-59) hour (0-23) day (1-31) month (1-12) day of week (0-6)",
+      "cronExamples": "Examples: '0 * * * *' (hourly) | '0 0 * * *' (daily) | '*/15 * * * *' (every 15 min)",
+      "saveSuccess": "Sync settings saved successfully",
+      "saveError": "Error saving settings: {message}",
+      "saving": "Saving settings..."
     }
   },
   "demo": {

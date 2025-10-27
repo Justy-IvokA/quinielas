@@ -88,7 +88,7 @@ export function PoolsList() {
           }
 
           const domain = pool.brand.domains[0];
-          const url = `${domain}/es-MX/auth/register/${pool.slug}`;
+          const url = `${domain}${process.env.NODE_ENV === "development" ? ":3000" : ""}/es-MX/auth/register/${pool.slug}`;
 
           try {
             await navigator.clipboard.writeText(url);
@@ -114,7 +114,7 @@ export function PoolsList() {
         const AccessIcon = accessConfig.icon;
 
         return (
-        <Card key={pool.id} className="group relative overflow-hidden border-border/70 bg-card/60 backdrop-blur shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+        <Card variant="glass" key={pool.id} className="group relative overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
           {/* Glassmorphism overlay */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-accent/3 pointer-events-none" />
           
@@ -132,7 +132,7 @@ export function PoolsList() {
                     />
                   )}
                   <div className="flex flex-col">
-                    <CardTitle className="line-clamp-1">{pool.name}</CardTitle>
+                    <CardTitle className="line-clamp-1 text-primary">{pool.name}</CardTitle>
                     <CardDescription className="mt-1 flex items-center gap-2">
                       <span>{pool.season.name}</span>
                       <span>·</span>
@@ -141,14 +141,14 @@ export function PoolsList() {
                   </div>
                 </div>
               </div>
-              <Badge variant={pool.isActive ? "default" : "gray"}>
+              <Badge variant={pool.isActive ? "success" : "gray"}>
                 {pool.isActive ? t("status.active") : t("status.inactive")}
               </Badge>
             </div>
           </CardHeader>
           <CardContent className="relative flex flex-col gap-4">
             {pool.description && (
-              <p className="line-clamp-2 text-sm text-muted-foreground">{pool.description}</p>
+              <p className="line-clamp-2 text-sm text-foreground">{pool.description}</p>
             )}
 
             {/* Tipo de Acceso */}
@@ -201,17 +201,15 @@ export function PoolsList() {
                 </Button>
               </div>
               <div className="flex gap-2">
-                <Button asChild size="sm" variant="outline" className="flex-1" StartIcon={Edit}>
-                  <Link href={`/pools/${pool.id}/edit`}>
-                    {t("actions.edit")}
-                  </Link>
+                <Button asChild variant="outline" href={`/pools/${pool.id}/edit`} size="sm" className="flex-1" StartIcon={Edit}>
+                  {t("actions.edit")}
                 </Button>
                 <Button
                   size="sm"
-                  variant="destructive"
+                  variant="outline"
                   onClick={() => handleDelete(pool.id, pool.name)}
                   loading={deleteMutation.isPending}
-                  className="flex-1"
+                  className="flex-1 bg-destructive text-foreground hover:bg-destructive/80 hover:text-primary-foreground"
                   StartIcon={Trash2}
                 >
                   {t("actions.delete")}

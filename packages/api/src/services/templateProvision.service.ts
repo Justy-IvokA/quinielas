@@ -37,20 +37,27 @@ export async function provisionTemplateToTenant(
 ): Promise<ProvisionResult> {
   const { templateId, tenantId, brandId } = input;
 
+  // console.log(`[TemplateProvision] 🚀 Iniciando provisión: template=${templateId}, tenant=${tenantId}, brand=${brandId}`);
+
   // Fetch template
+  // console.log(`[TemplateProvision] 📋 Obteniendo plantilla: ${templateId}`);
   const template = await prisma.poolTemplate.findUnique({
     where: { id: templateId },
     include: { sport: true }
   });
 
   if (!template) {
+    // console.error(`[TemplateProvision] ❌ Plantilla no encontrada: ${templateId}`);
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "Template not found"
+      message: "Plantilla no encontrada"
     });
   }
 
+  // console.log(`[TemplateProvision] ✅ Plantilla encontrada: ${template.slug} (${template.title})`);
+
   if (template.status !== "PUBLISHED") {
+    // console.error(`[TemplateProvision] ❌ Plantilla no publicada: status=${template.status}`);
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Only PUBLISHED templates can be provisioned"
@@ -63,9 +70,10 @@ export async function provisionTemplateToTenant(
   });
 
   if (!tenant) {
+    // console.error(`[TemplateProvision] ❌ Tenant no encontrado: ${tenantId}`);
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "Tenant not found"
+      message: "Tenant no encontrado"
     });
   }
 
@@ -132,16 +140,16 @@ export async function provisionTemplateToTenant(
     if (!template.competitionExternalId || !template.seasonYear) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Template must have competitionExternalId and seasonYear"
+        message: "La plantilla debe tener competitionExternalId y seasonYear"
       });
     }
 
     // ✅ IMPORTANT: Log template configuration for debugging
-    console.log(`[TemplateProvision] Template config: competitionExternalId=${template.competitionExternalId}, seasonYear=${template.seasonYear}, stageLabel=${template.stageLabel}, roundLabel=${template.roundLabel}`);
-    console.log(`[TemplateProvision] Template rules: ${JSON.stringify(template.rules, null, 2)}`);
+    // console.log(`[TemplateProvision] Configuración de la plantilla: competitionExternalId=${template.competitionExternalId}, seasonYear=${template.seasonYear}, stageLabel=${template.stageLabel}, roundLabel=${template.roundLabel}`);
+    // console.log(`[TemplateProvision] Reglas de la plantilla: ${JSON.stringify(template.rules, null, 2)}`);
 
     if (template.stageLabel || template.roundLabel) {
-      console.log(`[TemplateProvision] Fetching filtered season: stage=${template.stageLabel}, round=${template.roundLabel}`);
+      // console.log(`[TemplateProvision] Obteniendo temporada filtrada: stage=${template.stageLabel}, round=${template.roundLabel}`);
       // Check if provider supports fetchSeasonRound
       if ('fetchSeasonRound' in provider && typeof provider.fetchSeasonRound === 'function') {
         seasonData = await provider.fetchSeasonRound({
@@ -152,14 +160,14 @@ export async function provisionTemplateToTenant(
         });
       } else {
         // Fallback to full season fetch
-        console.warn(`[TemplateProvision] Provider does not support fetchSeasonRound, fetching full season`);
+        // console.warn(`[TemplateProvision] Proveedor no soporta fetchSeasonRound, obteniendo temporada completa`);
         seasonData = await provider.fetchSeason({
           competitionExternalId: template.competitionExternalId,
           year: template.seasonYear
         });
       }
     } else {
-      console.log(`[TemplateProvision] ✅ Fetching FULL season (roundLabel is undefined - import all matches)`);
+      // console.log(`[TemplateProvision] ✅ Obteniendo temporada completa (roundLabel es undefined - importar todos los partidos)`);
       seasonData = await provider.fetchSeason({
         competitionExternalId: template.competitionExternalId,
         year: template.seasonYear
@@ -169,11 +177,11 @@ export async function provisionTemplateToTenant(
     if (!seasonData) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Season data not found from provider"
+        message: "Datos de la temporada no encontrados del proveedor(API)"
       });
     }
 
-    console.log(`[TemplateProvision] Fetched ${seasonData.teams.length} teams and ${seasonData.matches.length} matches`);
+    // console.log(`[TemplateProvision] Obtenidos ${seasonData.teams.length} equipos y ${seasonData.matches.length} partidos`);
 
     // ✅ Use competitionName if available, otherwise fallback to title
     const competitionName = (template.meta as any)?.competitionName || template.title;
@@ -198,7 +206,7 @@ export async function provisionTemplateToTenant(
       });
       
       if (competition) {
-        console.log(`[TemplateProvision] ✅ Found Competition via ExternalMap: ${competition.id} (${competition.name})`);
+        // console.log(`[TemplateProvision] ✅ Competencia Encontrada via ExternalMap: ${competition.id} (${competition.name})`);
       }
     }
 
@@ -212,18 +220,27 @@ export async function provisionTemplateToTenant(
       });
       
       if (competition) {
-        console.log(`[TemplateProvision] ✅ Found Competition by name: ${competition.id} (${competition.name})`);
+        // console.log(`[TemplateProvision] ✅ Competencia Encontrada por nombre: ${competition.id} (${competition.name})`);
       }
     }
 
-    // Create if still not found
+    // Crear si aún no se encontró
     if (!competition) {
-      console.log(`[TemplateProvision] Creating new Competition: name=${competitionName}, slug=${competitionSlug}`);
+      // console.log(`[TemplateProvision] Creando nueva competencia: name=${competitionName}, slug=${competitionSlug}`);
       competition = await prisma.competition.create({
         data: {
           sportId: sport.id,
           slug: competitionSlug,
-          name: competitionName
+          name: competitionName,
+          logoUrl: seasonData.competitionLogoUrl || undefined
+        }
+      });
+    } else if (!competition.logoUrl && seasonData.competitionLogoUrl) {
+      // Update existing competition with logoUrl if it doesn't have one
+      competition = await prisma.competition.update({
+        where: { id: competition.id },
+        data: {
+          logoUrl: seasonData.competitionLogoUrl
         }
       });
     }
@@ -257,16 +274,16 @@ export async function provisionTemplateToTenant(
     });
 
     if (!season) {
-      console.log(`[TemplateProvision] Creating new Season: year=${template.seasonYear}, competitionId=${competition.id}`);
+      // console.log(`[TemplateProvision] Creando nueva temporada: año=${template.seasonYear}, competitionId=${competition.id}`);
       season = await prisma.season.create({
         data: {
           competitionId: competition.id,
-          name: `${template.title}`,
+          name: `${(template.meta as any)?.competitionName || template.title}`,
           year: template.seasonYear
         }
       });
     } else {
-      console.log(`[TemplateProvision] ✅ Reusing existing Season: ${season.id} (${season.name})`);
+      console.log(`[TemplateProvision] ✅ Reutilizando temporada existente: ${season.id} (${season.name})`);
     }
 
     // Import teams
@@ -333,14 +350,14 @@ export async function provisionTemplateToTenant(
 
     // Import matches
     let importedMatches = 0;
-    console.log(`[TemplateProvision] Starting match import: ${seasonData.matches.length} matches to process`);
+    // console.log(`[TemplateProvision] Iniciando importación de partidos: ${seasonData.matches.length} partidos para procesar`);
 
     for (const matchDTO of seasonData.matches) {
       const homeTeamId = teamIdMap.get(matchDTO.homeTeamExternalId);
       const awayTeamId = teamIdMap.get(matchDTO.awayTeamExternalId);
 
       if (!homeTeamId || !awayTeamId) {
-        console.warn(`[TemplateProvision] Skipping match: team mapping not found for ${matchDTO.homeTeamExternalId} vs ${matchDTO.awayTeamExternalId}`);
+        // console.warn(`[TemplateProvision] Omitiendo partido: mapeo de equipos no encontrado para ${matchDTO.homeTeamExternalId} vs ${matchDTO.awayTeamExternalId}`);
         continue;
       }
 
@@ -407,9 +424,9 @@ export async function provisionTemplateToTenant(
     };
 
     // ✅ IMPORTANT: Log rules including round filtering
-    console.log(`[TemplateProvision] Creating pool with rules: ${JSON.stringify(rules, null, 2)}`);
+    // console.log(`[TemplateProvision] Creando quiniela con reglas: ${JSON.stringify(rules, null, 2)}`);
     if (rules.rounds) {
-      console.log(`[TemplateProvision] ✅ Pool will filter matches by rounds: ${rules.rounds.start}-${rules.rounds.end}`);
+      // console.log(`[TemplateProvision] ✅ Quiniela filtrará partidos por rondas: ${rules.rounds.start}-${rules.rounds.end}`);
     }
 
     // Create Pool
@@ -427,7 +444,7 @@ export async function provisionTemplateToTenant(
       }
     });
 
-    console.log(`[TemplateProvision] ✅ Pool created: ${pool.id} (${pool.slug}) with ${importedMatches} matches`);
+    // console.log(`[TemplateProvision] ✅ Quiniela creada: ${pool.id} (${pool.slug}) con ${importedMatches} partidos`);
 
     // Parse access defaults from template
     const accessDefaults = template.accessDefaults as any || {};
@@ -454,7 +471,7 @@ export async function provisionTemplateToTenant(
 
     // Create Prizes
     if (prizesDefaults.length > 0) {
-      console.log(`[TemplateProvision] Creating ${prizesDefaults.length} prizes for pool ${pool.id}`);
+      // console.log(`[TemplateProvision] Creando ${prizesDefaults.length} premios para la quiniela ${pool.id}`);
       await prisma.prize.createMany({
         data: prizesDefaults.map((prize, index) => ({
           poolId: pool.id,
@@ -491,6 +508,9 @@ export async function provisionTemplateToTenant(
       }
     });
 
+    // console.log(`[TemplateProvision] ✅ Se completó la provisión exitosamente`);
+    // console.log(`[TemplateProvision] Resultado: poolId=${pool.id}, equipos=${teamIdMap.size}, partidos=${importedMatches}`);
+
     return {
       poolId: pool.id,
       poolSlug: pool.slug,
@@ -500,10 +520,18 @@ export async function provisionTemplateToTenant(
       }
     };
   } catch (error) {
-    console.error("[TemplateProvision] Error provisioning template:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    // console.error(`[TemplateProvision] ❌ Provision falló para template=${templateId}, tenant=${tenantId}`);
+    // console.error(`[TemplateProvision] Mensaje de error: ${errorMessage}`);
+    // if (errorStack) {
+    //   console.error(`[TemplateProvision] Stack trace:`, errorStack);
+    // }
+    
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: error instanceof Error ? error.message : "Failed to provision template"
+      message: errorMessage
     });
   }
 }
@@ -520,14 +548,14 @@ export async function previewTemplateImport(templateId: string) {
   if (!template) {
     throw new TRPCError({
       code: "NOT_FOUND",
-      message: "Template not found"
+      message: "Plantilla no encontrada"
     });
   }
 
   if (!template.competitionExternalId || !template.seasonYear) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "Template must have competitionExternalId and seasonYear"
+      message: "Plantilla debe tener competitionExternalId y seasonYear"
     });
   }
 
@@ -546,10 +574,10 @@ export async function previewTemplateImport(templateId: string) {
 
     return preview;
   } catch (error) {
-    console.error("[TemplateProvision] Error previewing template:", error);
+    // console.error("[TemplateProvision] Error al previsualizar la plantilla:", error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: error instanceof Error ? error.message : "Failed to preview template"
+      message: error instanceof Error ? error.message : "Error al previsualizar la plantilla"
     });
   }
 }

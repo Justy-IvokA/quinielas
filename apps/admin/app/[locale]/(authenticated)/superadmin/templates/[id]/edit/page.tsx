@@ -179,13 +179,13 @@ export default function EditTemplatePage() {
   const accessDefaults = template.accessDefaults as any;
 
   return (
-    <div className="container mx-auto py-4 sm:py-8 px-4 sm:px-6 max-w-4xl">
-      <div className="mb-6 sm:mb-8">
+    <div className="container mx-auto py-4 sm:py-8 px-4 sm:px-6 max-w-4xl [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+      <div className="flex items-center mb-6 sm:mb-8">
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => router.back()}
-          className="mb-4"
+          onClick={() => router.push(`/superadmin/templates`)}
+          className="mr-4"
           StartIcon={ArrowLeftIcon}
         >
           {t('backButton')}
@@ -195,7 +195,7 @@ export default function EditTemplatePage() {
           {/* Title and Status - Stack on mobile */}
           <div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-              <h1 className="text-2xl sm:text-3xl font-bold">{template.title}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-primary">{template.title}</h1>
               <div className="flex items-center gap-2">
                 {template.status === "PUBLISHED" && (
                   <Badge className="bg-green-500 w-fit">
@@ -214,7 +214,7 @@ export default function EditTemplatePage() {
                 )}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-accent">
               {t('tenantAssignmentsCount', { count: template.assignments?.length || 0 })}
             </p>
           </div>
@@ -373,7 +373,7 @@ export default function EditTemplatePage() {
           </div>
 
           <TabsContent value="general" className="space-y-4">
-            <Card>
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>{t('basicInformation')}</CardTitle>
               </CardHeader>
@@ -410,7 +410,7 @@ export default function EditTemplatePage() {
           </TabsContent>
 
           <TabsContent value="scope" className="space-y-4">
-            <Card>
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>{t('sportProviderScope')}</CardTitle>
               </CardHeader>
@@ -456,7 +456,7 @@ export default function EditTemplatePage() {
           </TabsContent>
 
           <TabsContent value="rules" className="space-y-4">
-            <Card>
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>{t('scoringRules')}</CardTitle>
               </CardHeader>
@@ -498,7 +498,7 @@ export default function EditTemplatePage() {
           </TabsContent>
 
           <TabsContent value="access" className="space-y-4">
-            <Card>
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>{t('accessPolicyDefaults')}</CardTitle>
               </CardHeader>
@@ -547,7 +547,7 @@ export default function EditTemplatePage() {
           </TabsContent>
 
           <TabsContent value="assignments" className="space-y-4">
-            <Card>
+            <Card variant="glass">
               <CardHeader>
                 <CardTitle>{t('tenantAssignments')}</CardTitle>
                 <CardDescription>

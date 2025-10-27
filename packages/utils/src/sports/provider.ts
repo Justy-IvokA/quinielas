@@ -31,6 +31,7 @@ export interface SeasonDTO {
   year: number;
   startsAt?: Date;
   endsAt?: Date;
+  competitionLogoUrl?: string;
   teams: TeamDTO[];
   matches: MatchDTO[];
 }

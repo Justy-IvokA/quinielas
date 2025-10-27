@@ -12,7 +12,7 @@ const cardVariants = cva(
         elevated: "bg-card border-border shadow-md hover:shadow-lg transition-shadow",
         outline: "bg-card border-2 border-border",
         ghost: "bg-card border-transparent",
-        glass: "backdrop-blur-2xl bg-secondary/20 dark:bg-primary/30 border-secondary/10 dark:border-primary/20 shadow-lg [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
+        glass: "backdrop-blur-md bg-card/20 dark:bg-card/60 border-card/30 dark:border-card/70 shadow-lg [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]"
       },
       padding: {
         none: "",

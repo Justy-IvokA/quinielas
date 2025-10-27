@@ -4,10 +4,14 @@ import { useTranslations } from "next-intl";
 import { trpc } from "@admin/trpc";
 import { toast } from "sonner";
 import { useTenantId } from "@admin/providers/brand-context";
+import { SyncSettingsForm } from "./components/SyncSettingsForm";
+import { useSession } from "next-auth/react";
 
 export default function SettingsPage() {
   const t = useTranslations("settings");
   const tenantId = useTenantId();
+  const { data: session } = useSession();
+  const isSuperAdmin = session?.user?.highestRole === "SUPERADMIN";
 
   // Fetch effective settings
   const { data: settings, isLoading, refetch } = trpc.settings.effective.useQuery(
@@ -92,12 +96,12 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">{t("title")}</h1>
+    <div className="container mx-auto p-4 max-w-4xl [text-shadow:_2px_2px_4px_rgb(0_0_0_/_40%)]">
+      <h1 className="text-3xl text-primary font-bold mb-6">{t("title")}</h1>
 
       {/* Anti-Abuse Settings */}
-      <div className="bg-white border rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">{t("antiAbuse.title")}</h2>
+      <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold text-primary mb-4">{t("antiAbuse.title")}</h2>
 
         <div className="space-y-4">
           <div>
@@ -114,7 +118,7 @@ export default function SettingsPage() {
               <option value="auto">{t("antiAbuse.captchaLevel.auto")}</option>
               <option value="force">{t("antiAbuse.captchaLevel.force")}</option>
             </select>
-            <p className="text-sm text-gray-500 mt-1">
+            <p className="text-sm text-accent mt-1">
               {t("antiAbuse.captchaLevel.description")}
             </p>
           </div>
@@ -122,14 +126,14 @@ export default function SettingsPage() {
       </div>
 
       {/* Privacy Settings */}
-      <div className="bg-white border rounded-lg p-6 mb-6">
-        <h2 className="text-xl font-semibold mb-4">{t("privacy.title")}</h2>
+      <div className="backdrop-blur-md bg-card/20 border border-card/10 dark:bg-card/70 dark:border-card/80 shadow-xl rounded-lg p-6 mb-6">
+        <h2 className="text-xl font-semibold text-primary mb-4">{t("privacy.title")}</h2>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium">{t("privacy.ipLogging.label")}</label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-accent">
                 {t("privacy.ipLogging.description")}
               </p>
             </div>
@@ -148,7 +152,7 @@ export default function SettingsPage() {
           <div className="flex items-center justify-between">
             <div>
               <label className="block text-sm font-medium">{t("privacy.cookieBanner.label")}</label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-accent">
                 {t("privacy.cookieBanner.description")}
               </p>
             </div>
@@ -169,7 +173,7 @@ export default function SettingsPage() {
               <label className="block text-sm font-medium">
                 {t("privacy.deviceFingerprint.label")}
               </label>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-accent">
                 {t("privacy.deviceFingerprint.description")}
               </p>
             </div>
@@ -189,11 +193,19 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      <div className="text-sm text-gray-500">
+      <div className="text-sm text-accent">
         <p>
           {t("note")}
         </p>
       </div>
+
+      {/* Sync Settings - Only for SUPERADMIN */}
+      {isSuperAdmin && (
+        <>
+          <hr className="my-8 border-border/50" />
+          <SyncSettingsForm />
+        </>
+      )}
     </div>
   );
 }

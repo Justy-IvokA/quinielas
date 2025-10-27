@@ -10,7 +10,7 @@ import { prisma } from "@qp/db";
 import { getSportsProvider } from "@qp/utils";
 
 export async function updateLiveMatchesJob() {
-  console.log("[UpdateLive] Starting live matches update...");
+  console.log("[UpdateLive] Iniciando actualización de partidos en vivo...");
 
   const now = new Date();
   
@@ -58,7 +58,7 @@ export async function updateLiveMatchesJob() {
   });
 
   if (matchesToUpdate.length === 0) {
-    console.log("[UpdateLive] No live or recent matches found");
+    console.log("[UpdateLive] No encontré partidos en vivo o recientes");
     return {
       updatedCount: 0,
       errorCount: 0,
@@ -66,7 +66,7 @@ export async function updateLiveMatchesJob() {
     };
   }
 
-  console.log(`[UpdateLive] Found ${matchesToUpdate.length} matches to update`);
+  console.log(`[UpdateLive] Encontré ${matchesToUpdate.length} partidos para actualizar`);
 
   let updatedCount = 0;
   let errorCount = 0;
@@ -100,7 +100,10 @@ export async function updateLiveMatchesJob() {
       });
 
       if (!competitionMap) {
-        console.warn(`[UpdateLive] No external mapping for competition ${season.competition.name}, skipping`);
+        console.warn(
+          `[UpdateLive] ❌ No encontré mapeo externo para la competencia "${season.competition.name}" (ID: ${season.competition.id}). ` +
+          `Omitiendo ${matches.length} partidos de la temporada "${season.name}"`
+        );
         errorCount += matches.length;
         continue;
       }
@@ -111,7 +114,7 @@ export async function updateLiveMatchesJob() {
         apiKey: process.env.SPORTS_API_KEY
       });
 
-      console.log(`[UpdateLive] Fetching data for ${season.name} from ${provider.getName()}`);
+      console.log(`[UpdateLive] Obteniendo datos para la temporada ${season.name} desde ${provider.getName()}`);
 
       // Fetch season data
       const seasonData = await provider.fetchSeason({
@@ -138,7 +141,10 @@ export async function updateLiveMatchesJob() {
           });
 
           if (!matchMap) {
-            console.warn(`[UpdateLive] No external mapping for match ${match.id}`);
+            console.warn(
+              `[UpdateLive] ❌ No encontré mapeo externo para el partido: ${match.homeTeam.shortName} vs ${match.awayTeam.shortName} ` +
+              `(ID del partido: ${match.id}, Temporada: ${season.name})`
+            );
             errorCount++;
             continue;
           }
@@ -146,7 +152,10 @@ export async function updateLiveMatchesJob() {
           const matchDTO = externalMatchMap.get(matchMap.externalId);
           
           if (!matchDTO) {
-            console.warn(`[UpdateLive] Match ${matchMap.externalId} not found in provider data`);
+            console.warn(
+              `[UpdateLive] ❌ No encontré el partido en los datos del proveedor: ${match.homeTeam.shortName} vs ${match.awayTeam.shortName} ` +
+              `(External ID: ${matchMap.externalId}, Temporada: ${season.name})`
+            );
             errorCount++;
             continue;
           }
@@ -165,13 +174,13 @@ export async function updateLiveMatchesJob() {
           });
 
           console.log(
-            `[UpdateLive] ✅ Updated ${match.homeTeam.shortName} vs ${match.awayTeam.shortName}: ` +
+            `[UpdateLive] ✅ Actualizado ${match.homeTeam.shortName} vs ${match.awayTeam.shortName}: ` +
             `${matchDTO.homeScore ?? '-'}-${matchDTO.awayScore ?? '-'} (${matchDTO.status})`
           );
 
           updatedCount++;
         } catch (error) {
-          console.error(`[UpdateLive] Error updating match ${match.id}:`, error);
+          console.error(`[UpdateLive] Error actualizando el partido ${match.id}:`, error);
           errorCount++;
         }
       }
@@ -180,12 +189,21 @@ export async function updateLiveMatchesJob() {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
     } catch (error) {
-      console.error(`[UpdateLive] Error processing season ${seasonId}:`, error);
+      console.error(`[UpdateLive] Error procesando la temporada ${seasonId}:`, error);
       errorCount += matches.length;
     }
   }
 
-  console.log(`[UpdateLive] Completed. Updated: ${updatedCount}, Errors: ${errorCount}`);
+  console.log(
+    `[UpdateLive] Finalizado. Actualizados: ${updatedCount}, Errores: ${errorCount}, Total: ${matchesToUpdate.length}`
+  );
+  
+  if (errorCount > 0) {
+    console.warn(
+      `[UpdateLive] ⚠️ Ocurrieron ${errorCount} error(es) durante la actualización. ` +
+      `Verifique los logs anteriores para detalles sobre mapeos externos faltantes o desajustes en los datos del proveedor.`
+    );
+  }
 
   return {
     updatedCount,

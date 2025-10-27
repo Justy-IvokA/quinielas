@@ -200,6 +200,7 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
       year: params.year,
       startsAt: league.seasons?.[0]?.start ? new Date(league.seasons[0].start) : undefined,
       endsAt: league.seasons?.[0]?.end ? new Date(league.seasons[0].end) : undefined,
+      competitionLogoUrl: league.league?.logo || undefined,
       teams,
       matches
     };
@@ -310,6 +311,7 @@ export class APIFootballProvider implements SportsProvider, ExtendedSportsProvid
       year: params.year,
       startsAt: league.seasons?.[0]?.start ? new Date(league.seasons[0].start) : undefined,
       endsAt: league.seasons?.[0]?.end ? new Date(league.seasons[0].end) : undefined,
+      competitionLogoUrl: league.league?.logo || undefined,
       teams,
       matches
     };

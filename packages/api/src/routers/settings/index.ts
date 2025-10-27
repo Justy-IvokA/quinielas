@@ -13,6 +13,7 @@ import {
   upsertSettingSchema,
   deleteSettingSchema,
   effectiveSettingsSchema,
+  updateSyncSettingsSchema,
 } from "./schema";
 
 export const settingsRouter = router({
@@ -263,6 +264,148 @@ export const settingsRouter = router({
           },
         });
       }
+
+      return { success: true };
+    }),
+
+  /**
+   * Get sync settings (SUPERADMIN only)
+   * Fetches all cron schedule settings for worker jobs
+   */
+  getSyncSettings: protectedProcedure.query(async ({ ctx }) => {
+    const userRole = ctx.session.user.highestRole;
+    if (userRole !== "SUPERADMIN") {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Solo SUPERADMIN puede ver los ajustes de sincronización",
+      });
+    }
+
+    // Get the superadmin's tenant (first tenant where user is SUPERADMIN)
+    const superadminMembership = await prisma.tenantMember.findFirst({
+      where: {
+        userId: ctx.session.user.id,
+        role: "SUPERADMIN",
+      },
+      include: {
+        tenant: true,
+      },
+    });
+
+    if (!superadminMembership) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "SUPERADMIN no tiene un tenant",
+      });
+    }
+
+    const tenantId = superadminMembership.tenantId;
+
+    // Fetch all sync settings for this tenant
+    const settings = await prisma.setting.findMany({
+      where: {
+        scope: "GLOBAL",
+        tenantId,
+        key: {
+          startsWith: "sync:",
+        },
+      },
+    });
+
+    // Map to object format
+    const syncSettings: Record<string, string> = {};
+    settings.forEach((setting) => {
+      syncSettings[setting.key] = String(setting.value);
+    });
+
+    return syncSettings;
+  }),
+
+  /**
+   * Update sync settings (SUPERADMIN only)
+   * Updates cron schedules for worker jobs
+   */
+  updateSyncSettings: protectedProcedure
+    .input(updateSyncSettingsSchema)
+    .mutation(async ({ input, ctx }) => {
+      const userRole = ctx.session.user.highestRole;
+      if (userRole !== "SUPERADMIN") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Solo SUPERADMIN puede modificar los ajustes de sincronización",
+        });
+      }
+
+      // Get the superadmin's tenant
+      const superadminMembership = await prisma.tenantMember.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          role: "SUPERADMIN",
+        },
+        include: {
+          tenant: true,
+        },
+      });
+
+      if (!superadminMembership) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "SUPERADMIN no tiene un tenant",
+        });
+      }
+
+      const tenantId = superadminMembership.tenantId;
+
+      // Validate cron strings (basic validation)
+      const cronRegex = /^(\*|([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])|\*\/([0-9]|1[0-9]|2[0-9]|3[0-9]|4[0-9]|5[0-9])) (\*|([0-9]|1[0-9]|2[0-3])|\*\/([0-9]|1[0-9]|2[0-3])) (\*|([1-9]|1[0-9]|2[0-9]|3[0-1])|\*\/([1-9]|1[0-9]|2[0-9]|3[0-1])) (\*|([1-9]|1[0-2])|\*\/([1-9]|1[0-2])) (\*|([0-6])|\*\/([0-6]))$/;
+
+      // Upsert each setting
+      for (const [key, value] of Object.entries(input.settings)) {
+        if (value && !cronRegex.test(value)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Invalid cron format for ${key}: ${value}`,
+          });
+        }
+
+        if (value) {
+          await prisma.setting.upsert({
+            where: {
+              scope_tenantId_poolId_key: {
+                scope: "GLOBAL",
+                tenantId,
+                poolId: "",
+                key,
+              },
+            },
+            create: {
+              scope: "GLOBAL",
+              tenantId,
+              key,
+              value,
+            },
+            update: {
+              value,
+            },
+          });
+        }
+      }
+
+      // Log the action
+      await prisma.auditLog.create({
+        data: {
+          tenantId,
+          actorId: ctx.session.user.id,
+          action: "SYNC_SETTINGS_UPDATE",
+          metadata: {
+            updatedKeys: Object.keys(input.settings).filter(
+              (k) => input.settings[k as keyof typeof input.settings]
+            ),
+          },
+          ipAddress: ctx.ip,
+          userAgent: ctx.userAgent,
+        },
+      });
 
       return { success: true };
     }),

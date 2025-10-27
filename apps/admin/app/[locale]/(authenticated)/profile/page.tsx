@@ -141,7 +141,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   };
 
   return (
-    <div className="space-y-8 pb-16">
+    <div className="space-y-4 pb-8">
       {/* Back Button */}
       <BackButton fallbackHref="/" />
       
@@ -154,7 +154,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         <div className="relative flex flex-col md:flex-row items-start md:items-center gap-6">
           {/* Avatar */}
           <div className="relative group">
-            <div className="absolute -inset-2 bg-gradient-to-r from-primary via-accent to-primary rounded-full blur opacity-40 group-hover:opacity-70 transition duration-500 animate-pulse" />
+            <div className="absolute -inset-2 bg-gradient-to-r from-primary via-accent to-primary rounded-full blur opacity-40 group-hover:opacity-70 transition duration-1000 animate-pulse" />
             <Avatar
               src={user.image || undefined}
               alt={user.name || user.email}
@@ -185,7 +185,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               {user.emailVerified && (
                 <Badge variant="outline" className="gap-1.5">
                   <CheckCircle2 className="w-3 h-3 text-green-500" />
-                  Email verificado
+                  {t("emailVerified")}
                 </Badge>
               )}
             </div>
@@ -197,60 +197,60 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
           <div className="grid grid-cols-2 gap-4 md:gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">{user._count.memberships}</div>
-              <div className="text-xs text-muted-foreground">Tenants</div>
+              <div className="text-xs text-muted-foreground">{t("tenants")}</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-accent">{user._count.registrations}</div>
-              <div className="text-xs text-muted-foreground">Quinielas</div>
+              <div className="text-xs text-muted-foreground">{t("pools")}</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {/* Account Information */}
-        <Card>
+        <Card variant="glass">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Activity className="w-5 h-5 text-primary" />
-              Información de Cuenta
+              {t("accountInfo")}
             </CardTitle>
-            <CardDescription>Detalles de tu cuenta y actividad</CardDescription>
+            <CardDescription className="text-foreground/70">Detalles de tu cuenta y actividad</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-start justify-between py-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <Calendar className="w-4 h-4" />
-                  <span>Miembro desde</span>
+                  <span>{t("memberSince")}</span>
                 </div>
                 <span className="text-sm font-medium">{formatDate(user.createdAt)}</span>
               </div>
               <Separator />
               
               <div className="flex items-start justify-between py-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <Clock className="w-4 h-4" />
-                  <span>Último acceso</span>
+                  <span>{t("lastAccess")}</span>
                 </div>
                 <span className="text-sm font-medium">{formatDate(user.lastSignInAt)}</span>
               </div>
               <Separator />
               
               <div className="flex items-start justify-between py-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <Trophy className="w-4 h-4" />
-                  <span>Predicciones</span>
+                  <span>{t("predictions")}</span>
                 </div>
                 <span className="text-sm font-medium">{user._count.predictions}</span>
               </div>
               <Separator />
               
               <div className="flex items-start justify-between py-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 text-sm text-foreground">
                   <Trophy className="w-4 h-4" />
-                  <span>Premios ganados</span>
+                  <span>{t("prizesWon")}</span>
                 </div>
                 <span className="text-sm font-medium">{user._count.prizeAwards}</span>
               </div>
@@ -259,15 +259,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </Card>
 
         {/* Email Verification Status */}
-        <Card>
-          <CardHeader>
+        <Card variant="glass">
+          <CardHeader className="mb-2">
             <CardTitle className="flex items-center gap-2">
               <Mail className="w-5 h-5 text-primary" />
-              Estado de Verificación
+              {t("verificationStatus")}
             </CardTitle>
-            <CardDescription>Seguridad y verificación de cuenta</CardDescription>
+            <CardDescription className="text-foreground/70">Seguridad y verificación de cuenta</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-2">
             <div className={`p-4 rounded-lg ${user.emailVerified ? 'bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800' : 'bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800'}`}>
               <div className="flex items-start gap-3">
                 {user.emailVerified ? (
@@ -315,13 +315,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
       {/* Tenant Memberships */}
       {user.memberships.length > 0 && (
-        <Card>
+        <Card variant="glass">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="w-5 h-5 text-primary" />
               Membresías de Tenants
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-foreground/70">
               Tus roles en diferentes organizaciones ({user.memberships.length})
             </CardDescription>
           </CardHeader>
@@ -363,7 +363,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
       {/* Active Registrations */}
       {user.registrations.length > 0 && (
-        <Card>
+        <Card variant="glass">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Trophy className="w-5 h-5 text-primary" />

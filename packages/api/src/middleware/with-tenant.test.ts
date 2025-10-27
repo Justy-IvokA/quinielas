@@ -28,6 +28,7 @@ describe("Tenant Middleware", () => {
           slug: "demo",
           name: "Demo Tenant",
           description: null,
+          licenseTier: "GOLAZO",
           createdAt: new Date(),
           updatedAt: new Date()
         },

@@ -279,13 +279,13 @@ export default function TenantsPage() {
             <Table>
               <TableHeader className="border-card/80 bg-card/70 p-4 shadow-sm backdrop-blur">
                 <TableRow>
-                  <TableHead className="text-secondary">{t('table.name')}</TableHead>
-                  <TableHead className="text-secondary">{t('table.slug')}</TableHead>
-                  <TableHead className="text-center text-secondary">{t('table.brands')}</TableHead>
-                  <TableHead className="text-center text-secondary">{t('table.pools')}</TableHead>
-                  <TableHead className="text-center text-secondary">{t('table.members')}</TableHead>
-                  <TableHead className="text-secondary">{t('table.created')}</TableHead>
-                  <TableHead className="text-right text-secondary">{t('table.actions')}</TableHead>
+                  <TableHead className="text-foreground">{t('table.name')}</TableHead>
+                  <TableHead className="text-foreground">{t('table.slug')}</TableHead>
+                  <TableHead className="text-center text-foreground">{t('table.brands')}</TableHead>
+                  <TableHead className="text-center text-foreground">{t('table.pools')}</TableHead>
+                  <TableHead className="text-center text-foreground">{t('table.members')}</TableHead>
+                  <TableHead className="text-foreground">{t('table.created')}</TableHead>
+                  <TableHead className="text-right text-foreground">{t('table.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="border-border/50 bg-card/40 p-4 shadow-sm backdrop-blur">

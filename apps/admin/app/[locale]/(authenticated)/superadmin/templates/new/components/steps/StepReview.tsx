@@ -66,8 +66,8 @@ export function StepReview({ wizardData }: StepReviewProps) {
       competitionExternalId: wizardData.competitionExternalId,
       competitionName: wizardData.competitionName,
       seasonYear: wizardData.seasonYear,
-      stageLabel: wizardData.stageLabel || undefined,
-      roundLabel: undefined, // ✅ NO filtrar en import - importar toda la temporada
+      stageLabel: undefined, // ✅ NO filtrar por etapa en import - importar toda la temporada
+      roundLabel: undefined, // ✅ NO filtrar por jornada en import - importar toda la temporada
       rules: {
         exactScore: wizardData.rules.exactScore,
         correctSign: wizardData.rules.correctSign,
@@ -88,14 +88,13 @@ export function StepReview({ wizardData }: StepReviewProps) {
       }
     };
 
-    console.log("🔥 DATOS TEMPLATE:", datos);
-  
     setIsCreating(true);
     
-    // ⚠️ IMPORTANTE: NO usar roundLabel para importar
+    // ⚠️ IMPORTANTE: NO usar stageLabel ni roundLabel para importar
     // Razón: Si usuario selecciona múltiples jornadas (J14, J15, J16),
     // roundLabel solo importaría UNA jornada de la API.
-    // Solución: Importar toda la temporada y filtrar en frontend con rounds.start/end
+    // Solución: Importar toda la temporada y filtrar en frontend con rules.rounds.start/end
+    // Esto permite reutilizar la plantilla para múltiples jornadas sin re-importar
     createMutation.mutate(datos);
   };
 

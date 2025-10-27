@@ -25,23 +25,23 @@ async function runJob(jobName: string, args: string[]) {
   const job = jobs[jobName as keyof typeof jobs];
 
   if (!job) {
-    console.error(`❌ Unknown job: ${jobName}`);
-    console.log("\nAvailable jobs:");
+    console.error(`❌ Trabajo no encontrado: ${jobName}`);
+    console.log("\nTrabajos disponibles:");
     Object.keys(jobs).forEach((name) => console.log(`  - ${name}`));
     process.exit(1);
   }
 
-  console.log(`🏃 Running job: ${jobName}`);
+  console.log(`🏃 Ejecutando trabajo: ${jobName}`);
   console.log(`📋 Args:`, args);
 
   try {
     // Type-safe job execution
     const result = await (job as (...args: any[]) => Promise<any>)(...args);
-    console.log(`✅ Job completed successfully`);
-    console.log(`📊 Result:`, result);
+    console.log(`✅ Trabajo ${jobName} completado exitosamente`);
+    console.log(`📊 Resultado:`, result);
     process.exit(0);
   } catch (error) {
-    console.error(`❌ Job failed:`, error);
+    console.error(`❌ Trabajo ${jobName} fallido:`, error);
     process.exit(1);
   }
 }
@@ -50,8 +50,8 @@ async function runJob(jobName: string, args: string[]) {
 const [, , jobName, ...args] = process.argv;
 
 if (!jobName) {
-  console.error("❌ Usage: pnpm worker run <job-name> [args]");
-  console.log("\nAvailable jobs:");
+  console.error("❌ Uso: pnpm worker run <job-name> [args]");
+  console.log("\nTrabajos disponibles:");
   Object.keys(jobs).forEach((name) => console.log(`  - ${name}`));
   process.exit(1);
 }

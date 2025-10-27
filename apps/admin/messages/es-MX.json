@@ -295,16 +295,16 @@
         "noName": "Sin nombre"
       },
       "status": {
-        "active": "Activo",
-        "inactive": "Inactivo"
+        "active": "Activa",
+        "inactive": "Inactiva"
       }
     },
     "settings": {
       "status": {
         "title": "Estado de la Quiniela",
         "description": "Controla si la quiniela está activa o inactiva",
-        "active": "Activo",
-        "inactive": "Inactivo",
+        "active": "Activa",
+        "inactive": "Inactiva",
         "activeDescription": "La quiniela está activa y los jugadores pueden registrarse y hacer predicciones",
         "inactiveDescription": "La quiniela está inactiva. Los jugadores no pueden registrarse ni hacer predicciones"
       },
@@ -571,7 +571,7 @@
     "phoneNotVerified": "Teléfono No Verificado",
     "verifiedOn": "Verificado el {date}",
     "pleaseVerify": "Por favor verifica tu email para acceso completo",
-    "tenants": "Tenants",
+    "tenants": "Inquilinos",
     "pools": "Quinielas",
     "active": "Activo",
     "andMore": "Y {count} más..."
@@ -605,7 +605,64 @@
         "description": "Habilitar huella digital de dispositivo para detección de fraude"
       }
     },
-    "note": "Nota: Estas configuraciones sobrescriben los valores predeterminados globales para este tenant. Las sobrescrituras específicas por pool se pueden configurar en cada pool."
+    "note": "Nota: Estas configuraciones sobrescriben los valores predeterminados globales para este tenant. Las sobrescrituras específicas por pool se pueden configurar en cada pool.",
+    "sync": {
+      "title": "Configuración de Sincronización de Workers",
+      "description": "Configura los horarios de ejecución (cron) para los trabajos de sincronización en segundo plano. Los cambios requieren un re-deploy del worker para tomar efecto.",
+      "warning": "⚠️ Importante: Los cambios en estas configuraciones requieren un re-deploy del worker para que tomen efecto. Contacta al equipo de DevOps para aplicar los cambios.",
+      "jobs": {
+        "auto-sync-fixtures": {
+          "label": "Sincronización Automática de Partidos",
+          "description": "Importa automáticamente nuevos partidos desde el proveedor de deportes",
+          "default": "0 */6 * * *"
+        },
+        "leaderboard-snapshot": {
+          "label": "Snapshot de Tabla de Posiciones",
+          "description": "Captura periódicamente el estado de la tabla de posiciones",
+          "default": "*/10 * * * *"
+        },
+        "purge-audit-logs": {
+          "label": "Limpiar Logs de Auditoría",
+          "description": "Elimina logs de auditoría antiguos según la política de retención",
+          "default": "0 2 * * *"
+        },
+        "purge-invitations": {
+          "label": "Limpiar Invitaciones Expiradas",
+          "description": "Elimina invitaciones por email que han expirado",
+          "default": "0 3 * * *"
+        },
+        "purge-tokens": {
+          "label": "Limpiar Tokens Expirados",
+          "description": "Elimina tokens de autenticación y verificación expirados",
+          "default": "0 4 * * *"
+        },
+        "refresh-standings": {
+          "label": "Actualizar Clasificaciones",
+          "description": "Actualiza las clasificaciones de los equipos desde el proveedor",
+          "default": "0 */12 * * *"
+        },
+        "lock-predictions": {
+          "label": "Bloquear Predicciones",
+          "description": "Bloquea automáticamente las predicciones cuando comienzan los partidos",
+          "default": "* * * * *"
+        },
+        "update-live-matches": {
+          "label": "Actualizar Partidos en Vivo",
+          "description": "Actualiza el estado de los partidos en vivo cada 5 minutos",
+          "default": "*/5 * * * *"
+        },
+        "score-final": {
+          "label": "Calcular Puntuaciones Finales",
+          "description": "Calcula las puntuaciones finales después de que terminan los partidos",
+          "default": "*/5 * * * *"
+        }
+      },
+      "cronHelp": "Formato Cron: minuto (0-59) hora (0-23) día (1-31) mes (1-12) día de semana (0-6)",
+      "cronExamples": "Ejemplos: '0 * * * *' (cada hora) | '0 0 * * *' (diariamente) | '*/15 * * * *' (cada 15 min)",
+      "saveSuccess": "Configuración de sincronización guardada exitosamente",
+      "saveError": "Error al guardar configuración: {message}",
+      "saving": "Guardando configuración..."
+    }
   },
   "metadata": {
     "title": {

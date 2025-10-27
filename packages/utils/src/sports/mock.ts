@@ -143,6 +143,7 @@ export class MockSportsProvider implements SportsProvider {
       year: params.year,
       startsAt: new Date("2026-06-08T00:00:00.000Z"),
       endsAt: new Date("2026-07-21T00:00:00.000Z"),
+      competitionLogoUrl: "https://flagcdn.com/w80/un.png",
       teams,
       matches
     };

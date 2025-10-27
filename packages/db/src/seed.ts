@@ -717,6 +717,49 @@ async function main() {
   console.log("✅ Global settings created");
 
   // ========================================
+  // WORKER SYNC SETTINGS (AGENCIA TENANT)
+  // ========================================
+  console.log("\n⏰ Creating worker sync settings...");
+
+  const syncSettings = {
+    "sync:auto-sync-fixtures:cron": "0 */6 * * *", // Every 6 hours
+    "sync:leaderboard-snapshot:cron": "*/10 * * * *", // Every 10 minutes
+    "sync:purge-audit-logs:cron": "0 2 * * *", // Daily at 2 AM
+    "sync:purge-invitations:cron": "0 3 * * *", // Daily at 3 AM
+    "sync:purge-tokens:cron": "0 4 * * *", // Daily at 4 AM
+    "sync:refresh-standings:cron": "0 */12 * * *", // Every 12 hours
+    "sync:lock-predictions:cron": "* * * * *", // Every minute
+    "sync:update-live-matches:cron": "*/5 * * * *", // Every 5 minutes
+    "sync:score-final:cron": "*/5 * * * *", // Every 5 minutes
+  };
+
+  for (const [key, value] of Object.entries(syncSettings)) {
+    const existing = await prisma.setting.findUnique({
+      where: {
+        scope_tenantId_poolId_key: {
+          scope: "GLOBAL",
+          tenantId: agenciaTenant.id,
+          poolId: "",
+          key,
+        },
+      },
+    });
+
+    if (!existing) {
+      await prisma.setting.create({
+        data: {
+          scope: "GLOBAL",
+          tenantId: agenciaTenant.id,
+          key,
+          value,
+        },
+      });
+    }
+  }
+
+  console.log("✅ Worker sync settings created");
+
+  // ========================================
   // DATA RETENTION POLICY (IVOKA TENANT)
   // ========================================
   console.log("\n🗑️ Creating data retention policy...");

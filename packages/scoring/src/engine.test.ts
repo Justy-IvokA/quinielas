@@ -89,16 +89,16 @@ describe("Scoring Engine", () => {
       const predictions = [
         {
           prediction: { homeScore: 2, awayScore: 1 },
-          result: { homeScore: 2, awayScore: 1 }
+          result: { homeScore: 2, awayScore: 1 },
         },
         {
           prediction: { homeScore: 1, awayScore: 0 },
-          result: { homeScore: 2, awayScore: 0 }
+          result: { homeScore: 2, awayScore: 0 },
         },
         {
           prediction: { homeScore: 0, awayScore: 0 },
-          result: { homeScore: 1, awayScore: 1 }
-        }
+          result: { homeScore: 1, awayScore: 1 },
+        },
       ];
 
       const result = scorePredictions(predictions, DEFAULT_RULE_SET);
@@ -113,13 +113,13 @@ describe("Scoring Engine", () => {
         {
           prediction: { homeScore: 2, awayScore: 1 },
           result: { homeScore: 2, awayScore: 1 },
-          isPremium: true
-        }
+          isPremium: true,
+        },
       ];
 
       const ruleSet = {
         ...DEFAULT_RULE_SET,
-        premiumMatchMultiplier: 2
+        premiumMatchMultiplier: 2,
       };
 
       const result = scorePredictions(predictions, ruleSet);
@@ -133,7 +133,7 @@ describe("Scoring Engine", () => {
       const players = [
         { userId: "user1", totalPoints: 10, exactCount: 1, signCount: 2 },
         { userId: "user2", totalPoints: 15, exactCount: 2, signCount: 3 },
-        { userId: "user3", totalPoints: 5, exactCount: 0, signCount: 1 }
+        { userId: "user3", totalPoints: 5, exactCount: 0, signCount: 1 },
       ];
 
       const leaderboard = generateLeaderboard(players);
@@ -149,7 +149,7 @@ describe("Scoring Engine", () => {
     it("should handle ties with exact count tiebreaker", () => {
       const players = [
         { userId: "user1", totalPoints: 10, exactCount: 1, signCount: 2 },
-        { userId: "user2", totalPoints: 10, exactCount: 2, signCount: 2 }
+        { userId: "user2", totalPoints: 10, exactCount: 2, signCount: 2 },
       ];
 
       const leaderboard = generateLeaderboard(players);
@@ -164,7 +164,7 @@ describe("Scoring Engine", () => {
       const players = [
         { userId: "user1", totalPoints: 10, exactCount: 1, signCount: 2 },
         { userId: "user2", totalPoints: 10, exactCount: 1, signCount: 2 },
-        { userId: "user3", totalPoints: 5, exactCount: 0, signCount: 1 }
+        { userId: "user3", totalPoints: 5, exactCount: 0, signCount: 1 },
       ];
 
       const leaderboard = generateLeaderboard(players);

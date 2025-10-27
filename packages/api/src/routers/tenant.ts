@@ -624,5 +624,39 @@ export const tenantRouter = router({
           message: "Failed to delete feature override"
         });
       }
+    }),
+
+  /**
+   * List all brands for current tenant
+   * Tenant-scoped: returns brands for the current tenant context
+   */
+  listBrands: procedure
+    .query(async ({ ctx }) => {
+      if (!ctx.tenant) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Tenant context required"
+        });
+      }
+
+      const brands = await ctx.prisma.brand.findMany({
+        where: {
+          tenantId: ctx.tenant.id
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          logoUrl: true,
+          domains: true,
+          createdAt: true,
+          updatedAt: true
+        },
+        orderBy: {
+          createdAt: "asc"
+        }
+      });
+
+      return brands;
     })
 });

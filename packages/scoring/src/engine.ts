@@ -38,7 +38,7 @@ export interface ScoreBreakdown {
 export const DEFAULT_RULE_SET: RuleSet = {
   exactScore: 5,
   correctSign: 3,
-  goalDiffBonus: 1
+  goalDiffBonus: 1,
 };
 
 /**
@@ -66,7 +66,8 @@ export function scoreMatch(
   ruleSet: RuleSet = DEFAULT_RULE_SET
 ): ScoreBreakdown {
   // Check exact score
-  const exactScore = prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
+  const exactScore =
+    prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore;
 
   // If exact score, award full points (includes sign and diff)
   if (exactScore) {
@@ -78,8 +79,8 @@ export function scoreMatch(
       breakdown: {
         exactScorePoints: ruleSet.exactScore,
         correctSignPoints: 0,
-        goalDiffBonusPoints: 0
-      }
+        goalDiffBonusPoints: 0,
+      },
     };
   }
 
@@ -97,7 +98,7 @@ export function scoreMatch(
   const breakdown = {
     exactScorePoints: 0,
     correctSignPoints: 0,
-    goalDiffBonusPoints: 0
+    goalDiffBonusPoints: 0,
   };
 
   // Award points for correct sign
@@ -117,7 +118,7 @@ export function scoreMatch(
     correctSign,
     correctDiff,
     points,
-    breakdown
+    breakdown,
   };
 }
 
@@ -157,7 +158,7 @@ export function scorePredictions(
 
     scores.push({
       ...score,
-      points: finalPoints
+      points: finalPoints,
     });
   }
 
@@ -166,7 +167,7 @@ export function scorePredictions(
     exactCount,
     signCount,
     diffCount,
-    scores
+    scores,
   };
 }
 
@@ -240,7 +241,7 @@ export function generateLeaderboard<T extends { userId: string }>(
 
     return {
       ...player,
-      rank: currentRank
+      rank: currentRank,
     };
   });
 
@@ -264,6 +265,7 @@ export function validateRuleSet(ruleSet: unknown): ruleSet is RuleSet {
     rs.correctSign >= 0 &&
     typeof rs.goalDiffBonus === "number" &&
     rs.goalDiffBonus >= 0 &&
-    (rs.premiumMatchMultiplier === undefined || (typeof rs.premiumMatchMultiplier === "number" && rs.premiumMatchMultiplier >= 1))
+    (rs.premiumMatchMultiplier === undefined ||
+      (typeof rs.premiumMatchMultiplier === "number" && rs.premiumMatchMultiplier >= 1))
   );
 }

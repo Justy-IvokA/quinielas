@@ -175,7 +175,7 @@ export function GeneralForm({ poolId }: GeneralFormProps) {
                 <SelectValue placeholder={t("form.brandPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
-                {brands?.map((brand) => (
+                {brands?.map((brand: { id: string; name: string; slug: string; logoUrl?: string | null; domains?: string[] | null; createdAt: Date; updatedAt: Date; }) => (
                   <SelectItem key={brand.id} value={brand.id}>
                     {brand.name}
                   </SelectItem>

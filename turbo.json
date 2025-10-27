@@ -23,6 +23,7 @@
       "cache": true
     },
     "@qp/utils#build": {
+      "dependsOn": ["@qp/config#build"],
       "outputs": ["dist/**"],
       "cache": true
     },
@@ -32,14 +33,17 @@
       "cache": true
     },
     "@qp/branding#build": {
+      "dependsOn": ["@qp/config#build"],
       "outputs": ["dist/**"],
       "cache": true
     },
     "@qp/scoring#build": {
+      "dependsOn": ["@qp/config#build"],
       "outputs": ["dist/**"],
       "cache": true
     },
     "@qp/ui#build": {
+      "dependsOn": ["@qp/config#build"],
       "outputs": ["dist/**"],
       "cache": true
     },

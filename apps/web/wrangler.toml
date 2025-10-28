@@ -1,13 +1,7 @@
-name = "quinielas-web"
-compatibility_date = "2025-01-21"
-pages_build_output_dir = ".vercel/output/static"
-
-# Cloudflare Pages configuration for Next.js
-# Build command: pnpm run pages:build
-# This uses @cloudflare/next-on-pages to convert Next.js to Cloudflare Pages
-
-[build]
-command = "pnpm run pages:build"
-
-# Environment variables will be set in Cloudflare Dashboard
-# or via wrangler CLI: wrangler pages secret put <KEY>
+  main = ".open-next/worker.js"
+  name = "quinielas-web"
+  compatibility_date = "2025-03-25"
+  compatibility_flags = ["nodejs_compat"]
+  [assets]
+  directory = ".open-next/assets"
+  binding = "ASSETS"

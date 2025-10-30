@@ -1,8 +1,8 @@
 import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
-import { locales, defaultLocale } from "@web/i18n/config";
-import { extractBrandContext } from "@web/middleware/brandResolver";
+import { locales, defaultLocale } from "./src/i18n/config";
+import { extractBrandContext } from "./src/middleware/brandResolver";
 
 /**
  * i18n Middleware

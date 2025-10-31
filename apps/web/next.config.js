@@ -21,9 +21,9 @@ const nextConfig = {
   // ✅ NUEVO: Output standalone para incluir Prisma binaries
   output: "standalone",
   serverExternalPackages: [
-      "@qp/db",
-      "@qp/api", 
-      "@qp/auth",
+      // "@qp/db",
+      // "@qp/api", 
+      // "@qp/auth",
       "@prisma/client",
       "prisma",
       "nodemailer",

@@ -17,7 +17,7 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  transpilePackages: ["@qp/ui", "@qp/branding", "@qp/api", "@qp/auth", "@qp/db", ],
+  transpilePackages: ["@qp/ui", "@qp/branding", "@qp/api", "@qp/auth", "@qp/db", "@qp/config", "@qp/scoring", "@qp/utils" ],
   // ✅ NUEVO: Output standalone para incluir Prisma binaries
   output: "standalone",
   serverExternalPackages: [

@@ -2,6 +2,9 @@
 
 generator client {
   provider = "prisma-client-js"
+   // ✅ CRÍTICO: Generar binaries para múltiples plataformas
+  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
+  // Esto genera binaries para desarrollo local + Vercel
 }
 
 datasource db {

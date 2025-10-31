@@ -17,7 +17,9 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  transpilePackages: ["@qp/ui", "@qp/branding"],
+  transpilePackages: ["@qp/ui", "@qp/branding", "@qp/api", "@qp/auth", "@qp/db", ],
+  // ✅ NUEVO: Output standalone para incluir Prisma binaries
+  output: "standalone",
   serverExternalPackages: [
       "@qp/db",
       "@qp/api", 
@@ -26,6 +28,7 @@ const nextConfig = {
       "prisma",
       "nodemailer",
     ],
+  outputFileTracingRoot: require('path').resolve(__dirname, '../../'),
   experimental: {
     optimizePackageImports: ["@qp/ui", "lucide-react"],
   },
@@ -49,7 +52,6 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer, nextRuntime }) => {
-    console.log("🔥 nextRuntime", nextRuntime);
     // ✅ NUEVO: Configuración específica para Edge Runtime (middleware)
     if (nextRuntime === 'edge') {
       // Excluir TODOS los packages que usan Node.js APIs

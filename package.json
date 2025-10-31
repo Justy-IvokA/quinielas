@@ -31,7 +31,7 @@
     "npm:package_versions": "npm view tailwindcss versions",
     "powershell:adminCache": "Remove-Item -Recurse -Force .\\apps\\admin\\.next",
     "powershell:webCache": "Remove-Item -Recurse -Force .\\apps\\web\\.next",
-    "postinstall": "db:generate"
+    "postinstall": "pnpm --filter @qp/db exec prisma generate"
   },
   "dependencies": {
     "@qp/db": "workspace:*"

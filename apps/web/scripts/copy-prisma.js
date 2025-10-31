@@ -5,60 +5,73 @@ console.log('🔍 Copiando binarios de Prisma...');
 
 // Rutas posibles del source
 const possibleSources = [
-  path.join(__dirname, '../../../node_modules/@prisma/client'),
+  path.join(__dirname, '../../../node_modules/.prisma/client'),
   path.join(__dirname, '../../../packages/db/node_modules/@prisma/client'),
-];
-
-// Rutas de destino
-const targets = [
-  path.join(__dirname, '../.next/server'),
-  path.join(__dirname, '../.next/standalone/node_modules/.prisma/client'),
+  path.join(__dirname, '../../../packages/db/node_modules/.prisma/client'),
 ];
 
 let sourceFound = null;
 
 // Encontrar el source
 for (const src of possibleSources) {
+  console.log(`🔎 Buscando en: ${src}`);
+  
   if (fs.existsSync(src)) {
-    sourceFound = src;
-    console.log('✅ Encontré fuentes de Prisma en:', src);
-    break;
+    const files = fs.readdirSync(src);
+    const binaries = files.filter(f => f.endsWith('.node') || f.endsWith('.so.node'));
+    
+    if (binaries.length > 0) {
+      sourceFound = src;
+      console.log(`✅ ¡Encontre! Binarios: ${binaries.join(', ')}`);
+      break;
+    } else {
+      console.log(`⚠️  Existe pero no tiene binarios`);
+    }
+  } else {
+    console.log(`❌ No existe`);
   }
 }
 
 if (!sourceFound) {
-  console.error('❌ No encontré fuentes de Prisma en ninguna de estas ubicaciones:');
-  possibleSources.forEach(p => console.error('  -', p));
+  console.error('\n❌ ERROR: No se encontró Prisma Client generado');
+  console.error('💡 Solución: Ejecuta "pnpm --filter @qp/db exec prisma generate"');
+  console.error('');
   process.exit(1);
 }
+
+// Targets en Next.js output
+const targets = [
+  path.join(__dirname, '../.next/server/node_modules/.prisma/client'),
+  path.join(__dirname, '../.next/standalone/node_modules/.prisma/client'),
+];
+
+let copiedCount = 0;
 
 // Copiar a todos los targets
 targets.forEach(target => {
   try {
     fs.mkdirSync(target, { recursive: true });
     
-    // Copiar todos los archivos
-    const files = fs.readdirSync(sourceFound);
+    // Copiar recursivamente
+    fs.cpSync(sourceFound, target, { recursive: true });
     
-    files.forEach(file => {
-      const srcFile = path.join(sourceFound, file);
-      const destFile = path.join(target, file);
-      
-      if (fs.statSync(srcFile).isFile()) {
-        fs.copyFileSync(srcFile, destFile);
-      }
-    });
-    
-    console.log('✅ Copiados fuentes de Prisma a:', target);
-    
-    // Listar binaries copiados
+    // Verificar binaries copiados
+    const files = fs.readdirSync(target);
     const binaries = files.filter(f => f.endsWith('.node') || f.endsWith('.so.node'));
+    
     if (binaries.length > 0) {
-      console.log('   Binarios:', binaries.join(', '));
+      console.log(`✅ Copiado a: ${target}`);
+      console.log(`   Binaries: ${binaries.join(', ')}`);
+      copiedCount++;
     }
   } catch (error) {
-    console.warn('⚠️  No se pudo copiar a:', target, error.message);
+    console.warn(`⚠️  Error copiando a ${target}: ${error.message}`);
   }
 });
 
-console.log('✅ Copiado de binarios de Prisma completado');
+if (copiedCount === 0) {
+  console.error('❌ No se pudo copiar a ningún destino');
+  process.exit(1);
+}
+
+console.log(`\n✅ ¡Éxito! Binarios copiados a ${copiedCount} ubicación(es)`);

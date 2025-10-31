@@ -5,6 +5,8 @@ generator client {
    // ✅ CRÍTICO: Generar binaries para múltiples plataformas
   // Esto genera binaries para desarrollo local + Vercel
   binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
+  // ✅ Output DEBE estar en la raíz del monorepo
+  output = "../../../node_modules/.prisma/client"
 }
 
 datasource db {

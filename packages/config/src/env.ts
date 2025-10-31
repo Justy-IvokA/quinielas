@@ -11,7 +11,7 @@ interface CreateEnvOptions<T extends z.ZodRawShape> {
 export const createEnv = <T extends z.ZodRawShape>({
   schema,
   runtimeEnv,
-  skipValidation = process.env.NODE_ENV === "test"
+  skipValidation = process.env.NODE_ENV === "test" || process.env.SKIP_ENV_VALIDATION === "1"
 }: CreateEnvOptions<T>) => {
   if (skipValidation) {
     return schema.parse(runtimeEnv ?? process.env);

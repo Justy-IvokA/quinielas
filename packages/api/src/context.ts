@@ -7,7 +7,7 @@ import type { Session } from "@qp/auth";
 
 // Environment schema
 const envSchema = z.object({
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.string().min(1), // VEMG .url()
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   SPORTS_API_PROVIDER: z.enum(["mock", "api-football", "sportmonks"]).default("mock"),
   SPORTS_API_KEY: z.string().optional(),

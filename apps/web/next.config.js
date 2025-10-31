@@ -48,7 +48,8 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, nextRuntime }) => {
+    console.log("🔥 nextRuntime", nextRuntime);
     // ✅ NUEVO: Configuración específica para Edge Runtime (middleware)
     if (nextRuntime === 'edge') {
       // Excluir TODOS los packages que usan Node.js APIs

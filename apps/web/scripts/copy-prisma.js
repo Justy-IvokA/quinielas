@@ -5,14 +5,14 @@ console.log('🔍 Copiando binarios de Prisma...');
 
 // Rutas posibles del source
 const possibleSources = [
-  path.join(__dirname, '../../node_modules/@prisma/client'),
-  path.join(__dirname, '../../packages/db/node_modules/@prisma/client'),
+  path.join(__dirname, '../../../node_modules/@prisma/client'),
+  path.join(__dirname, '../../../packages/db/node_modules/@prisma/client'),
 ];
 
 // Rutas de destino
 const targets = [
-  path.join(__dirname, './.next/server'),
-  path.join(__dirname, './.next/standalone/node_modules/.prisma/client'),
+  path.join(__dirname, '../.next/server'),
+  path.join(__dirname, '../.next/standalone/node_modules/.prisma/client'),
 ];
 
 let sourceFound = null;

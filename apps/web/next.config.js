@@ -20,19 +20,12 @@ const nextConfig = {
   transpilePackages: ["@qp/ui", "@qp/branding", "@qp/api", "@qp/auth", "@qp/db", "@qp/config", "@qp/scoring", "@qp/utils" ],
   // ✅ NUEVO: Output standalone para incluir Prisma binaries
   output: "standalone",
-  serverExternalPackages: [
-      // "@qp/db",
-      // "@qp/api", 
-      // "@qp/auth",
-      // "@prisma/client",
-      // "prisma",
-      "nodemailer",
-    ],
+  serverExternalPackages: [ "nodemailer" ],
   outputFileTracingRoot: require('path').resolve(__dirname, '../../'),
-  // ✅ NUEVO: Incluir archivos específicos en el trace
+  // ✅ CRÍTICO: Incluir Prisma en el trace de Next.js
   outputFileTracingIncludes: {
-    '/': [
-      './packages/db/node_modules/@prisma/client/**',
+    '/**': [
+      '../../node_modules/.prisma/client/**',
     ],
   },
   experimental: {
@@ -66,43 +59,26 @@ const nextConfig = {
         '@qp/db',
         '@qp/api',
         '@qp/auth',
-        '@qp/config',
-        '@qp/scoring',
-        '@qp/utils',
         '@prisma/client',
         'prisma',
-        'nodemailer',
-        'firebase-admin',
-        'cloudinary',
-        '@aws-sdk/client-s3',
-        '@aws-sdk/s3-request-presigner',
+        'nodemailer'        
       );
       
       return config;
     }
 
-    // ✅ NUEVO: Configurar Prisma para server runtime
-    // if (isServer) {
-    //   // No externalizar Prisma en server components
-    //   // Debe estar en el bundle para que funcione en Vercel
-      
-    //   // Copiar binaries de Prisma
-    //   config.plugins.push({
-    //     apply: (compiler) => {
-    //       compiler.hooks.afterEmit.tap('CopyPrismaPlugin', () => {
-    //         const fs = require('fs');
-    //         const source = require('path').join(__dirname, '../../packages/db/node_modules/@prisma/client');
-    //         const target = require('path').join(__dirname, '.next/server/node_modules/@prisma/client');
-            
-    //         if (fs.existsSync(source)) {
-    //           fs.mkdirSync(require('path').dirname(target), { recursive: true });
-    //           fs.cpSync(source, target, { recursive: true });
-    //           console.log('✅ Se copiaron los binarios de Prisma binaries a .next/server');
-    //         }
-    //       });
-    //     },
-    //   });
-    // }
+     // ✅ Para server runtime: NO externalizar Prisma
+    if (isServer) {
+      // Remover Prisma de externals si Next.js lo agregó
+      if (Array.isArray(config.externals)) {
+        config.externals = config.externals.filter(ext => {
+          if (typeof ext === 'string') {
+            return !ext.includes('prisma') && !ext.includes('@prisma');
+          }
+          return true;
+        });
+      }
+    }
 
     // Enable WebAssembly support
     config.experiments = {

@@ -1,7 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🔍 Copiando binarios de Prisma...');
+console.log('🔍 Copiando binarios de Prisma para Vercel...');
+console.log('📍 Script ejecutándose desde:', __dirname);
+
+// ======================================
+// 1. ENCONTRAR EL SOURCE (donde están los binaries)
+// ======================================
 
 // Rutas posibles del source
 const possibleSources = [
@@ -12,23 +17,23 @@ const possibleSources = [
 
 let sourceFound = null;
 
-// Encontrar el source
+console.log('\n🔎 Buscando Prisma Client generado...');
+
 for (const src of possibleSources) {
-  console.log(`🔎 Buscando en: ${src}`);
+  const exists = fs.existsSync(src);
+  console.log(`   ${exists ? '✅' : '❌'} ${src}`);
   
-  if (fs.existsSync(src)) {
+  if (exists) {
     const files = fs.readdirSync(src);
     const binaries = files.filter(f => f.endsWith('.node') || f.endsWith('.so.node'));
     
     if (binaries.length > 0) {
       sourceFound = src;
-      console.log(`✅ ¡Encontre! Binarios: ${binaries.join(', ')}`);
+      console.log(`   ✅ ¡Encontre! Binarios: ${binaries.join(', ')}`);
       break;
     } else {
-      console.log(`⚠️  Existe pero no tiene binarios`);
+      console.log(`   ⚠️  Carpeta existe pero no tiene binarios`);
     }
-  } else {
-    console.log(`❌ No existe`);
   }
 }
 
@@ -39,39 +44,101 @@ if (!sourceFound) {
   process.exit(1);
 }
 
-// Targets en Next.js output
+// ======================================
+// 2. DEFINIR TODOS LOS TARGETS (donde copiar)
+// ======================================
+
+const baseDir = path.join(__dirname, '..');
+
+// Todas las rutas posibles que Vercel puede usar
 const targets = [
-  path.join(__dirname, '../.next/server/node_modules/.prisma/client'),
-  path.join(__dirname, '../.next/standalone/node_modules/.prisma/client'),
+  // Next.js server output (build time)
+  path.join(baseDir, '.next/server/node_modules/.prisma/client'),
+  
+  // Next.js standalone (Vercel usa esto en producción)
+  path.join(baseDir, '.next/standalone/node_modules/.prisma/client'),
+  
+  // Ruta específica de la app en standalone
+  path.join(baseDir, '.next/standalone/apps/web/node_modules/.prisma/client'),
+  
+  // Dentro de chunks (donde Next.js a veces busca)
+  path.join(baseDir, '.next/server/chunks/node_modules/.prisma/client'),
+  
+  // Ruta .prisma directa (sin node_modules)
+  path.join(baseDir, '.next/server/.prisma/client'),
+  path.join(baseDir, '.next/standalone/.prisma/client'),
+  
+  // ✅ CRÍTICO: Ruta pnpm específica que Vercel busca
+  path.join(baseDir, '.next/server/node_modules/.pnpm/@prisma+client@6.18.0_prisma@6.18.0_typescript@5.9.3__typescript@5.9.3/node_modules/.prisma/client'),
+  
+  // Ruta sin node_modules (Vercel runtime)
+  path.join(baseDir, '.next/server/apps/web/.prisma/client'),
+  
+  // /var/task equivalente (Vercel runtime paths)
+  // Estos se crean en build pero pueden no funcionar, pero no hace daño intentar
 ];
 
-let copiedCount = 0;
+// ======================================
+// 3. COPIAR A TODOS LOS TARGETS
+// ======================================
 
-// Copiar a todos los targets
-targets.forEach(target => {
+console.log('\n📦 Copiando binarios a ubicaciones de Vercel...');
+
+let successCount = 0;
+let failCount = 0;
+
+targets.forEach((target, index) => {
   try {
+    // Crear directorio (recursivo)
     fs.mkdirSync(target, { recursive: true });
     
-    // Copiar recursivamente
-    fs.cpSync(sourceFound, target, { recursive: true });
+    // Copiar todo el contenido recursivamente
+    fs.cpSync(sourceFound, target, { 
+      recursive: true,
+      force: true // Sobrescribir si existe
+    });
     
-    // Verificar binaries copiados
+    // Verificar que se copiaron binaries
     const files = fs.readdirSync(target);
     const binaries = files.filter(f => f.endsWith('.node') || f.endsWith('.so.node'));
     
     if (binaries.length > 0) {
-      console.log(`✅ Copiado a: ${target}`);
-      console.log(`   Binaries: ${binaries.join(', ')}`);
-      copiedCount++;
+      console.log(`✅ [${index + 1}/${targets.length}] ${target}`);
+      console.log(`      Binarios: ${binaries.join(', ')}`);
+      successCount++;
+      
+      // Asegurar permisos de ejecución en binarios
+      binaries.forEach(binary => {
+        const binaryPath = path.join(target, binary);
+        try {
+          fs.chmodSync(binaryPath, 0o755);
+        } catch (e) {
+          // Ignorar errores de chmod en Windows
+        }
+      });
+    } else {
+      console.log(`⚠️  [${index + 1}/${targets.length}] Copiado pero sin binarios: ${target}`);
     }
   } catch (error) {
-    console.warn(`⚠️  Error copiando a ${target}: ${error.message}`);
+    console.log(`❌ [${index + 1}/${targets.length}] Error: ${target}`);
+    console.log(`      Razón: ${error.message}`);
+    failCount++;
   }
 });
 
-if (copiedCount === 0) {
-  console.error('❌ No se pudo copiar a ningún destino');
+// ======================================
+// 4. REPORTE FINAL
+// ======================================
+
+console.log('\n' + '='.repeat(60));
+console.log(`✅ Éxito: ${successCount} ubicaciones`);
+console.log(`❌ Fallos: ${failCount} ubicaciones (pueden ser normales)`);
+console.log('='.repeat(60));
+
+if (successCount === 0) {
+  console.error('\n❌ ERROR: No se pudo copiar a NINGUNA ubicación');
+  console.error('Esto causará errores en Vercel');
   process.exit(1);
 }
 
-console.log(`\n✅ ¡Éxito! Binarios copiados a ${copiedCount} ubicación(es)`);
+console.log('\n✅ Prisma binarios listos para Vercel deployment');

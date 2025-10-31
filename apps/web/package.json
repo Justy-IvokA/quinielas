@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "next build && node scripts/copy-prisma.js",
+    "build": "next build",
+    "buildCopy": "next build && node scripts/copy-prisma.js",
     "postbuild": "node scripts/copy-prisma.js",
     "pages:build": "npx @cloudflare/next-on-pages",
     "pages:deploy": "wrangler pages deploy .vercel/output/static --project-name=quinielas-web",

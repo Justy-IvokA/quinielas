@@ -24,8 +24,8 @@ const nextConfig = {
       // "@qp/db",
       // "@qp/api", 
       // "@qp/auth",
-      "@prisma/client",
-      "prisma",
+      // "@prisma/client",
+      // "prisma",
       "nodemailer",
     ],
   outputFileTracingRoot: require('path').resolve(__dirname, '../../'),
@@ -82,27 +82,27 @@ const nextConfig = {
     }
 
     // ✅ NUEVO: Configurar Prisma para server runtime
-    if (isServer) {
-      // No externalizar Prisma en server components
-      // Debe estar en el bundle para que funcione en Vercel
+    // if (isServer) {
+    //   // No externalizar Prisma en server components
+    //   // Debe estar en el bundle para que funcione en Vercel
       
-      // Copiar binaries de Prisma
-      config.plugins.push({
-        apply: (compiler) => {
-          compiler.hooks.afterEmit.tap('CopyPrismaPlugin', () => {
-            const fs = require('fs');
-            const source = require('path').join(__dirname, '../../packages/db/node_modules/@prisma/client');
-            const target = require('path').join(__dirname, '.next/server/node_modules/@prisma/client');
+    //   // Copiar binaries de Prisma
+    //   config.plugins.push({
+    //     apply: (compiler) => {
+    //       compiler.hooks.afterEmit.tap('CopyPrismaPlugin', () => {
+    //         const fs = require('fs');
+    //         const source = require('path').join(__dirname, '../../packages/db/node_modules/@prisma/client');
+    //         const target = require('path').join(__dirname, '.next/server/node_modules/@prisma/client');
             
-            if (fs.existsSync(source)) {
-              fs.mkdirSync(require('path').dirname(target), { recursive: true });
-              fs.cpSync(source, target, { recursive: true });
-              console.log('✅ Se copiaron los binarios de Prisma binaries a .next/server');
-            }
-          });
-        },
-      });
-    }
+    //         if (fs.existsSync(source)) {
+    //           fs.mkdirSync(require('path').dirname(target), { recursive: true });
+    //           fs.cpSync(source, target, { recursive: true });
+    //           console.log('✅ Se copiaron los binarios de Prisma binaries a .next/server');
+    //         }
+    //       });
+    //     },
+    //   });
+    // }
 
     // Enable WebAssembly support
     config.experiments = {

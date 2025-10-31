@@ -1,17 +1,15 @@
 // Prisma schema for Quinielas WL multi-tenant platform
 
 generator client {
-  provider = "prisma-client-js"
-   // ✅ CRÍTICO: Generar binaries para múltiples plataformas
-  // Esto genera binaries para desarrollo local + Vercel
-  binaryTargets = ["native", "rhel-openssl-3.0.x", "debian-openssl-3.0.x"]
-  // ✅ Output DEBE estar en la raíz del monorepo
-  output = "../../../node_modules/.prisma/client"
+  provider = "prisma-client-js"   
 }
 
 datasource db {
   provider = "postgresql"
+  // ✅ Usar el URL de Accelerate
   url      = env("DATABASE_URL")
+  // ✅ Para migrations, usar el URL directo
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
 enum TenantRole {

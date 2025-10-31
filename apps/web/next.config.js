@@ -17,7 +17,15 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
-  transpilePackages: ["@qp/ui", "@qp/api", "@qp/auth", "@qp/db", "@qp/branding", "@qp/config", "@qp/scoring", "@qp/utils"],
+  transpilePackages: ["@qp/ui", "@qp/branding"],
+  serverExternalPackages: [
+      "@qp/db",
+      "@qp/api", 
+      "@qp/auth",
+      "@prisma/client",
+      "prisma",
+      "nodemailer",
+    ],
   experimental: {
     optimizePackageImports: ["@qp/ui", "lucide-react"],
   },
@@ -41,6 +49,28 @@ const nextConfig = {
     ],
   },
   webpack: (config, { isServer }) => {
+    // ✅ NUEVO: Configuración específica para Edge Runtime (middleware)
+    if (nextRuntime === 'edge') {
+      // Excluir TODOS los packages que usan Node.js APIs
+      config.externals = config.externals || [];
+      config.externals.push(
+        '@qp/db',
+        '@qp/api',
+        '@qp/auth',
+        '@qp/config',
+        '@qp/scoring',
+        '@qp/utils',
+        '@prisma/client',
+        'prisma',
+        'nodemailer',
+        'firebase-admin',
+        'cloudinary',
+        '@aws-sdk/client-s3',
+        '@aws-sdk/s3-request-presigner',
+      );
+      
+      return config;
+    }
     // Enable WebAssembly support
     config.experiments = {
       ...config.experiments,

@@ -7,13 +7,26 @@ const globalForPrisma = globalThis as unknown as {
   prisma: ReturnType<PrismaClient['$extends']> | undefined;
 };
 
-const prismaClientSingleton = () => {
-  return new PrismaClient({
-    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  }).$extends(withAccelerate());
+// ✅ En runtime, usar Accelerate si está disponible
+const getDatabaseUrl = () => {
+  // En producción (Vercel), usar Accelerate
+  if (process.env.PRISMA_ACCELERATE_URL) {
+    return process.env.PRISMA_ACCELERATE_URL;
+  }
+  
+  // En desarrollo, usar URL directo
+  return process.env.DIRECT_DATABASE_URL || process.env.DATABASE_URL;
 };
 
-export const db = (globalForPrisma.prisma ?? prismaClientSingleton()) as ReturnType<typeof prismaClientSingleton>;
+export const db = globalForPrisma.prisma ?? 
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    datasources: {
+      db: {
+        url: getDatabaseUrl(),
+      },
+    },
+  }).$extends(withAccelerate());
 
 if (process.env.NODE_ENV !== 'production') {
   globalForPrisma.prisma = db;

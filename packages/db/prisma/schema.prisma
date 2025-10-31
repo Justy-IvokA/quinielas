@@ -1,15 +1,12 @@
 // Prisma schema for Quinielas WL multi-tenant platform
 
 generator client {
-  provider = "prisma-client-js"   
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  // ✅ Usar el URL de Accelerate
-  url      = env("DATABASE_URL")
-  // ✅ Para migrations, usar el URL directo
-  directUrl = env("DIRECT_DATABASE_URL")
+  url      = env("DIRECT_DATABASE_URL")
 }
 
 enum TenantRole {

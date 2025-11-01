@@ -1,5 +1,4 @@
-// packages/db/src/index.ts
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client/edge';
 import { withAccelerate } from '@prisma/extension-accelerate';
 
 // ✅ Singleton pattern para evitar múltiples instancias
@@ -10,8 +9,8 @@ const globalForPrisma = globalThis as unknown as {
 // ✅ En runtime, usar Accelerate si está disponible
 const getDatabaseUrl = () => {
   // En producción (Vercel), usar Accelerate
-  if (process.env.PRISMA_ACCELERATE_URL) {
-    return process.env.PRISMA_ACCELERATE_URL;
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.DATABASE_URL;
   }
   
   // En desarrollo, usar URL directo
